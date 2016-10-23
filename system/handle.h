@@ -15,7 +15,7 @@ class Handle {
  public:
   Handle() : value_(MX_HANDLE_INVALID) {}
 
-  explicit Handle(const mx_handle_t& value) : value_(value) {}
+  explicit Handle(mx_handle_t value) : value_(value) {}
 
   Handle(Handle&& other) : value_(other.release()) {}
 
@@ -26,7 +26,7 @@ class Handle {
     return *this;
   }
 
-  void reset(const mx_handle_t& value = MX_HANDLE_INVALID) {
+  void reset(mx_handle_t value = MX_HANDLE_INVALID) {
     CloseIfNecessary();
     value_ = value;
   }
