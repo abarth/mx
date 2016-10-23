@@ -53,12 +53,7 @@ class Handle {
 
   void operator=(const Handle&) = delete;
 
-  void CloseIfNecessary() {
-    if (value_ != MX_HANDLE_INVALID) {
-      mx_handle_close(value_);
-      value_ = MX_HANDLE_INVALID;
-    }
-  }
+  void CloseIfNecessary();
 
   mx_handle_t value_;
 };
