@@ -1,0 +1,20 @@
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+static_library("system") {
+  sources = [
+    "log.cc",
+    "log.h",
+    "handle.h",
+    "handle_traits.h",
+    "msgpipe.cc",
+    "msgpipe.h",
+    "process.cc",
+    "process.h",
+    "thread.cc",
+    "thread.h",
+  ]
+
+  libs = [ "magenta" ]
+}

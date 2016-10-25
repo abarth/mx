@@ -7,33 +7,46 @@
 #include <magenta/syscalls.h>
 #include <magenta/types.h>
 
-#include <utility>
+#include "lib/mx/system/handle_traits.h"
 
 namespace mx {
 
-class Handle {
+template <typename T = void>
+class handle {
  public:
-  Handle() : value_(MX_HANDLE_INVALID) {}
+  handle() : value_(MX_HANDLE_INVALID) {}
 
-  explicit Handle(mx_handle_t value) : value_(value) {}
+  explicit handle(mx_handle_t value) : value_(value) {}
 
-  Handle(Handle&& other) : value_(other.release()) {}
+  template <typename U>
+  handle(handle<U>&& other) : value_(other.release()) {
+    static_assert(is_same<T, void>::value, "Receiver must be compatible.");
+  }
 
-  ~Handle() { CloseIfNecessary(); }
+  ~handle() { close(); }
 
-  Handle& operator=(Handle&& other) {
+  template <typename U>
+  handle<T>& operator=(handle<U>&& other) {
+    static_assert(is_same<T, void>::value, "Receiver must be compatible.");
     reset(other.release());
     return *this;
   }
 
   void reset(mx_handle_t value = MX_HANDLE_INVALID) {
-    CloseIfNecessary();
+    close();
     value_ = value;
   }
 
-  void swap(Handle& other) {
-    using std::swap;
-    swap(value_, other.value_);
+  void swap(handle<T>& other) {
+    mx_handle_t tmp = value_;
+    value_ = other.value_;
+    other.value_ = tmp;
+  }
+
+  handle<T> duplicate(mx_rights_t rights) {
+    static_assert(handle_traits<T>::is_duplicatable,
+                  "Receiver must be duplicatable.");
+    return handle<T>(mx_handle_duplicate(value_), rights);
   }
 
   explicit operator bool() { return value_ != MX_HANDLE_INVALID; }
@@ -46,51 +59,29 @@ class Handle {
     return result;
   }
 
-  Handle Duplicate(mx_rights_t rights);
-
  private:
-  Handle(const Handle&) = delete;
+  template <typename A, typename B>
+  struct is_same {
+    static const bool value = false;
+  };
 
-  void operator=(const Handle&) = delete;
+  template <typename A>
+  struct is_same<A, A> {
+    static const bool value = true;
+  };
 
-  void CloseIfNecessary();
+  handle(const handle<T>&) = delete;
+
+  void operator=(const handle<T>&) = delete;
+
+  void close() {
+    if (value_ != MX_HANDLE_INVALID) {
+      mx_handle_close(value_);
+      value_ = MX_HANDLE_INVALID;
+    }
+  }
 
   mx_handle_t value_;
 };
 
-namespace internal {
-
-template <typename T>
-class HandleHolder {
-  HandleHolder() = default;
-
-  explicit HandleHolder(Handle handle) : handle_(std::move(handle)) {}
-
-  HandleHolder(T&& other) : handle_(std::move(other.handle_)) {}
-
-  T& operator=(T&& other) {
-    handle_(std::move(other.handle_));
-    return *this;
-  }
-
-  void swap(T& other) {
-    using std::swap;
-    swap(handle_, other.handle_);
-  }
-
-  explicit operator bool() { return handle_; }
-
-  const Handle& handle() const { return handle_; }
-
-  Handle ReleaseHandle() { return std::move(handle_); }
-
- private:
-  HandleHolder(const HandleHolder&) = delete;
-
-  void operator=(const HandleHolder&) = delete;
-
-  Handle handle_;
-}
-
-}  // namespace internal
 }  // namespace mx

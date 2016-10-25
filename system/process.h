@@ -4,21 +4,27 @@
 
 #pragma once
 
-#include <utility>
-
-#include "mx/system/handle.h"
+#include "lib/mx/system/handle.h"
 
 namespace mx {
 
-class Process : public internal::HandleHolder<Process> {
+class process : public handle<process> {
  public:
-  Process() = default;
+  process() = default;
 
-  explicit Process(Handle handle) : internal::HandleHolder(std::move(handle)) {}
+  explicit process(handle<void> h) : handle(h.release()) {}
 
-  Process(Process&& other) : internal::HandleHolder(other) {}
+  process(process&& other) : handle(other.release()) {}
 
-  Process(const char* name, uint32_t name_len, uint32_t flags);
+  process& operator=(process&& other) {
+    reset(other.release());
+    return *this;
+  }
+
+  static mx_status_t create(process* result,
+                            const char* name,
+                            uint32_t name_len,
+                            uint32_t flags);
 };
 
 }  // namespace mx
