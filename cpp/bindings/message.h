@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "lib/mdl/cpp/bindings/lib/message_internal.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 
@@ -46,13 +46,13 @@ class Message {
   // Access the request_id field (if present).
   bool has_request_id() const { return data_->header.version >= 1; }
   uint64_t request_id() const {
-    MOJO_DCHECK(has_request_id());
+    FTL_DCHECK(has_request_id());
     return static_cast<const internal::MessageHeaderWithRequestID*>(
                &data_->header)
         ->request_id;
   }
   void set_request_id(uint64_t request_id) {
-    MOJO_DCHECK(has_request_id());
+    FTL_DCHECK(has_request_id());
     static_cast<internal::MessageHeaderWithRequestID*>(&data_->header)
         ->request_id = request_id;
   }
@@ -65,7 +65,7 @@ class Message {
     return reinterpret_cast<uint8_t*>(data_) + data_->header.num_bytes;
   }
   uint32_t payload_num_bytes() const {
-    MOJO_DCHECK(data_num_bytes_ >= data_->header.num_bytes);
+    FTL_DCHECK(data_num_bytes_ >= data_->header.num_bytes);
     return data_num_bytes_ - data_->header.num_bytes;
   }
 
@@ -81,7 +81,7 @@ class Message {
   internal::MessageData* data_;
   std::vector<Handle> handles_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(Message);
+  FTL_DISALLOW_COPY_AND_ASSIGN(Message);
 };
 
 class MessageReceiver {
@@ -91,7 +91,7 @@ class MessageReceiver {
   // The receiver may mutate the given message.  Returns true if the message
   // was accepted and false otherwise, indicating that the message was invalid
   // or malformed.
-  virtual bool Accept(Message* message) MOJO_WARN_UNUSED_RESULT = 0;
+  virtual bool Accept(Message* message) FTL_WARN_UNUSED_RESULT = 0;
 };
 
 class MessageReceiverWithResponder : public MessageReceiver {
@@ -108,7 +108,7 @@ class MessageReceiverWithResponder : public MessageReceiver {
   // its own destruction.
   //
   virtual bool AcceptWithResponder(Message* message, MessageReceiver* responder)
-      MOJO_WARN_UNUSED_RESULT = 0;
+      FTL_WARN_UNUSED_RESULT = 0;
 };
 
 // A MessageReceiver that is also able to provide status about the state
@@ -141,7 +141,7 @@ class MessageReceiverWithResponderStatus : public MessageReceiver {
   //
   virtual bool AcceptWithResponder(Message* message,
                                    MessageReceiverWithStatus* responder)
-      MOJO_WARN_UNUSED_RESULT = 0;
+      FTL_WARN_UNUSED_RESULT = 0;
 };
 
 // Read a single message from the pipe into the supplied |message|. |handle|
@@ -153,7 +153,7 @@ class MessageReceiverWithResponderStatus : public MessageReceiver {
 // description of its possible return values.
 //
 // NOTE: The message isn't validated and may be malformed!
-MojoResult ReadMessage(MessagePipeHandle handle, Message* message);
+mx_status_t ReadMessage(const mx::msgpipe& handle, Message* message);
 
 // Read a single message from the pipe and dispatch to the given receiver.
 // |handle| must be valid. |receiver| may be null, in which case the read
@@ -164,9 +164,9 @@ MojoResult ReadMessage(MessagePipeHandle handle, Message* message);
 // This method calls into |MojoReadMessage()| and propagates any errors it
 // produces. See mojo/public/c/include/mojo/system/message_pipe.h for a
 // description of its possible return values.
-MojoResult ReadAndDispatchMessage(MessagePipeHandle handle,
-                                  MessageReceiver* receiver,
-                                  bool* receiver_result);
+mx_status_t ReadAndDispatchMessage(const mx::msgpipe& handle,
+                                   MessageReceiver* receiver,
+                                   bool* receiver_result);
 
 }  // namespace mdl
 

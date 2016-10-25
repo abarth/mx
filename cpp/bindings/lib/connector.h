@@ -12,7 +12,7 @@
 #include "lib/mdl/cpp/bindings/callback.h"
 #include "lib/mdl/cpp/bindings/message.h"
 #include "mojo/public/cpp/environment/environment.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 
 namespace mdl {
@@ -29,7 +29,7 @@ class Connector : public MessageReceiver {
  public:
   // The Connector takes ownership of |message_pipe|.
   explicit Connector(
-      ScopedMessagePipeHandle message_pipe,
+      mx::msgpipe message_pipe,
       const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter());
   ~Connector() override;
 
@@ -49,7 +49,7 @@ class Connector : public MessageReceiver {
 
   // Sets the error handler to receive notifications when an error is
   // encountered while reading from the pipe or waiting to read from the pipe.
-  void set_connection_error_handler(const Closure& error_handler) {
+  void set_connection_error_handler(const ftl::Closure& error_handler) {
     connection_error_handler_ = error_handler;
   }
 
@@ -63,7 +63,7 @@ class Connector : public MessageReceiver {
 
   // Releases the pipe, not triggering the error state. Connector is put into
   // a quiescent state.
-  ScopedMessagePipeHandle PassMessagePipe();
+  mx::msgpipe PassMessagePipe();
 
   // Is the connector bound to a MessagePipe handle?
   bool is_valid() const { return message_pipe_.is_valid(); }
@@ -75,7 +75,7 @@ class Connector : public MessageReceiver {
   // for returning |false| was |MOJO_SYSTEM_RESULT_SHOULD_WAIT| or
   // |MOJO_SYSTEM_RESULT_DEADLINE_EXCEEDED|.
   // Use |encountered_error| to see if an error occurred.
-  bool WaitForIncomingMessage(MojoDeadline deadline);
+  bool WaitForIncomingMessage(mx_time_t deadline);
 
   // MessageReceiver implementation:
   bool Accept(Message* message) override;
@@ -83,13 +83,13 @@ class Connector : public MessageReceiver {
   MessagePipeHandle handle() const { return message_pipe_.get(); }
 
  private:
-  static void CallOnHandleReady(void* closure, MojoResult result);
-  void OnHandleReady(MojoResult result);
+  static void CallOnHandleReady(void* ftl::Closure, mx_status_t result);
+  void OnHandleReady(mx_status_t result);
 
   void WaitToReadMore();
 
   // Returns false if |this| was destroyed during message dispatch.
-  MOJO_WARN_UNUSED_RESULT bool ReadSingleMessage(MojoResult* read_result);
+  FTL_WARN_UNUSED_RESULT bool ReadSingleMessage(mx_status_t* read_result);
 
   // |this| can be destroyed during message dispatch.
   void ReadAllAvailableMessages();
@@ -99,10 +99,10 @@ class Connector : public MessageReceiver {
   // Cancels any calls made to |waiter_|.
   void CancelWait();
 
-  Closure connection_error_handler_;
+  ftl::Closure connection_error_handler_;
   const MojoAsyncWaiter* waiter_;
 
-  ScopedMessagePipeHandle message_pipe_;
+  mx::msgpipe message_pipe_;
   MessageReceiver* incoming_receiver_;
 
   MojoAsyncWaitID async_wait_id_;
@@ -115,7 +115,7 @@ class Connector : public MessageReceiver {
   // of dispatching an incoming message.
   bool* destroyed_flag_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(Connector);
+  FTL_DISALLOW_COPY_AND_ASSIGN(Connector);
 };
 
 }  // namespace internal

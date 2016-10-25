@@ -5,7 +5,7 @@
 #include "lib/mdl/cpp/bindings/lib/control_message_handler.h"
 
 #include "lib/mdl/cpp/bindings/lib/message_builder.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 #include "mojo/public/interfaces/bindings/interface_control_messages.mojom.h"
 
 namespace mdl {
@@ -25,8 +25,8 @@ bool ControlMessageHandler::Accept(Message* message) {
   if (message->header()->name == kRunOrClosePipeMessageId)
     return RunOrClosePipe(message);
 
-  MOJO_DCHECK(false) << "Bad control message (no response): name = "
-                     << message->header()->name;
+  FTL_DCHECK(false) << "Bad control message (no response): name = "
+                    << message->header()->name;
   return false;
 }
 
@@ -36,8 +36,8 @@ bool ControlMessageHandler::AcceptWithResponder(
   if (message->header()->name == kRunMessageId)
     return Run(message, responder);
 
-  MOJO_DCHECK(false) << "Bad control message (with response): name = "
-                     << message->header()->name;
+  FTL_DCHECK(false) << "Bad control message (with response): name = "
+                    << message->header()->name;
   return false;
 }
 
@@ -56,7 +56,7 @@ bool ControlMessageHandler::Run(Message* message,
   RunResponseMessageParams_Data* response_params = nullptr;
   auto result =
       Serialize_(response_params_ptr.get(), builder.buffer(), &response_params);
-  MOJO_DCHECK(result == ValidationError::NONE);
+  FTL_DCHECK(result == ValidationError::NONE);
 
   response_params->EncodePointersAndHandles(
       builder.message()->mutable_handles());

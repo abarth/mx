@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 namespace internal {
@@ -28,7 +28,7 @@ void* FixedBuffer::Allocate(size_t delta) {
   delta = internal::Align(delta);
 
   if (delta == 0 || delta > size_ - cursor_) {
-    MOJO_DCHECK(false) << "Not reached";
+    FTL_DCHECK(false) << "Not reached";
     return nullptr;
   }
 

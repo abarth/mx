@@ -43,7 +43,7 @@ class MessageBuilder {
   Message message_;
   internal::FixedBuffer buf_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(MessageBuilder);
+  FTL_DISALLOW_COPY_AND_ASSIGN(MessageBuilder);
 };
 
 namespace internal {

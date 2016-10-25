@@ -8,7 +8,7 @@
 #include "gtest/gtest.h"
 #include "lib/mdl/cpp/bindings/binding.h"
 #include "lib/mdl/cpp/bindings/strong_binding.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/sample_interfaces.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/sample_service.mojom.h"
@@ -26,7 +26,7 @@ class BindingTestBase : public testing::Test {
  private:
   RunLoop loop_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(BindingTestBase);
+  FTL_DISALLOW_COPY_AND_ASSIGN(BindingTestBase);
 };
 
 class ServiceImpl : public sample::Service {
@@ -50,7 +50,7 @@ class ServiceImpl : public sample::Service {
 
   bool* const was_deleted_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ServiceImpl);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ServiceImpl);
 };
 
 // BindingTest -----------------------------------------------------------------
@@ -151,7 +151,7 @@ class ServiceImplWithBinding : public ServiceImpl {
  private:
   Binding<sample::Service> binding_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ServiceImplWithBinding);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ServiceImplWithBinding);
 };
 
 // Tests that the binding may be deleted in the connection error handler.
@@ -210,7 +210,7 @@ class IntegerAccessorImpl : public sample::IntegerAccessor {
   }
   void SetInteger(int64_t data, sample::Enum type) override {}
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(IntegerAccessorImpl);
+  FTL_DISALLOW_COPY_AND_ASSIGN(IntegerAccessorImpl);
 };
 
 TEST_F(BindingTest, SetInterfaceHandleVersion) {
@@ -263,7 +263,7 @@ class ServiceImplWithStrongBinding : public ServiceImpl {
  private:
   StrongBinding<sample::Service> binding_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ServiceImplWithStrongBinding);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ServiceImplWithStrongBinding);
 };
 
 // Tests the typical case, where the implementation object owns the

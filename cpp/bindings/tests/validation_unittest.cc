@@ -19,7 +19,7 @@
 #include "lib/mdl/cpp/bindings/message.h"
 #include "lib/mdl/cpp/bindings/tests/validation_test_input_parser.h"
 #include "lib/mdl/cpp/bindings/tests/validation_util.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 #include "mojo/public/cpp/test_support/test_support.h"
 #include "mojo/public/cpp/utility/run_loop.h"
@@ -115,7 +115,7 @@ class ValidationIntegrationTest : public testing::Test {
   ~ValidationIntegrationTest() override {}
 
   void SetUp() override {
-    ScopedMessagePipeHandle tester_endpoint;
+    mx::msgpipe tester_endpoint;
     ASSERT_EQ(MOJO_RESULT_OK,
               CreateMessagePipe(nullptr, &tester_endpoint, &testee_endpoint_));
     test_message_receiver_ =
@@ -133,13 +133,12 @@ class ValidationIntegrationTest : public testing::Test {
 
   MessageReceiver* test_message_receiver() { return test_message_receiver_; }
 
-  ScopedMessagePipeHandle testee_endpoint() { return testee_endpoint_.Pass(); }
+  mx::msgpipe testee_endpoint() { return testee_endpoint_.Pass(); }
 
  private:
   class TestMessageReceiver : public MessageReceiver {
    public:
-    TestMessageReceiver(ValidationIntegrationTest* owner,
-                        ScopedMessagePipeHandle handle)
+    TestMessageReceiver(ValidationIntegrationTest* owner, mx::msgpipe handle)
         : owner_(owner), connector_(handle.Pass()) {
       connector_.set_enforce_errors_from_incoming_receiver(false);
     }
@@ -160,7 +159,7 @@ class ValidationIntegrationTest : public testing::Test {
 
   RunLoop loop_;
   TestMessageReceiver* test_message_receiver_;
-  ScopedMessagePipeHandle testee_endpoint_;
+  mx::msgpipe testee_endpoint_;
 };
 
 class IntegrationTestInterfaceImpl : public IntegrationTestInterface {

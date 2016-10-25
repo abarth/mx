@@ -11,8 +11,8 @@
 #include "lib/mdl/cpp/bindings/lib/connector.h"
 #include "lib/mdl/cpp/bindings/lib/message_builder.h"
 #include "lib/mdl/cpp/bindings/tests/message_queue.h"
-#include "mojo/public/cpp/environment/logging.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/logging.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 
 namespace mdl {
@@ -38,13 +38,13 @@ class ConnectorTest : public testing::Test {
   void PumpMessages() { loop_.RunUntilIdle(); }
 
  protected:
-  ScopedMessagePipeHandle handle0_;
-  ScopedMessagePipeHandle handle1_;
+  mx::msgpipe handle0_;
+  mx::msgpipe handle1_;
 
  private:
   RunLoop loop_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ConnectorTest);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ConnectorTest);
 };
 
 class MessageAccumulator : public MessageReceiver {
@@ -63,7 +63,7 @@ class MessageAccumulator : public MessageReceiver {
  private:
   MessageQueue queue_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(MessageAccumulator);
+  FTL_DISALLOW_COPY_AND_ASSIGN(MessageAccumulator);
 };
 
 TEST_F(ConnectorTest, Basic) {
@@ -106,7 +106,7 @@ TEST_F(ConnectorTest, Basic_Synchronous) {
   MessageAccumulator accumulator;
   connector1.set_incoming_receiver(&accumulator);
 
-  connector1.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  connector1.WaitForIncomingMessage(MX_TIME_INFINITE);
 
   ASSERT_FALSE(accumulator.IsEmpty());
 
@@ -190,7 +190,7 @@ TEST_F(ConnectorTest, Basic_TwoMessages_Synchronous) {
   MessageAccumulator accumulator;
   connector1.set_incoming_receiver(&accumulator);
 
-  connector1.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  connector1.WaitForIncomingMessage(MX_TIME_INFINITE);
 
   ASSERT_FALSE(accumulator.IsEmpty());
 
@@ -266,7 +266,7 @@ TEST_F(ConnectorTest, MessageWithHandles) {
   // Now send a message to the transferred handle and confirm it's sent through
   // to the orginal pipe.
   // TODO(vtl): Do we need a better way of "downcasting" the handle types?
-  ScopedMessagePipeHandle smph;
+  mx::msgpipe smph;
   smph.reset(MessagePipeHandle(message_received.handles()->front().value()));
   message_received.mutable_handles()->front() = Handle();
   // |smph| now owns this handle.
@@ -294,7 +294,7 @@ TEST_F(ConnectorTest, WaitForIncomingMessageWithError) {
   internal::Connector connector0(handle0_.Pass());
   // Close the other end of the pipe.
   handle1_.reset();
-  ASSERT_FALSE(connector0.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE));
+  ASSERT_FALSE(connector0.WaitForIncomingMessage(MX_TIME_INFINITE));
 }
 
 class ConnectorDeletingMessageAccumulator : public MessageAccumulator {
@@ -311,7 +311,7 @@ class ConnectorDeletingMessageAccumulator : public MessageAccumulator {
  private:
   internal::Connector** connector_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ConnectorDeletingMessageAccumulator);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ConnectorDeletingMessageAccumulator);
 };
 
 TEST_F(ConnectorTest, WaitForIncomingMessageWithDeletion) {
@@ -328,7 +328,7 @@ TEST_F(ConnectorTest, WaitForIncomingMessageWithDeletion) {
   ConnectorDeletingMessageAccumulator accumulator(&connector1);
   connector1->set_incoming_receiver(&accumulator);
 
-  connector1->WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  connector1->WaitForIncomingMessage(MX_TIME_INFINITE);
 
   ASSERT_FALSE(connector1);
   ASSERT_FALSE(accumulator.IsEmpty());
@@ -351,7 +351,7 @@ class ReentrantMessageAccumulator : public MessageAccumulator {
       return false;
     number_of_calls_++;
     if (number_of_calls_ == 1) {
-      return connector_->WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+      return connector_->WaitForIncomingMessage(MX_TIME_INFINITE);
     }
     return true;
   }
@@ -362,7 +362,7 @@ class ReentrantMessageAccumulator : public MessageAccumulator {
   internal::Connector* connector_;
   int number_of_calls_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ReentrantMessageAccumulator);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ReentrantMessageAccumulator);
 };
 
 TEST_F(ConnectorTest, WaitForIncomingMessageWithReentrancy) {
@@ -438,7 +438,7 @@ class NoTaskStarvationReplier : public MessageReceiver {
   MessageReceiver* const reply_to_;
   unsigned num_accepted_ = 0;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(NoTaskStarvationReplier);
+  FTL_DISALLOW_COPY_AND_ASSIGN(NoTaskStarvationReplier);
 };
 
 // TODO(vtl): This test currently fails. See the discussion on issue #604

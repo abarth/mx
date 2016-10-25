@@ -8,8 +8,8 @@
 #include <sstream>
 #include <string>
 
-#include "mojo/public/cpp/environment/logging.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/logging.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 namespace internal {
@@ -80,7 +80,7 @@ class ValidationErrorObserverForTesting {
  private:
   ValidationError last_error_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ValidationErrorObserverForTesting);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ValidationErrorObserverForTesting);
 };
 
 // This takes in a string pointer, and provides a string stream which you can
@@ -96,7 +96,7 @@ class ValidationErrorStringStream {
   std::string* err_msg_;
   std::ostringstream stream_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ValidationErrorStringStream);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ValidationErrorStringStream);
 };
 
 }  // namespace internal

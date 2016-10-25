@@ -5,7 +5,7 @@
 #ifndef LIB_MDL_CPP_BINDINGS_TESTS_CONTAINER_TEST_UTIL_H_
 #define LIB_MDL_CPP_BINDINGS_TESTS_CONTAINER_TEST_UTIL_H_
 
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 

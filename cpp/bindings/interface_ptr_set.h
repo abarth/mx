@@ -26,7 +26,7 @@ class InterfacePtrSet {
   // |ptr| must be bound to a message pipe.
   void AddInterfacePtr(InterfacePtr<Interface> ptr) {
     assert(ptr.is_bound());
-    ptrs_.emplace_back(ptr.Pass());
+    ptrs_.emplace_back(std::move(ptr));
     InterfacePtr<Interface>& intrfc_ptr = ptrs_.back();
     Interface* pointer = intrfc_ptr.get();
     // Set the connection error handler for the newly added InterfacePtr to be a

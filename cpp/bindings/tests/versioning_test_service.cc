@@ -11,7 +11,7 @@
 #include "mojo/public/cpp/application/run_application.h"
 #include "mojo/public/cpp/application/service_provider_impl.h"
 #include "lib/mdl/cpp/bindings/strong_binding.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/tests/versioning_test_service.mojom.h"
 
 namespace mdl {
@@ -26,7 +26,7 @@ struct EmployeeInfo {
   Array<uint8_t> finger_print;
 
  private:
-  MOJO_DISALLOW_COPY_AND_ASSIGN(EmployeeInfo);
+  FTL_DISALLOW_COPY_AND_ASSIGN(EmployeeInfo);
 };
 
 class HumanResourceDatabaseImpl : public HumanResourceDatabase {
@@ -92,7 +92,7 @@ class HumanResourceDatabaseImpl : public HumanResourceDatabase {
 
   StrongBinding<HumanResourceDatabase> strong_binding_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(HumanResourceDatabaseImpl);
+  FTL_DISALLOW_COPY_AND_ASSIGN(HumanResourceDatabaseImpl);
 };
 
 class HumanResourceSystemServer : public ApplicationImplBase {
@@ -113,14 +113,14 @@ class HumanResourceSystemServer : public ApplicationImplBase {
   }
 
  private:
-  MOJO_DISALLOW_COPY_AND_ASSIGN(HumanResourceSystemServer);
+  FTL_DISALLOW_COPY_AND_ASSIGN(HumanResourceSystemServer);
 };
 
 }  // namespace versioning
 }  // namespace test
 }  // namespace mdl
 
-MojoResult MojoMain(MojoHandle application_request) {
+mx_status_t MojoMain(MojoHandle application_request) {
   mdl::test::versioning::HumanResourceSystemServer hr_system_server;
   return mdl::RunApplication(application_request, &hr_system_server);
 }

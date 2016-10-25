@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 
@@ -54,7 +54,7 @@ class BoundsChecker {
   uint32_t handle_begin_;
   uint32_t handle_end_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(BoundsChecker);
+  FTL_DISALLOW_COPY_AND_ASSIGN(BoundsChecker);
 };
 
 }  // namespace internal

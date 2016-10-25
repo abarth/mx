@@ -10,8 +10,8 @@
 #include <new>
 
 #include "lib/mdl/cpp/bindings/type_converter.h"
-#include "mojo/public/cpp/environment/logging.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/logging.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 namespace internal {
@@ -60,11 +60,11 @@ class StructPtr {
   bool is_null() const { return !ptr_; }
 
   Struct& operator*() const {
-    MOJO_DCHECK(ptr_);
+    FTL_DCHECK(ptr_);
     return *ptr_;
   }
   Struct* operator->() const {
-    MOJO_DCHECK(ptr_);
+    FTL_DCHECK(ptr_);
     return ptr_.get();
   }
   Struct* get() const { return ptr_.get(); }
@@ -85,7 +85,7 @@ class StructPtr {
  private:
   friend class internal::StructHelper<Struct>;
   void Initialize() {
-    MOJO_DCHECK(!ptr_);
+    FTL_DCHECK(!ptr_);
     ptr_.reset(new Struct());
   }
 
@@ -137,11 +137,11 @@ class InlinedStructPtr {
   bool is_null() const { return is_null_; }
 
   Struct& operator*() const {
-    MOJO_DCHECK(!is_null_);
+    FTL_DCHECK(!is_null_);
     return value_;
   }
   Struct* operator->() const {
-    MOJO_DCHECK(!is_null_);
+    FTL_DCHECK(!is_null_);
     return &value_;
   }
   Struct* get() const { return is_null() ? nullptr : &value_; }

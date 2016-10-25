@@ -6,19 +6,19 @@
 #define LIB_MDL_CPP_BINDINGS_BINDING_H_
 
 #include <mojo/environment/async_waiter.h>
+#include <mx/msgpipe.h>
 
 #include <memory>
 #include <utility>
 
-#include "lib/mdl/cpp/bindings/callback.h"
+#include "lib/ftl/functional/closure.h"
+#include "lib/ftl/logging.h"
+#include "lib/ftl/macros.h"
 #include "lib/mdl/cpp/bindings/interface_handle.h"
 #include "lib/mdl/cpp/bindings/interface_ptr.h"
 #include "lib/mdl/cpp/bindings/interface_request.h"
 #include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
 #include "lib/mdl/cpp/bindings/lib/router.h"
-#include "mojo/public/cpp/environment/logging.h"
-#include "mojo/public/cpp/system/macros.h"
-#include "mojo/public/cpp/system/message_pipe.h"
 
 namespace mdl {
 
@@ -34,7 +34,7 @@ namespace mdl {
 //   class FooImpl : public Foo {
 //    public:
 //     explicit FooImpl(InterfaceRequest<Foo> request)
-//         : binding_(this, request.Pass()) {}
+//         : binding_(this, std::move(request) {}
 //
 //     // Foo implementation here.
 //
@@ -63,10 +63,10 @@ class Binding {
   // |impl|. Does not take ownership of |impl|, which must outlive the binding.
   // See class comment for definition of |waiter|.
   Binding(Interface* impl,
-          ScopedMessagePipeHandle handle,
+          mx::msgpipe handle,
           const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter())
       : Binding(impl) {
-    Bind(handle.Pass(), waiter);
+    Bind(std::move(handle), waiter);
   }
 
   // Constructs a completed binding of |impl| to a new message pipe, passing the
@@ -101,9 +101,9 @@ class Binding {
   // implementation. Takes ownership of |handle| and binds it to the previously
   // specified implementation. See class comment for definition of |waiter|.
   void Bind(
-      ScopedMessagePipeHandle handle,
+      mx::msgpipe handle,
       const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
-    MOJO_DCHECK(!internal_router_);
+    FTL_DCHECK(!internal_router_);
 
     internal::MessageValidatorList validators;
     validators.push_back(std::unique_ptr<internal::MessageValidator>(
@@ -127,10 +127,12 @@ class Binding {
   void Bind(
       InterfaceHandle<Interface>* interface_handle,
       const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
-    MessagePipe pipe;
+    mx::msgpipe endpoint0;
+    mx::msgpipe endpoint1;
+    mx::msgpipe::create(&endpoint0, &endpoint1, 0);
     *interface_handle =
-        InterfaceHandle<Interface>(pipe.handle0.Pass(), Interface::Version_);
-    Bind(pipe.handle1.Pass(), waiter);
+        InterfaceHandle<Interface>(std::move(endpoint0), Interface::Version_);
+    Bind(std::move(endpoint1), waiter);
   }
 
   // Completes a binding that was constructed with only an interface
@@ -146,16 +148,15 @@ class Binding {
   // Blocks the calling thread until either a call arrives on the previously
   // bound message pipe, the deadline is exceeded, or an error occurs. Returns
   // true if a method was successfully read and dispatched.
-  bool WaitForIncomingMethodCall(
-      MojoDeadline deadline = MOJO_DEADLINE_INDEFINITE) {
-    MOJO_DCHECK(internal_router_);
+  bool WaitForIncomingMethodCall(mx_time_t deadline = MX_TIME_INFINITE) {
+    FTL_DCHECK(internal_router_);
     return internal_router_->WaitForIncomingMessage(deadline);
   }
 
   // Closes the message pipe that was previously bound. Put this object into a
   // state where it can be rebound to a new pipe.
   void Close() {
-    MOJO_DCHECK(internal_router_);
+    FTL_DCHECK(internal_router_);
     internal_router_.reset();
   }
 
@@ -172,7 +173,7 @@ class Binding {
 
   // Sets an error handler that will be called if a connection error occurs on
   // the bound message pipe.
-  void set_connection_error_handler(const Closure& error_handler) {
+  void set_connection_error_handler(const ftl::Closure& error_handler) {
     connection_error_handler_ = error_handler;
   }
 
@@ -189,7 +190,7 @@ class Binding {
   // bound. Ownership of the handle is retained by the Binding, it is not
   // transferred to the caller.
   MessagePipeHandle handle() const {
-    MOJO_DCHECK(is_bound());
+    FTL_DCHECK(is_bound());
     return internal_router_->handle();
   }
 
@@ -200,9 +201,9 @@ class Binding {
   std::unique_ptr<internal::Router> internal_router_;
   typename Interface::Stub_ stub_;
   Interface* impl_;
-  Closure connection_error_handler_;
+  ftl::Closure connection_error_handler_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(Binding);
+  FTL_DISALLOW_COPY_AND_ASSIGN(Binding);
 };
 
 }  // namespace mdl

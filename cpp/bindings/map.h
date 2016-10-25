@@ -46,7 +46,7 @@ class Map {
   // corresponding |values|.
   Map(mdl::Array<KeyType> keys, mdl::Array<ValueType> values)
       : is_null_(false) {
-    MOJO_DCHECK(keys.size() == values.size());
+    FTL_DCHECK(keys.size() == values.size());
     for (size_t i = 0; i < keys.size(); ++i)
       Traits::Insert(&map_, keys[i], values[i]);
   }
@@ -253,18 +253,18 @@ class Map {
 
 // Copies the contents of an std::map to a new Map, optionally changing the
 // types of the keys and values along the way using TypeConverter.
-template <typename MojoKey,
-          typename MojoValue,
+template <typename MdlKey,
+          typename MdlValue,
           typename STLKey,
           typename STLValue>
-struct TypeConverter<Map<MojoKey, MojoValue>, std::map<STLKey, STLValue>> {
-  static Map<MojoKey, MojoValue> Convert(
+struct TypeConverter<Map<MdlKey, MdlValue>, std::map<STLKey, STLValue>> {
+  static Map<MdlKey, MdlValue> Convert(
       const std::map<STLKey, STLValue>& input) {
-    Map<MojoKey, MojoValue> result;
+    Map<MdlKey, MdlValue> result;
     result.mark_non_null();
     for (auto& pair : input) {
-      result.insert(TypeConverter<MojoKey, STLKey>::Convert(pair.first),
-                    TypeConverter<MojoValue, STLValue>::Convert(pair.second));
+      result.insert(TypeConverter<MdlKey, STLKey>::Convert(pair.first),
+                    TypeConverter<MdlValue, STLValue>::Convert(pair.second));
     }
     return result;
   }
@@ -272,19 +272,19 @@ struct TypeConverter<Map<MojoKey, MojoValue>, std::map<STLKey, STLValue>> {
 
 // Copies the contents of a Map to an std::map, optionally changing the types of
 // the keys and values along the way using TypeConverter.
-template <typename MojoKey,
-          typename MojoValue,
+template <typename MdlKey,
+          typename MdlValue,
           typename STLKey,
           typename STLValue>
-struct TypeConverter<std::map<STLKey, STLValue>, Map<MojoKey, MojoValue>> {
+struct TypeConverter<std::map<STLKey, STLValue>, Map<MdlKey, MdlValue>> {
   static std::map<STLKey, STLValue> Convert(
-      const Map<MojoKey, MojoValue>& input) {
+      const Map<MdlKey, MdlValue>& input) {
     std::map<STLKey, STLValue> result;
     if (!input.is_null()) {
       for (auto it = input.cbegin(); it != input.cend(); ++it) {
         result.insert(std::make_pair(
-            TypeConverter<STLKey, MojoKey>::Convert(it.GetKey()),
-            TypeConverter<STLValue, MojoValue>::Convert(it.GetValue())));
+            TypeConverter<STLKey, MdlKey>::Convert(it.GetKey()),
+            TypeConverter<STLValue, MdlValue>::Convert(it.GetValue())));
       }
     }
     return result;

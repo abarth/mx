@@ -88,8 +88,8 @@ class InterfaceImpl : public sample::Provider {
   }
 
   void EchoMessagePipeHandle(
-      ScopedMessagePipeHandle a,
-      const Callback<void(ScopedMessagePipeHandle)>& callback) override {
+      mx::msgpipe a,
+      const Callback<void(mx::msgpipe)>& callback) override {
     MOJO_CHECK(false) << "Not implemented.";
   }
 

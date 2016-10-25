@@ -10,21 +10,21 @@
 #include <utility>
 
 #include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 #include "mojo/public/cpp/system/wait.h"
 
 namespace mdl {
 namespace internal {
 
-SynchronousConnector::SynchronousConnector(ScopedMessagePipeHandle handle)
+SynchronousConnector::SynchronousConnector(mx::msgpipe handle)
     : handle_(std::move(handle)) {}
 
 SynchronousConnector::~SynchronousConnector() {}
 
 bool SynchronousConnector::Write(Message* msg_to_send) {
-  MOJO_DCHECK(handle_.is_valid());
-  MOJO_DCHECK(msg_to_send);
+  FTL_DCHECK(handle_.is_valid());
+  FTL_DCHECK(msg_to_send);
 
   auto result = WriteMessageRaw(
       handle_.get(), msg_to_send->data(), msg_to_send->data_num_bytes(),
@@ -53,11 +53,11 @@ bool SynchronousConnector::Write(Message* msg_to_send) {
 }
 
 bool SynchronousConnector::BlockingRead(Message* received_msg) {
-  MOJO_DCHECK(handle_.is_valid());
-  MOJO_DCHECK(received_msg);
+  FTL_DCHECK(handle_.is_valid());
+  FTL_DCHECK(received_msg);
 
-  MojoResult rv = Wait(handle_.get(), MOJO_HANDLE_SIGNAL_READABLE,
-                       MOJO_DEADLINE_INDEFINITE, nullptr);
+  mx_status_t rv = Wait(handle_.get(), MOJO_HANDLE_SIGNAL_READABLE,
+                        MX_TIME_INFINITE, nullptr);
 
   if (rv != MOJO_RESULT_OK) {
     MOJO_LOG(WARNING) << "Failed waiting for a response. error = " << rv;

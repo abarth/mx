@@ -45,7 +45,7 @@ class SharedPtr {
     P* ptr;
 
    private:
-    MOJO_DISALLOW_COPY_AND_ASSIGN(Impl);
+    FTL_DISALLOW_COPY_AND_ASSIGN(Impl);
   };
 
   SharedData<Impl> impl_;

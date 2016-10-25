@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 namespace internal {
@@ -33,7 +33,7 @@ class ControlMessageHandler : public MessageReceiverWithResponderStatus {
 
   uint32_t interface_version_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ControlMessageHandler);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ControlMessageHandler);
 };
 
 }  // namespace internal

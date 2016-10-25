@@ -10,7 +10,7 @@
 
 #include "lib/mdl/cpp/bindings/lib/validation_errors.h"
 #include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 namespace internal {

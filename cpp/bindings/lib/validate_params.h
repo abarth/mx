@@ -5,7 +5,7 @@
 #ifndef LIB_MDL_CPP_BINDINGS_LIB_VALIDATE_PARAMS_H_
 #define LIB_MDL_CPP_BINDINGS_LIB_VALIDATE_PARAMS_H_
 
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 namespace internal {
@@ -40,7 +40,7 @@ class ArrayValidateParams {
   ArrayValidateParams* element_validate_params;
 
  private:
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ArrayValidateParams);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ArrayValidateParams);
 };
 
 }  // namespace internal

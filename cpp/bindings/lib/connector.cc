@@ -4,8 +4,8 @@
 
 #include "lib/mdl/cpp/bindings/lib/connector.h"
 
-#include "mojo/public/cpp/environment/logging.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/logging.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/system/wait.h"
 
 namespace mdl {
@@ -13,8 +13,7 @@ namespace internal {
 
 // ----------------------------------------------------------------------------
 
-Connector::Connector(ScopedMessagePipeHandle message_pipe,
-                     const MojoAsyncWaiter* waiter)
+Connector::Connector(mx::msgpipe message_pipe, const MojoAsyncWaiter* waiter)
     : waiter_(waiter),
       message_pipe_(message_pipe.Pass()),
       incoming_receiver_(nullptr),
@@ -40,16 +39,16 @@ void Connector::CloseMessagePipe() {
   Close(message_pipe_.Pass());
 }
 
-ScopedMessagePipeHandle Connector::PassMessagePipe() {
+mx::msgpipe Connector::PassMessagePipe() {
   CancelWait();
   return message_pipe_.Pass();
 }
 
-bool Connector::WaitForIncomingMessage(MojoDeadline deadline) {
+bool Connector::WaitForIncomingMessage(mx_time_t deadline) {
   if (error_)
     return false;
 
-  MojoResult rv =
+  mx_status_t rv =
       Wait(message_pipe_.get(), MOJO_HANDLE_SIGNAL_READABLE, deadline, nullptr);
   if (rv == MOJO_SYSTEM_RESULT_SHOULD_WAIT ||
       rv == MOJO_SYSTEM_RESULT_DEADLINE_EXCEEDED)
@@ -70,7 +69,7 @@ bool Connector::Accept(Message* message) {
   if (drop_writes_)
     return true;
 
-  MojoResult rv = WriteMessageRaw(
+  mx_status_t rv = WriteMessageRaw(
       message_pipe_.get(), message->data(), message->data_num_bytes(),
       message->mutable_handles()->empty()
           ? nullptr
@@ -100,7 +99,7 @@ bool Connector::Accept(Message* message) {
       //     a data pipe handle in the middle of a two-phase read/write,
       //     regardless of which thread that two-phase read/write is happening
       //     on).
-      // TODO(vtl): I wonder if this should be a |MOJO_DCHECK()|. (But, until
+      // TODO(vtl): I wonder if this should be a |FTL_DCHECK()|. (But, until
       // crbug.com/389666, etc. are resolved, this will make tests fail quickly
       // rather than hanging.)
       MOJO_CHECK(false) << "Race condition or other bug detected";
@@ -114,12 +113,12 @@ bool Connector::Accept(Message* message) {
 }
 
 // static
-void Connector::CallOnHandleReady(void* closure, MojoResult result) {
-  Connector* self = static_cast<Connector*>(closure);
+void Connector::CallOnHandleReady(void* ftl::Closure, mx_status_t result) {
+  Connector* self = static_cast<Connector*>(ftl::Closure);
   self->OnHandleReady(result);
 }
 
-void Connector::OnHandleReady(MojoResult result) {
+void Connector::OnHandleReady(mx_status_t result) {
   MOJO_CHECK(async_wait_id_ != 0);
   async_wait_id_ = 0;
   if (result != MOJO_RESULT_OK) {
@@ -134,10 +133,10 @@ void Connector::WaitToReadMore() {
   MOJO_CHECK(!async_wait_id_);
   async_wait_id_ = waiter_->AsyncWait(
       message_pipe_.get().value(), MOJO_HANDLE_SIGNAL_READABLE,
-      MOJO_DEADLINE_INDEFINITE, &Connector::CallOnHandleReady, this);
+      MX_TIME_INFINITE, &Connector::CallOnHandleReady, this);
 }
 
-bool Connector::ReadSingleMessage(MojoResult* read_result) {
+bool Connector::ReadSingleMessage(mx_status_t* read_result) {
   bool receiver_result = false;
 
   // Detect if |this| was destroyed during message dispatch. Allow for the
@@ -146,8 +145,8 @@ bool Connector::ReadSingleMessage(MojoResult* read_result) {
   bool* previous_destroyed_flag = destroyed_flag_;
   destroyed_flag_ = &was_destroyed_during_dispatch;
 
-  MojoResult rv = ReadAndDispatchMessage(message_pipe_.get(),
-                                         incoming_receiver_, &receiver_result);
+  mx_status_t rv = ReadAndDispatchMessage(message_pipe_.get(),
+                                          incoming_receiver_, &receiver_result);
   if (read_result)
     *read_result = rv;
 
@@ -171,7 +170,7 @@ bool Connector::ReadSingleMessage(MojoResult* read_result) {
 
 void Connector::ReadAllAvailableMessages() {
   while (!error_) {
-    MojoResult rv;
+    mx_status_t rv;
 
     // Return immediately if |this| was destroyed. Do not touch any members!
     if (!ReadSingleMessage(&rv))

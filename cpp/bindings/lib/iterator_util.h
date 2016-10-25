@@ -9,7 +9,7 @@
 
 #include "lib/mdl/cpp/bindings/array.h"
 #include "lib/mdl/cpp/bindings/map.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 namespace internal {
@@ -69,7 +69,7 @@ class MapKeyIterator {
     typename Map<K, V>::MapIterator it_;
   };
 
-  explicit MapKeyIterator(Map<K, V>* map) : map_(map) { MOJO_DCHECK(map); }
+  explicit MapKeyIterator(Map<K, V>* map) : map_(map) { FTL_DCHECK(map); }
 
   size_t size() const { return map_->size(); }
   Iterator begin() const { return Iterator{map_->begin()}; }
@@ -114,7 +114,7 @@ class MapValueIterator {
     typename Map<K, V>::MapIterator it_;
   };
 
-  explicit MapValueIterator(Map<K, V>* map) : map_(map) { MOJO_DCHECK(map); }
+  explicit MapValueIterator(Map<K, V>* map) : map_(map) { FTL_DCHECK(map); }
   size_t size() const { return map_->size(); }
   Iterator begin() const { return Iterator{map_->begin()}; }
   Iterator end() const { return Iterator{map_->end()}; }

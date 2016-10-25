@@ -5,10 +5,12 @@
 #ifndef LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_INFO_H_
 #define LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_INFO_H_
 
-#include <cstddef>
+#include <mx/msgpipe.h>
 
-#include "mojo/public/cpp/system/macros.h"
-#include "mojo/public/cpp/system/message_pipe.h"
+#include <cstddef>
+#include <utility>
+
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 
@@ -26,11 +28,11 @@ class InterfaceHandle {
   InterfaceHandle() : version_(0u) {}
   InterfaceHandle(std::nullptr_t) : version_(0u) {}
 
-  InterfaceHandle(ScopedMessagePipeHandle handle, uint32_t version)
-      : handle_(handle.Pass()), version_(version) {}
+  InterfaceHandle(mx::msgpipe handle, uint32_t version)
+      : handle_(std::move(handle)), version_(version) {}
 
   InterfaceHandle(InterfaceHandle&& other)
-      : handle_(other.handle_.Pass()), version_(other.version_) {
+      : handle_(std::move(other.handle_)), version_(other.version_) {
     other.version_ = 0u;
   }
 
@@ -54,7 +56,7 @@ class InterfaceHandle {
 
   InterfaceHandle& operator=(InterfaceHandle&& other) {
     if (this != &other) {
-      handle_ = other.handle_.Pass();
+      handle_ = std::move(other.handle_);
       version_ = other.version_;
       other.version_ = 0u;
     }
@@ -66,15 +68,15 @@ class InterfaceHandle {
   explicit operator bool() const { return is_valid(); }
   bool is_valid() const { return handle_.is_valid(); }
 
-  ScopedMessagePipeHandle PassHandle() { return handle_.Pass(); }
-  const ScopedMessagePipeHandle& handle() const { return handle_; }
-  void set_handle(ScopedMessagePipeHandle handle) { handle_ = handle.Pass(); }
+  mx::msgpipe PassHandle() { return std::move(handle_); }
+  const mx::msgpipe& handle() const { return handle_; }
+  void set_handle(mx::msgpipe handle) { handle_ = std::move(handle); }
 
   uint32_t version() const { return version_; }
   void set_version(uint32_t version) { version_ = version; }
 
  private:
-  ScopedMessagePipeHandle handle_;
+  mx::msgpipe handle_;
   uint32_t version_;
 
   MOJO_MOVE_ONLY_TYPE(InterfaceHandle);

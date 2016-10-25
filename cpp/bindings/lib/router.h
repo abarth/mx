@@ -21,7 +21,7 @@ namespace internal {
 // response messages back to the sender.
 class Router : public MessageReceiverWithResponder {
  public:
-  Router(ScopedMessagePipeHandle message_pipe,
+  Router(mx::msgpipe message_pipe,
          MessageValidatorList validators,
          const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter());
   ~Router() override;
@@ -34,7 +34,7 @@ class Router : public MessageReceiverWithResponder {
 
   // Sets the error handler to receive notifications when an error is
   // encountered while reading from the pipe or waiting to read from the pipe.
-  void set_connection_error_handler(const Closure& error_handler) {
+  void set_connection_error_handler(const ftl::Closure& error_handler) {
     connector_.set_connection_error_handler(error_handler);
   }
 
@@ -47,9 +47,7 @@ class Router : public MessageReceiverWithResponder {
 
   void CloseMessagePipe() { connector_.CloseMessagePipe(); }
 
-  ScopedMessagePipeHandle PassMessagePipe() {
-    return connector_.PassMessagePipe();
-  }
+  mx::msgpipe PassMessagePipe() { return connector_.PassMessagePipe(); }
 
   // MessageReceiver implementation:
   bool Accept(Message* message) override;
@@ -62,7 +60,7 @@ class Router : public MessageReceiverWithResponder {
   // for returning |false| was |MOJO_SYSTEM_RESULT_SHOULD_WAIT| or
   // |MOJO_SYSTEM_RESULT_DEADLINE_EXCEEDED|.
   // Use |encountered_error| to see if an error occurred.
-  bool WaitForIncomingMessage(MojoDeadline deadline) {
+  bool WaitForIncomingMessage(mx_time_t deadline) {
     return connector_.WaitForIncomingMessage(deadline);
   }
 

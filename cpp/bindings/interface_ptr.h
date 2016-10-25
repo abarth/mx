@@ -7,12 +7,13 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <functional>
+#include <utility>
 
-#include "lib/mdl/cpp/bindings/callback.h"
+#include "lib/ftl/macros.h"
 #include "lib/mdl/cpp/bindings/interface_handle.h"
 #include "lib/mdl/cpp/bindings/lib/interface_ptr_internal.h"
 #include "mojo/public/cpp/environment/environment.h"
-#include "mojo/public/cpp/system/macros.h"
 
 namespace mdl {
 
@@ -65,7 +66,7 @@ class InterfacePtr {
       const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
     InterfacePtr<Interface> ptr;
     if (info.is_valid())
-      ptr.Bind(info.Pass(), waiter);
+      ptr.Bind(std::move(info), waiter);
     return ptr;
   }
 
@@ -82,7 +83,7 @@ class InterfacePtr {
       const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
     reset();
     if (info.is_valid())
-      internal_state_.Bind(info.Pass(), waiter);
+      internal_state_.Bind(std::move(info), waiter);
   }
 
   // Returns whether or not this InterfacePtr is bound to a message pipe.
@@ -102,7 +103,7 @@ class InterfacePtr {
   // Queries the max version that the remote side supports. On completion, the
   // result will be returned as the input of |callback|. The version number of
   // this interface pointer will also be updated.
-  void QueryVersion(const Callback<void(uint32_t)>& callback) {
+  void QueryVersion(const std::function<void(uint32_t)>& callback) {
     internal_state_.QueryVersion(callback);
   }
 
@@ -134,7 +135,7 @@ class InterfacePtr {
   // This method may only be called after the InterfacePtr has been bound to a
   // message pipe.
   bool WaitForIncomingResponse() {
-    return internal_state_.WaitForIncomingResponse(MOJO_DEADLINE_INDEFINITE);
+    return internal_state_.WaitForIncomingResponse(MX_TIME_INFINITE);
   }
 
   // Blocks the current thread until the next incoming response callback
@@ -144,7 +145,7 @@ class InterfacePtr {
   //
   // This method may only be called after the InterfacePtr has been bound to a
   // message pipe.
-  bool WaitForIncomingResponseWithTimeout(MojoDeadline deadline) {
+  bool WaitForIncomingResponseWithTimeout(mx_time_t deadline) {
     return internal_state_.WaitForIncomingResponse(deadline);
   }
 
@@ -158,7 +159,7 @@ class InterfacePtr {
   //
   // This method may only be called after the InterfacePtr has been bound to a
   // message pipe.
-  void set_connection_error_handler(const Closure& error_handler) {
+  void set_connection_error_handler(const ftl::Closure& error_handler) {
     internal_state_.set_connection_error_handler(error_handler);
   }
 

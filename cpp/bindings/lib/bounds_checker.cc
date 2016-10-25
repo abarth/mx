@@ -5,7 +5,7 @@
 #include "lib/mdl/cpp/bindings/lib/bounds_checker.h"
 
 #include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 #include "mojo/public/cpp/system/handle.h"
 
 namespace mdl {
@@ -22,13 +22,13 @@ BoundsChecker::BoundsChecker(const void* data,
     // The calculation of |data_end_| overflowed.
     // It shouldn't happen but if it does, set the range to empty so
     // IsValidRange() and ClaimMemory() always fail.
-    MOJO_DCHECK(false) << "Not reached";
+    FTL_DCHECK(false) << "Not reached";
     data_end_ = data_begin_;
   }
   if (handle_end_ < num_handles) {
     // Assigning |num_handles| to |handle_end_| overflowed.
     // It shouldn't happen but if it does, set the handle index range to empty.
-    MOJO_DCHECK(false) << "Not reached";
+    FTL_DCHECK(false) << "Not reached";
     handle_end_ = 0;
   }
 }

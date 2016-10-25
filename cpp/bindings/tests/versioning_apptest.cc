@@ -4,7 +4,7 @@
 
 #include "mojo/public/cpp/application/application_test_base.h"
 #include "mojo/public/cpp/application/connect.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/tests/versioning_test_client.mojom.h"
 
 namespace mdl {
@@ -28,7 +28,7 @@ class VersioningApplicationTest : public ApplicationTestBase {
   HumanResourceDatabasePtr database_;
 
  private:
-  MOJO_DISALLOW_COPY_AND_ASSIGN(VersioningApplicationTest);
+  FTL_DISALLOW_COPY_AND_ASSIGN(VersioningApplicationTest);
 };
 
 TEST_F(VersioningApplicationTest, Struct) {

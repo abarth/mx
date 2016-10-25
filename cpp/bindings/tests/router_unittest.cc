@@ -9,7 +9,7 @@
 #include "lib/mdl/cpp/bindings/lib/message_builder.h"
 #include "lib/mdl/cpp/bindings/lib/router.h"
 #include "lib/mdl/cpp/bindings/tests/message_queue.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 
 namespace mdl {
@@ -133,8 +133,8 @@ class RouterTest : public testing::Test {
   void PumpMessages() { loop_.RunUntilIdle(); }
 
  protected:
-  ScopedMessagePipeHandle handle0_;
-  ScopedMessagePipeHandle handle1_;
+  mx::msgpipe handle0_;
+  mx::msgpipe handle1_;
 
  private:
   RunLoop loop_;
@@ -193,8 +193,8 @@ TEST_F(RouterTest, BasicRequestResponse_Synchronous) {
   MessageQueue message_queue;
   router0.AcceptWithResponder(&request, new MessageAccumulator(&message_queue));
 
-  router1.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
-  router0.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  router1.WaitForIncomingMessage(MX_TIME_INFINITE);
+  router0.WaitForIncomingMessage(MX_TIME_INFINITE);
 
   EXPECT_FALSE(message_queue.IsEmpty());
 
@@ -211,8 +211,8 @@ TEST_F(RouterTest, BasicRequestResponse_Synchronous) {
   router0.AcceptWithResponder(&request2,
                               new MessageAccumulator(&message_queue));
 
-  router1.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
-  router0.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  router1.WaitForIncomingMessage(MX_TIME_INFINITE);
+  router0.WaitForIncomingMessage(MX_TIME_INFINITE);
 
   EXPECT_FALSE(message_queue.IsEmpty());
 
@@ -240,8 +240,8 @@ TEST_F(RouterTest, BasicRequestResponse_SynchronousTimeout) {
   MessageQueue message_queue;
   router0.AcceptWithResponder(&request, new MessageAccumulator(&message_queue));
 
-  router1.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
-  router0.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  router1.WaitForIncomingMessage(MX_TIME_INFINITE);
+  router0.WaitForIncomingMessage(MX_TIME_INFINITE);
 
   EXPECT_FALSE(message_queue.IsEmpty());
 
@@ -263,8 +263,8 @@ TEST_F(RouterTest, BasicRequestResponse_SynchronousTimeout) {
   router0.AcceptWithResponder(&request2,
                               new MessageAccumulator(&message_queue));
 
-  router1.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
-  router0.WaitForIncomingMessage(MOJO_DEADLINE_INDEFINITE);
+  router1.WaitForIncomingMessage(MX_TIME_INFINITE);
+  router0.WaitForIncomingMessage(MX_TIME_INFINITE);
 
   EXPECT_FALSE(message_queue.IsEmpty());
 

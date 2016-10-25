@@ -6,7 +6,7 @@
 #define LIB_MDL_CPP_BINDINGS_LIB_SYNCHRONOUS_CONNECTOR_H_
 
 #include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 
 namespace mdl {
@@ -18,7 +18,7 @@ namespace internal {
 // response message), wait on the message pipe, and read the response.
 class SynchronousConnector {
  public:
-  explicit SynchronousConnector(ScopedMessagePipeHandle handle);
+  explicit SynchronousConnector(mx::msgpipe handle);
   ~SynchronousConnector();
 
   // This will mutate the message by moving the handles out of it. |msg_to_send|
@@ -30,15 +30,15 @@ class SynchronousConnector {
   // TODO(vardhan): Add a timeout mechanism.
   bool BlockingRead(Message* received_msg);
 
-  ScopedMessagePipeHandle PassHandle() { return std::move(handle_); }
+  mx::msgpipe PassHandle() { return std::move(handle_); }
 
   // Returns true if the underlying MessagePipe is valid.
   bool is_valid() const { return handle_.is_valid(); }
 
  private:
-  ScopedMessagePipeHandle handle_;
+  mx::msgpipe handle_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(SynchronousConnector);
+  FTL_DISALLOW_COPY_AND_ASSIGN(SynchronousConnector);
 };
 
 }  // namespace internal

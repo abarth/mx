@@ -13,8 +13,8 @@
 #include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
 #include "lib/mdl/cpp/bindings/lib/synchronous_connector.h"
 #include "lib/mdl/cpp/bindings/message_validator.h"
-#include "mojo/public/cpp/environment/logging.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/logging.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 
@@ -60,8 +60,8 @@ class SynchronousInterfacePtr {
   typename Interface::Synchronous_* get() { return proxy_.get(); }
 
   typename Interface::Synchronous_* operator->() {
-    MOJO_DCHECK(connector_);
-    MOJO_DCHECK(proxy_);
+    FTL_DCHECK(connector_);
+    FTL_DCHECK(proxy_);
     return proxy_.get();
   }
   typename Interface::Synchronous_& operator*() { return *operator->(); }

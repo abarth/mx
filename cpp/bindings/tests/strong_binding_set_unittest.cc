@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "lib/mdl/cpp/bindings/binding.h"
 #include "lib/mdl/cpp/bindings/interface_request.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/minimal_interface.mojom.h"
 
@@ -29,7 +29,7 @@ class MinimalInterfaceImpl : public test::MinimalInterface {
   bool* deleted_flag_;
   int call_count_ = 0;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(MinimalInterfaceImpl);
+  FTL_DISALLOW_COPY_AND_ASSIGN(MinimalInterfaceImpl);
 };
 
 // Tests all of the functionality of StrongBindingSet.

@@ -5,7 +5,7 @@
 #include "lib/mdl/cpp/bindings/tests/message_queue.h"
 
 #include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 namespace test {
@@ -27,13 +27,13 @@ void MessageQueue::Push(Message* message) {
 }
 
 void MessageQueue::Pop(Message* message) {
-  MOJO_DCHECK(!queue_.empty());
+  FTL_DCHECK(!queue_.empty());
   queue_.front()->MoveTo(message);
   Pop();
 }
 
 void MessageQueue::Pop() {
-  MOJO_DCHECK(!queue_.empty());
+  FTL_DCHECK(!queue_.empty());
   delete queue_.front();
   queue_.pop();
 }

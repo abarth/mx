@@ -10,7 +10,7 @@
 
 #include "lib/mdl/cpp/bindings/lib/array_internal.h"
 #include "lib/mdl/cpp/bindings/type_converter.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 
@@ -151,7 +151,7 @@ struct TypeConverter<std::string, String> {
 template <size_t N>
 struct TypeConverter<String, char[N]> {
   static String Convert(const char input[N]) {
-    MOJO_DCHECK(input);
+    FTL_DCHECK(input);
     return String(input, N - 1);
   }
 };
@@ -160,7 +160,7 @@ struct TypeConverter<String, char[N]> {
 template <size_t N>
 struct TypeConverter<String, const char[N]> {
   static String Convert(const char input[N]) {
-    MOJO_DCHECK(input);
+    FTL_DCHECK(input);
     return String(input, N - 1);
   }
 };

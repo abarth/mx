@@ -6,7 +6,7 @@
 
 #include "lib/mdl/cpp/bindings/lib/message_builder.h"
 #include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/interface_control_messages.mojom.h"
 
 namespace mdl {
@@ -24,7 +24,7 @@ class RunResponseForwardToCallback : public MessageReceiver {
 
  private:
   RunCallback callback_;
-  MOJO_DISALLOW_COPY_AND_ASSIGN(RunResponseForwardToCallback);
+  FTL_DISALLOW_COPY_AND_ASSIGN(RunResponseForwardToCallback);
 };
 
 bool RunResponseForwardToCallback::Accept(Message* message) {
@@ -53,7 +53,7 @@ void SendRunMessage(MessageReceiverWithResponder* receiver,
 
   RunMessageParams_Data* params = nullptr;
   auto result = Serialize_(params_ptr.get(), builder.buffer(), &params);
-  MOJO_DCHECK(result == ValidationError::NONE);
+  FTL_DCHECK(result == ValidationError::NONE);
 
   params->EncodePointersAndHandles(builder.message()->mutable_handles());
   MessageReceiver* responder = new RunResponseForwardToCallback(callback);
@@ -73,7 +73,7 @@ void SendRunOrClosePipeMessage(MessageReceiverWithResponder* receiver,
 
   RunOrClosePipeMessageParams_Data* params = nullptr;
   auto result = Serialize_(params_ptr.get(), builder.buffer(), &params);
-  MOJO_DCHECK(result == ValidationError::NONE);
+  FTL_DCHECK(result == ValidationError::NONE);
 
   params->EncodePointersAndHandles(builder.message()->mutable_handles());
   bool ok = receiver->Accept(builder.message());

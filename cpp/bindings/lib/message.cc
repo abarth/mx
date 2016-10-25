@@ -8,7 +8,7 @@
 
 #include <algorithm>
 
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 
@@ -28,19 +28,19 @@ void Message::Reset() {
 }
 
 void Message::AllocData(uint32_t num_bytes) {
-  MOJO_DCHECK(!data_);
+  FTL_DCHECK(!data_);
   data_num_bytes_ = num_bytes;
   data_ = static_cast<internal::MessageData*>(calloc(num_bytes, 1));
 }
 
 void Message::AllocUninitializedData(uint32_t num_bytes) {
-  MOJO_DCHECK(!data_);
+  FTL_DCHECK(!data_);
   data_num_bytes_ = num_bytes;
   data_ = static_cast<internal::MessageData*>(malloc(num_bytes));
 }
 
 void Message::MoveTo(Message* destination) {
-  MOJO_DCHECK(this != destination);
+  FTL_DCHECK(this != destination);
 
   destination->FreeDataAndCloseHandles();
 
@@ -68,16 +68,16 @@ void Message::FreeDataAndCloseHandles() {
   }
 }
 
-MojoResult ReadMessage(MessagePipeHandle handle, Message* message) {
-  MOJO_DCHECK(handle.is_valid());
-  MOJO_DCHECK(message);
-  MOJO_DCHECK(message->handles()->empty());
-  MOJO_DCHECK(message->data_num_bytes() == 0);
+mx_status_t ReadMessage(const mx::msgpipe& handle, Message* message) {
+  FTL_DCHECK(handle.is_valid());
+  FTL_DCHECK(message);
+  FTL_DCHECK(message->handles()->empty());
+  FTL_DCHECK(message->data_num_bytes() == 0);
 
   uint32_t num_bytes = 0;
   uint32_t num_handles = 0;
-  MojoResult rv = ReadMessageRaw(handle, nullptr, &num_bytes, nullptr,
-                                 &num_handles, MOJO_READ_MESSAGE_FLAG_NONE);
+  mx_status_t rv = ReadMessageRaw(handle, nullptr, &num_bytes, nullptr,
+                                  &num_handles, MOJO_READ_MESSAGE_FLAG_NONE);
   if (rv != MOJO_SYSTEM_RESULT_RESOURCE_EXHAUSTED)
     return rv;
 
@@ -93,17 +93,17 @@ MojoResult ReadMessage(MessagePipeHandle handle, Message* message) {
           : reinterpret_cast<MojoHandle*>(&message->mutable_handles()->front()),
       &num_handles_actual, MOJO_READ_MESSAGE_FLAG_NONE);
 
-  MOJO_DCHECK(num_bytes == num_bytes_actual);
-  MOJO_DCHECK(num_handles == num_handles_actual);
+  FTL_DCHECK(num_bytes == num_bytes_actual);
+  FTL_DCHECK(num_handles == num_handles_actual);
 
   return rv;
 }
 
-MojoResult ReadAndDispatchMessage(MessagePipeHandle handle,
-                                  MessageReceiver* receiver,
-                                  bool* receiver_result) {
+mx_status_t ReadAndDispatchMessage(const mx::msgpipe& handle,
+                                   MessageReceiver* receiver,
+                                   bool* receiver_result) {
   Message message;
-  MojoResult rv = ReadMessage(handle, &message);
+  mx_status_t rv = ReadMessage(handle, &message);
   if (receiver && rv == MOJO_RESULT_OK)
     *receiver_result = receiver->Accept(&message);
 

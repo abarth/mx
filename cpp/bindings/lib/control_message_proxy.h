@@ -8,7 +8,7 @@
 #include <stdint.h>
 
 #include "lib/mdl/cpp/bindings/callback.h"
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 
@@ -29,7 +29,7 @@ class ControlMessageProxy {
   // Not owned.
   MessageReceiverWithResponder* receiver_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(ControlMessageProxy);
+  FTL_DISALLOW_COPY_AND_ASSIGN(ControlMessageProxy);
 };
 
 }  // namespace internal

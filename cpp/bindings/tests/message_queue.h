@@ -7,7 +7,7 @@
 
 #include <queue>
 
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 class Message;
@@ -34,7 +34,7 @@ class MessageQueue {
 
   std::queue<Message*> queue_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(MessageQueue);
+  FTL_DISALLOW_COPY_AND_ASSIGN(MessageQueue);
 };
 
 }  // namespace test

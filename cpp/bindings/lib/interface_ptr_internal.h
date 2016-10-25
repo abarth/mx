@@ -14,7 +14,7 @@
 #include "lib/mdl/cpp/bindings/lib/control_message_proxy.h"
 #include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
 #include "lib/mdl/cpp/bindings/lib/router.h"
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 struct MojoAsyncWaiter;
 
@@ -81,23 +81,22 @@ class InterfacePtrState {
   }
 
   void Bind(InterfaceHandle<Interface> info, const MojoAsyncWaiter* waiter) {
-    MOJO_DCHECK(!proxy_);
-    MOJO_DCHECK(!router_);
-    MOJO_DCHECK(!handle_.is_valid());
-    MOJO_DCHECK(!waiter_);
-    MOJO_DCHECK(version_ == 0u);
-    MOJO_DCHECK(info.is_valid());
+    FTL_DCHECK(!proxy_);
+    FTL_DCHECK(!router_);
+    FTL_DCHECK(!handle_.is_valid());
+    FTL_DCHECK(!waiter_);
+    FTL_DCHECK(version_ == 0u);
+    FTL_DCHECK(info.is_valid());
 
     handle_ = info.PassHandle();
     waiter_ = waiter;
     version_ = info.version();
   }
 
-  bool WaitForIncomingResponse(
-      MojoDeadline deadline = MOJO_DEADLINE_INDEFINITE) {
+  bool WaitForIncomingResponse(mx_time_t deadline = MX_TIME_INFINITE) {
     ConfigureProxyIfNecessary();
 
-    MOJO_DCHECK(router_);
+    FTL_DCHECK(router_);
     return router_->WaitForIncomingMessage(deadline);
   }
 
@@ -114,10 +113,10 @@ class InterfacePtrState {
     return router_ ? router_->encountered_error() : false;
   }
 
-  void set_connection_error_handler(const Closure& error_handler) {
+  void set_connection_error_handler(const ftl::Closure& error_handler) {
     ConfigureProxyIfNecessary();
 
-    MOJO_DCHECK(router_);
+    FTL_DCHECK(router_);
     router_->set_connection_error_handler(error_handler);
   }
 
@@ -132,12 +131,12 @@ class InterfacePtrState {
   void ConfigureProxyIfNecessary() {
     // The proxy has been configured.
     if (proxy_) {
-      MOJO_DCHECK(router_);
+      FTL_DCHECK(router_);
       return;
     }
     // The object hasn't been bound.
     if (!waiter_) {
-      MOJO_DCHECK(!handle_.is_valid());
+      FTL_DCHECK(!handle_.is_valid());
       return;
     }
 
@@ -159,12 +158,12 @@ class InterfacePtrState {
   // |proxy_| and |router_| are not initialized until read/write with the
   // message pipe handle is needed. |handle_| and |waiter_| are valid between
   // the Bind() call and the initialization of |proxy_| and |router_|.
-  ScopedMessagePipeHandle handle_;
+  mx::msgpipe handle_;
   const MojoAsyncWaiter* waiter_;
 
   uint32_t version_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(InterfacePtrState);
+  FTL_DISALLOW_COPY_AND_ASSIGN(InterfacePtrState);
 };
 
 }  // namespace internal

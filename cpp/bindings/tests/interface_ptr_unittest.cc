@@ -80,7 +80,7 @@ class MathCalculatorUI {
     return calculator_.WaitForIncomingResponse();
   }
 
-  bool WaitForIncomingResponseWithTimeout(MojoDeadline deadline) {
+  bool WaitForIncomingResponseWithTimeout(mx_time_t deadline) {
     return calculator_.WaitForIncomingResponseWithTimeout(deadline);
   }
 
@@ -451,7 +451,7 @@ TEST_F(InterfacePtrTest, RequireVersion) {
 
 class StrongMathCalculatorImpl : public math::Calculator {
  public:
-  StrongMathCalculatorImpl(ScopedMessagePipeHandle handle,
+  StrongMathCalculatorImpl(mx::msgpipe handle,
                            bool* error_received,
                            bool* destroyed)
       : error_received_(error_received),
@@ -520,7 +520,7 @@ TEST(StrongConnectorTest, Math) {
 
 class WeakMathCalculatorImpl : public math::Calculator {
  public:
-  WeakMathCalculatorImpl(ScopedMessagePipeHandle handle,
+  WeakMathCalculatorImpl(mx::msgpipe handle,
                          bool* error_received,
                          bool* destroyed)
       : error_received_(error_received),

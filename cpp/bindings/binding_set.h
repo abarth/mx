@@ -11,8 +11,8 @@
 #include <memory>
 #include <vector>
 
+#include "lib/ftl/macros.h"
 #include "lib/mdl/cpp/bindings/binding.h"
-#include "mojo/public/cpp/system/macros.h"
 
 namespace mdl {
 
@@ -69,7 +69,7 @@ class BindingSet {
 
   std::vector<std::unique_ptr<Binding<Interface>>> bindings_;
 
-  MOJO_DISALLOW_COPY_AND_ASSIGN(BindingSet);
+  FTL_DISALLOW_COPY_AND_ASSIGN(BindingSet);
 };
 
 }  // namespace mdl

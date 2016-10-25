@@ -2,8 +2,6 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("../../mojo_sdk.gni")
-
 group("bindings") {
   public_deps = [
     ":core",
@@ -14,7 +12,7 @@ group("bindings") {
 # This target provides source files and dependencies required for serializing
 # mojom types and has no references to the rest of the mojo system. It needs to
 # be linked with an |Environment| implementation for logging.
-mojo_sdk_source_set("serialization") {
+source_set("serialization") {
   sources = [
     "array.h",
     "formatting.h",
@@ -52,7 +50,7 @@ mojo_sdk_source_set("serialization") {
     ":callback",
   ]
 
-  mojo_sdk_public_deps = [
+  public_deps = [
     "mojo/public/cpp/environment",
     "mojo/public/cpp/system",
   ]
@@ -60,7 +58,7 @@ mojo_sdk_source_set("serialization") {
 
 # This target provides everything needed to build (and theoretically use) all
 # C++ generated from mojom files.
-mojo_sdk_source_set("core") {
+source_set("core") {
   sources = [
     "binding.h",
     "interface_handle.h",
@@ -98,10 +96,10 @@ mojo_sdk_source_set("core") {
     ":serialization",
   ]
 
-  mojo_sdk_deps = [ "mojo/public/interfaces/bindings:bindings_cpp_sources" ]
+  deps = [ "mojo/public/interfaces/bindings:bindings_cpp_sources" ]
 }
 
-mojo_sdk_source_set("utility") {
+source_set("utility") {
   sources = [
     "binding_set.h",
     "interface_ptr_set.h",
@@ -113,10 +111,10 @@ mojo_sdk_source_set("utility") {
     ":core",
   ]
 
-  mojo_sdk_deps = [ "mojo/public/cpp/system" ]
+  deps = [ "mojo/public/cpp/system" ]
 }
 
-mojo_sdk_source_set("callback") {
+source_set("callback") {
   sources = [
     "callback.h",
     "lib/callback_internal.h",
@@ -125,5 +123,5 @@ mojo_sdk_source_set("callback") {
     "lib/template_util.h",
   ]
 
-  mojo_sdk_deps = [ "mojo/public/cpp/system" ]
+  deps = [ "mojo/public/cpp/system" ]
 }

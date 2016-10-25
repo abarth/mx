@@ -5,7 +5,7 @@
 #ifndef LIB_MDL_CPP_BINDINGS_LIB_SHARED_DATA_H_
 #define LIB_MDL_CPP_BINDINGS_LIB_SHARED_DATA_H_
 
-#include "mojo/public/cpp/system/macros.h"
+#include "lib/ftl/macros.h"
 
 namespace mdl {
 namespace internal {
@@ -63,7 +63,7 @@ class SharedData {
 
    private:
     int ref_count_;
-    MOJO_DISALLOW_COPY_AND_ASSIGN(Holder);
+    FTL_DISALLOW_COPY_AND_ASSIGN(Holder);
   };
 
   Holder* holder_;

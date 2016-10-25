@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "mojo/public/cpp/environment/logging.h"
+#include "lib/ftl/logging.h"
 
 namespace mdl {
 namespace internal {
@@ -68,12 +68,12 @@ void ReportValidationError(ValidationError error, std::string* description) {
 
 ValidationErrorObserverForTesting::ValidationErrorObserverForTesting()
     : last_error_(ValidationError::NONE) {
-  MOJO_DCHECK(!g_validation_error_observer);
+  FTL_DCHECK(!g_validation_error_observer);
   g_validation_error_observer = this;
 }
 
 ValidationErrorObserverForTesting::~ValidationErrorObserverForTesting() {
-  MOJO_DCHECK(g_validation_error_observer == this);
+  FTL_DCHECK(g_validation_error_observer == this);
   g_validation_error_observer = nullptr;
 }
 
