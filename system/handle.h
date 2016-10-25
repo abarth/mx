@@ -61,6 +61,10 @@ class handle {
     return h;
   }
 
+  // TODO(abarth): Not all of these methods apply to every type of handle. We
+  // should sort out which ones apply where and limit them to the interfaces
+  // where they work.
+
   mx_status_t signal(uint32_t clear_mask, uint32_t set_mask) const {
     return mx_object_signal(get(), clear_mask, set_mask);
   }
