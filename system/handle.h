@@ -43,13 +43,49 @@ class handle {
     other.value_ = tmp;
   }
 
-  handle<T> duplicate(mx_rights_t rights) {
+  handle<T> duplicate(mx_rights_t rights) const {
     static_assert(handle_traits<T>::is_duplicatable,
                   "Receiver must be duplicatable.");
     return handle<T>(mx_handle_duplicate(value_), rights);
   }
 
-  explicit operator bool() { return value_ != MX_HANDLE_INVALID; }
+  mx_status_t wait(mx_signals_t signals,
+                   mx_time_t timeout,
+                   mx_signals_state_t* signals_state) const {
+    return mx_wait_one(value_, signals, timeout, signals_state);
+  }
+
+  mx_status_t replace(handle<T>* result, mx_rights_t rights) const {
+    mx_handle_t h = mx_handle_replace(value_, rights);
+    result->reset(h < 0 ? MX_HANDLE_INVALID : h);
+    return h;
+  }
+
+  mx_status_t signal(uint32_t clear_mask, uint32_t set_mask) const {
+    return mx_object_signal(get(), clear_mask, set_mask);
+  }
+
+  mx_ssize_t get_info(uint32_t topic,
+                      uint16_t topic_size,
+                      void* buffer,
+                      mx_size_t buffer_size) const {
+    return mx_object_get_info(get(), topic, topic_size, buffer, buffer_size);
+  }
+
+  // TODO(abarth): mx_object_get_child
+  // TODO(abarth): mx_object_bind_exception_port
+
+  mx_status_t get_property(uint32_t property, void* value, mx_size_t size) {
+    return get_property(get(), property, value, size);
+  }
+
+  mx_status_t set_property(uint32_t property,
+                           const void* value,
+                           mx_size_t size) {
+    return set_property(get(), property, value, size);
+  }
+
+  explicit operator bool() const { return value_ != MX_HANDLE_INVALID; }
 
   mx_handle_t get() const { return value_; }
 

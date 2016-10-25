@@ -2,9 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mx/system/thread.h"
+#include "lib/mx/system/process.h"
 
 #include <magenta/syscalls.h>
+
+#include "lib/mx/system/thread.h"
 
 namespace mx {
 
@@ -15,6 +17,15 @@ mx_status_t process::create(process* result,
   mx_handle_t h = mx_process_create(name, name_len, flags);
   result->reset((h < 0) ? MX_HANDLE_INVALID : h);
   return h;
+}
+
+mx_status_t process::start(const thread& thread_handle,
+                           uintptr_t entry,
+                           uintptr_t stack,
+                           handle arg_handle,
+                           uintptr_t arg2) const {
+  return mx_process_start(get(), thread_handle.get(), entry, stack,
+                          arg_handle.release(), arg2);
 }
 
 }  // namespace mx

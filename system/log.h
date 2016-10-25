@@ -23,11 +23,11 @@ class log : public handle<log> {
 
   static mx_status_t create(log* result, uint32_t flags);
 
-  mx_status_t write(uint32_t len, const void* buffer, uint32_t flags) {
+  mx_status_t write(uint32_t len, const void* buffer, uint32_t flags) const {
     return mx_log_write(get(), len, buffer, flags);
   }
 
-  mx_status_t read(uint32_t len, void* buffer, uint32_t flags) {
+  mx_status_t read(uint32_t len, void* buffer, uint32_t flags) const {
     return mx_log_read(get(), len, buffer, flags);
   }
 };

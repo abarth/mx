@@ -8,22 +8,20 @@
 
 namespace mx {
 
-class msgpipe : public handle<msgpipe> {
+class port : public handle<port> {
  public:
-  msgpipe() = default;
+  port() = default;
 
-  explicit msgpipe(handle<void> h) : handle(h.release()) {}
+  explicit port(handle<void> h) : handle(h.release()) {}
 
-  msgpipe(msgpipe&& other) : handle(other.release()) {}
+  port(port&& other) : handle(other.release()) {}
 
-  msgpipe& operator=(msgpipe&& other) {
+  port& operator=(port&& other) {
     reset(other.release());
     return *this;
   }
 
-  static mx_status_t create(msgpipe* endpoint0,
-                            msgpipe* endpoint1,
-                            uint32_t flags);
+  static mx_status_t create(port* result, msgpipe* endpoint1, uint32_t flags);
 
   mx_status_t read(void* bytes,
                    uint32_t* num_bytes,

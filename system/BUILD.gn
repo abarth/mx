@@ -4,16 +4,23 @@
 
 static_library("system") {
   sources = [
-    "log.cc",
-    "log.h",
+    "event.cc",
+    "event.h",
+    "eventpair.cc",
+    "eventpair.h",
     "handle.h",
     "handle_traits.h",
+    "log.cc",
+    "log.h",
     "msgpipe.cc",
     "msgpipe.h",
     "process.cc",
     "process.h",
+    "task.h",
     "thread.cc",
     "thread.h",
+    "vmo.cc",
+    "vmo.h",
   ]
 
   libs = [ "magenta" ]
