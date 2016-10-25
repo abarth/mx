@@ -4,6 +4,7 @@
 
 static_library("system") {
   sources = [
+    "datapipe.h",
     "event.cc",
     "event.h",
     "eventpair.cc",
@@ -14,13 +15,19 @@ static_library("system") {
     "log.h",
     "msgpipe.cc",
     "msgpipe.h",
+    "port.cc",
+    "port.h",
     "process.cc",
     "process.h",
+    "socket.cc",
+    "socket.h",
     "task.h",
     "thread.cc",
     "thread.h",
     "vmo.cc",
     "vmo.h",
+    "waitset.cc",
+    "waitset.h",
   ]
 
   libs = [ "magenta" ]

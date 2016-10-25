@@ -49,9 +49,9 @@ class handle {
     return handle<T>(mx_handle_duplicate(value_), rights);
   }
 
-  mx_status_t wait(mx_signals_t signals,
-                   mx_time_t timeout,
-                   mx_signals_state_t* signals_state) const {
+  mx_status_t wait_one(mx_signals_t signals,
+                       mx_time_t timeout,
+                       mx_signals_state_t* signals_state) const {
     return mx_wait_one(value_, signals, timeout, signals_state);
   }
 

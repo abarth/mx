@@ -21,24 +21,18 @@ class port : public handle<port> {
     return *this;
   }
 
-  static mx_status_t create(port* result, msgpipe* endpoint1, uint32_t flags);
+  static mx_status_t create(port* result, uint32_t options);
 
-  mx_status_t read(void* bytes,
-                   uint32_t* num_bytes,
-                   mx_handle_t* handles,
-                   uint32_t* num_handles,
-                   uint32_t flags) const {
-    return mx_msgpipe_read(get(), bytes, num_bytes, handles, num_handles,
-                           flags);
+  mx_status_t queue(const void* packet, mx_size_t size) {
+    return mx_port_queue(get(), packet, size);
   }
 
-  mx_status_t write(const void* bytes,
-                    uint32_t num_bytes,
-                    const mx_handle_t* handles,
-                    uint32_t num_handles,
-                    uint32_t flags) const {
-    return mx_msgpipe_write(get(), bytes, num_bytes, handles, num_handles,
-                            flags);
+  mx_status_t wait(void* packet, mx_size_t size) {
+    return mx_port_wait(get(), packet, size);
+  }
+
+  mx_status_t bind(uint64_t key, mx_handle_t source, mx_signals_t signals) {
+    return mx_port_bind(get(), key, source, signals);
   }
 };
 
