@@ -51,26 +51,22 @@ const void* DecodePointerRaw(const uint64_t* offset) {
   return reinterpret_cast<const char*>(offset) + *offset;
 }
 
-void EncodeHandle(Handle* handle, std::vector<Handle>* handles) {
-  if (handle->is_valid()) {
+void EncodeHandle(mx_handle_t* handle, std::vector<mx_handle_t>* handles) {
+  if (handle != MX_HANDLE_INVALID) {
     handles->push_back(*handle);
-    handle->set_value(static_cast<MojoHandle>(handles->size() - 1));
+    handle->set_value(static_cast<mx_handle_t>(handles->size() - 1));
   } else {
     handle->set_value(kEncodedInvalidHandleValue);
   }
 }
 
-void EncodeHandle(Interface_Data* data, std::vector<Handle>* handles) {
+void EncodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles) {
   EncodeHandle(&data->handle, handles);
 }
 
-void EncodeHandle(MojoHandle* handle, std::vector<Handle>* handles) {
-  EncodeHandle(reinterpret_cast<Handle*>(handle), handles);
-}
-
-void DecodeHandle(Handle* handle, std::vector<Handle>* handles) {
+void DecodeHandle(mx_handle_t* handle, std::vector<mx_handle_t>* handles) {
   if (handle->value() == kEncodedInvalidHandleValue) {
-    *handle = Handle();
+    *handle = MX_HANDLE_INVALID;
     return;
   }
   FTL_DCHECK(handle->value() < handles->size());
@@ -78,12 +74,8 @@ void DecodeHandle(Handle* handle, std::vector<Handle>* handles) {
   *handle = FetchAndReset(&handles->at(handle->value()));
 }
 
-void DecodeHandle(Interface_Data* data, std::vector<Handle>* handles) {
+void DecodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles) {
   DecodeHandle(&data->handle, handles);
-}
-
-void DecodeHandle(MojoHandle* handle, std::vector<Handle>* handles) {
-  DecodeHandle(reinterpret_cast<Handle*>(handle), handles);
 }
 
 }  // namespace internal

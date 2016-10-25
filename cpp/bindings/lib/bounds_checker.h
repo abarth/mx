@@ -37,7 +37,7 @@ class BoundsChecker {
   // - |encoded_handle|'s value is |kEncodedInvalidHandleValue|.
   // - the handle is contained inside the valid range of handle indices. In this
   // case, the valid range is shinked to begin right after the claimed handle.
-  bool ClaimHandle(const Handle& encoded_handle);
+  bool ClaimHandle(mx_handle_t encoded_handle);
 
   // Returns true if the specified range is not empty, and the range is
   // contained inside the valid memory range.

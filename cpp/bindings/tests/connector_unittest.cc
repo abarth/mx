@@ -403,7 +403,7 @@ class NoTaskStarvationReplier : public MessageReceiver {
  public:
   explicit NoTaskStarvationReplier(MessageReceiver* reply_to)
       : reply_to_(reply_to) {
-    MOJO_CHECK(reply_to_ != this);
+    FTL_CHECK(reply_to_ != this);
   }
 
   bool Accept(Message* message) override {
@@ -427,7 +427,7 @@ class NoTaskStarvationReplier : public MessageReceiver {
       return true;
 
     MessageBuilder builder(name + 1u, 0u);
-    MOJO_CHECK(reply_to_->Accept(builder.message()));
+    FTL_CHECK(reply_to_->Accept(builder.message()));
 
     return true;
   }

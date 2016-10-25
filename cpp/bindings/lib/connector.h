@@ -5,15 +5,14 @@
 #ifndef LIB_MDL_CPP_BINDINGS_LIB_CONNECTOR_H_
 #define LIB_MDL_CPP_BINDINGS_LIB_CONNECTOR_H_
 
-#include <mojo/environment/async_waiter.h>
-#include <mojo/system/result.h>
-#include <mojo/system/time.h>
+#include <magenta/types.h>
+#include <mx/msgpipe.h>
 
-#include "lib/mdl/cpp/bindings/callback.h"
+#include <mojo/environment/async_waiter.h>
+
+#include "lib/ftl/macros.h"
 #include "lib/mdl/cpp/bindings/message.h"
 #include "mojo/public/cpp/environment/environment.h"
-#include "lib/ftl/macros.h"
-#include "mojo/public/cpp/system/message_pipe.h"
 
 namespace mdl {
 namespace internal {
@@ -66,7 +65,7 @@ class Connector : public MessageReceiver {
   mx::msgpipe PassMessagePipe();
 
   // Is the connector bound to a MessagePipe handle?
-  bool is_valid() const { return message_pipe_.is_valid(); }
+  bool is_valid() const { return message_pipe_; }
 
   // Waits for the next message on the pipe, blocking until one arrives,
   // |deadline| elapses, or an error happens. Returns |true| if a message has
@@ -80,7 +79,7 @@ class Connector : public MessageReceiver {
   // MessageReceiver implementation:
   bool Accept(Message* message) override;
 
-  MessagePipeHandle handle() const { return message_pipe_.get(); }
+  mx_handle_t handle() const { return message_pipe_.get(); }
 
  private:
   static void CallOnHandleReady(void* ftl::Closure, mx_status_t result);

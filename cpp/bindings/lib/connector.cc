@@ -15,7 +15,7 @@ namespace internal {
 
 Connector::Connector(mx::msgpipe message_pipe, const MojoAsyncWaiter* waiter)
     : waiter_(waiter),
-      message_pipe_(message_pipe.Pass()),
+      message_pipe_(std::move(message_pipe)),
       incoming_receiver_(nullptr),
       async_wait_id_(0),
       error_(false),
@@ -36,12 +36,12 @@ Connector::~Connector() {
 
 void Connector::CloseMessagePipe() {
   CancelWait();
-  Close(message_pipe_.Pass());
+  message_pipe_.reset();
 }
 
 mx::msgpipe Connector::PassMessagePipe() {
   CancelWait();
-  return message_pipe_.Pass();
+  return std::move(message_pipe_);
 }
 
 bool Connector::WaitForIncomingMessage(mx_time_t deadline) {
@@ -49,7 +49,7 @@ bool Connector::WaitForIncomingMessage(mx_time_t deadline) {
     return false;
 
   mx_status_t rv =
-      Wait(message_pipe_.get(), MOJO_HANDLE_SIGNAL_READABLE, deadline, nullptr);
+      message_pipe_.wait_one(MX_SIGNAL_READABLE, deadline, nullptr);
   if (rv == MOJO_SYSTEM_RESULT_SHOULD_WAIT ||
       rv == MOJO_SYSTEM_RESULT_DEADLINE_EXCEEDED)
     return false;
@@ -65,18 +65,17 @@ bool Connector::Accept(Message* message) {
   if (error_)
     return false;
 
-  MOJO_CHECK(message_pipe_.is_valid());
+  FTL_CHECK(message_pipe_);
   if (drop_writes_)
     return true;
 
-  mx_status_t rv = WriteMessageRaw(
-      message_pipe_.get(), message->data(), message->data_num_bytes(),
+  mx_status_t rv = message_pipe_.write(
+      message->data(), message->data_num_bytes(),
       message->mutable_handles()->empty()
           ? nullptr
-          : reinterpret_cast<const MojoHandle*>(
+          : reinterpret_cast<const mx_handle_t*>(
                 &message->mutable_handles()->front()),
-      static_cast<uint32_t>(message->mutable_handles()->size()),
-      MOJO_WRITE_MESSAGE_FLAG_NONE);
+      static_cast<uint32_t>(message->mutable_handles()->size()), 0);
 
   switch (rv) {
     case MOJO_RESULT_OK:
@@ -102,7 +101,7 @@ bool Connector::Accept(Message* message) {
       // TODO(vtl): I wonder if this should be a |FTL_DCHECK()|. (But, until
       // crbug.com/389666, etc. are resolved, this will make tests fail quickly
       // rather than hanging.)
-      MOJO_CHECK(false) << "Race condition or other bug detected";
+      FTL_CHECK(false) << "Race condition or other bug detected";
       return false;
     default:
       // This particular write was rejected, presumably because of bad input.
@@ -119,9 +118,9 @@ void Connector::CallOnHandleReady(void* ftl::Closure, mx_status_t result) {
 }
 
 void Connector::OnHandleReady(mx_status_t result) {
-  MOJO_CHECK(async_wait_id_ != 0);
+  FTL_CHECK(async_wait_id_ != 0);
   async_wait_id_ = 0;
-  if (result != MOJO_RESULT_OK) {
+  if (result != NO_ERROR) {
     NotifyError();
     return;
   }
@@ -130,7 +129,7 @@ void Connector::OnHandleReady(mx_status_t result) {
 }
 
 void Connector::WaitToReadMore() {
-  MOJO_CHECK(!async_wait_id_);
+  FTL_CHECK(!async_wait_id_);
   async_wait_id_ = waiter_->AsyncWait(
       message_pipe_.get().value(), MOJO_HANDLE_SIGNAL_READABLE,
       MX_TIME_INFINITE, &Connector::CallOnHandleReady, this);
@@ -145,8 +144,8 @@ bool Connector::ReadSingleMessage(mx_status_t* read_result) {
   bool* previous_destroyed_flag = destroyed_flag_;
   destroyed_flag_ = &was_destroyed_during_dispatch;
 
-  mx_status_t rv = ReadAndDispatchMessage(message_pipe_.get(),
-                                          incoming_receiver_, &receiver_result);
+  mx_status_t rv = ReadAndDispatchMessage(message_pipe_, incoming_receiver_,
+                                          &receiver_result);
   if (read_result)
     *read_result = rv;
 

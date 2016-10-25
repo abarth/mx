@@ -78,24 +78,24 @@ class InterfaceImpl : public sample::Provider {
 
   void EchoString(const String& a,
                   const Callback<void(String)>& callback) override {
-    MOJO_CHECK(false) << "Not implemented.";
+    FTL_CHECK(false) << "Not implemented.";
   }
 
   void EchoStrings(const String& a,
                    const String& b,
                    const Callback<void(String, String)>& callback) override {
-    MOJO_CHECK(false) << "Not implemented.";
+    FTL_CHECK(false) << "Not implemented.";
   }
 
   void EchoMessagePipeHandle(
       mx::msgpipe a,
       const Callback<void(mx::msgpipe)>& callback) override {
-    MOJO_CHECK(false) << "Not implemented.";
+    FTL_CHECK(false) << "Not implemented.";
   }
 
   void EchoEnum(sample::Enum a,
                 const Callback<void(sample::Enum)>& callback) override {
-    MOJO_CHECK(false) << "Not implemented.";
+    FTL_CHECK(false) << "Not implemented.";
   }
 
   void resetLastServerValueSeen() { last_server_value_seen_ = 0; }

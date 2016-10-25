@@ -5,12 +5,11 @@
 #ifndef LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
 #define LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
 
-#include <mojo/system/handle.h>
+#include <magenta/types.h>
 
 #include <vector>
 
 #include "lib/mdl/cpp/bindings/lib/bindings_internal.h"
-#include "mojo/public/cpp/system/handle.h"
 
 namespace mdl {
 
@@ -21,7 +20,7 @@ namespace internal {
 
 // Please note that this is a different value than |mdl::kInvalidHandleValue|,
 // which is the "decoded" invalid handle.
-const MojoHandle kEncodedInvalidHandleValue = static_cast<MojoHandle>(-1);
+const mx_handle_t kEncodedInvalidHandleValue = static_cast<mx_handle_t>(-1);
 
 size_t Align(size_t size);
 char* AlignPointer(char* ptr);
@@ -49,19 +48,17 @@ inline void DecodePointer(const uint64_t* offset, T** ptr) {
 // Handles are encoded as indices into a vector of handles. These functions
 // manipulate the value of |handle|, mapping it to and from an index.
 
-void EncodeHandle(Handle* handle, std::vector<Handle>* handles);
-void EncodeHandle(Interface_Data* data, std::vector<Handle>* handles);
-void EncodeHandle(MojoHandle* handle, std::vector<Handle>* handles);
+void EncodeHandle(mx_handle_t* handle, std::vector<mx_handle_t>* handles);
+void EncodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles);
 // Note: The following three functions don't validate the encoded handle value.
-void DecodeHandle(Handle* handle, std::vector<Handle>* handles);
-void DecodeHandle(Interface_Data* data, std::vector<Handle>* handles);
-void DecodeHandle(MojoHandle* handle, std::vector<Handle>* handles);
+void DecodeHandle(mx_handle_t* handle, std::vector<mx_handle_t>* handles);
+void DecodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles);
 
 // The following 2 functions are used to encode/decode all objects (structs and
 // arrays) in a consistent manner.
 
 template <typename T>
-inline void Encode(T* obj, std::vector<Handle>* handles) {
+inline void Encode(T* obj, std::vector<mx_handle_t>* handles) {
   if (obj->ptr)
     obj->ptr->EncodePointersAndHandles(handles);
   EncodePointer(obj->ptr, &obj->offset);
@@ -69,7 +66,7 @@ inline void Encode(T* obj, std::vector<Handle>* handles) {
 
 // Note: This function doesn't validate the encoded pointer and handle values.
 template <typename T>
-inline void Decode(T* obj, std::vector<Handle>* handles) {
+inline void Decode(T* obj, std::vector<mx_handle_t>* handles) {
   DecodePointer(&obj->offset, &obj->ptr);
   if (obj->ptr)
     obj->ptr->DecodePointersAndHandles(handles);

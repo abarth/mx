@@ -6,7 +6,6 @@
 
 #include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
 #include "lib/ftl/logging.h"
-#include "mojo/public/cpp/system/handle.h"
 
 namespace mdl {
 namespace internal {
@@ -46,8 +45,8 @@ bool BoundsChecker::ClaimMemory(const void* position, uint32_t num_bytes) {
   return true;
 }
 
-bool BoundsChecker::ClaimHandle(const Handle& encoded_handle) {
-  uint32_t index = encoded_handle.value();
+bool BoundsChecker::ClaimHandle(mx_handle_t encoded_handle) {
+  uint32_t index = encoded_handle;
   if (index == kEncodedInvalidHandleValue)
     return true;
 
