@@ -5,9 +5,10 @@
 #ifndef LIB_MDL_CPP_BINDINGS_LIB_SYNCHRONOUS_CONNECTOR_H_
 #define LIB_MDL_CPP_BINDINGS_LIB_SYNCHRONOUS_CONNECTOR_H_
 
+#include <mx/msgpipe.h>
+
 #include "lib/mdl/cpp/bindings/message.h"
 #include "lib/ftl/macros.h"
-#include "mojo/public/cpp/system/message_pipe.h"
 
 namespace mdl {
 namespace internal {

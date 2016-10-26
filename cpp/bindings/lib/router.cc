@@ -77,7 +77,7 @@ Router::Router(mx::msgpipe message_pipe,
                const MojoAsyncWaiter* waiter)
     : thunk_(this),
       validators_(std::move(validators)),
-      connector_(message_pipe.Pass(), waiter),
+      connector_(std::move(message_pipe.Pass), waiter),
       weak_self_(this),
       incoming_receiver_(nullptr),
       next_request_id_(0),

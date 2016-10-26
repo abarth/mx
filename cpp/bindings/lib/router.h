@@ -7,7 +7,6 @@
 
 #include <map>
 
-#include "lib/mdl/cpp/bindings/callback.h"
 #include "lib/mdl/cpp/bindings/lib/connector.h"
 #include "lib/mdl/cpp/bindings/lib/shared_data.h"
 #include "lib/mdl/cpp/bindings/lib/validation_errors.h"

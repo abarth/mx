@@ -23,29 +23,23 @@ SynchronousConnector::SynchronousConnector(mx::msgpipe handle)
 SynchronousConnector::~SynchronousConnector() {}
 
 bool SynchronousConnector::Write(Message* msg_to_send) {
-  FTL_DCHECK(handle_.is_valid());
+  FTL_DCHECK(handle_);
   FTL_DCHECK(msg_to_send);
 
-  auto result = WriteMessageRaw(
-      handle_.get(), msg_to_send->data(), msg_to_send->data_num_bytes(),
+  mx_status_t rv = handle.write(
+      msg_to_send->data(), msg_to_send->data_num_bytes(),
       msg_to_send->mutable_handles()->empty()
           ? nullptr
           : reinterpret_cast<const MojoHandle*>(
                 msg_to_send->mutable_handles()->data()),
-      static_cast<uint32_t>(msg_to_send->mutable_handles()->size()),
-      MOJO_WRITE_MESSAGE_FLAG_NONE);
+      static_cast<uint32_t>(msg_to_send->mutable_handles()->size()), 0);
 
-  switch (result) {
-    case MOJO_RESULT_OK:
+  switch (rv) {
+    case NO_ERROR:
       break;
 
-    case MOJO_SYSTEM_RESULT_INVALID_ARGUMENT:
-    case MOJO_SYSTEM_RESULT_RESOURCE_EXHAUSTED:
-    case MOJO_SYSTEM_RESULT_FAILED_PRECONDITION:
-    case MOJO_SYSTEM_RESULT_UNIMPLEMENTED:
-    case MOJO_SYSTEM_RESULT_BUSY:
     default:
-      MOJO_LOG(WARNING) << "WriteMessageRaw unsuccessful. error = " << result;
+      FTL_LOG(WARNING) << "mx_msgpipe_write unsuccessful. error = " << rv;
       return false;
   }
 
@@ -53,20 +47,20 @@ bool SynchronousConnector::Write(Message* msg_to_send) {
 }
 
 bool SynchronousConnector::BlockingRead(Message* received_msg) {
-  FTL_DCHECK(handle_.is_valid());
+  FTL_DCHECK(handle_);
   FTL_DCHECK(received_msg);
 
-  mx_status_t rv = Wait(handle_.get(), MOJO_HANDLE_SIGNAL_READABLE,
-                        MX_TIME_INFINITE, nullptr);
+  mx_status_t rv =
+      handle_.wait_one(MX_SIGNAL_READABLE, MX_TIME_INFINITE, nullptr);
 
-  if (rv != MOJO_RESULT_OK) {
-    MOJO_LOG(WARNING) << "Failed waiting for a response. error = " << rv;
+  if (rv != NO_ERROR) {
+    FTL_LOG(WARNING) << "Failed waiting for a response. error = " << rv;
     return false;
   }
 
-  rv = ReadMessage(handle_.get(), received_msg);
-  if (rv != MOJO_RESULT_OK) {
-    MOJO_LOG(WARNING) << "Failed reading the response message. error = " << rv;
+  rv = ReadMessage(handle_, received_msg);
+  if (rv != NO_ERROR) {
+    FTL_LOG(WARNING) << "Failed reading the response message. error = " << rv;
     return false;
   }
 

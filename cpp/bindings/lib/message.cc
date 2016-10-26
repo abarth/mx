@@ -69,15 +69,14 @@ void Message::FreeDataAndCloseHandles() {
 }
 
 mx_status_t ReadMessage(const mx::msgpipe& handle, Message* message) {
-  FTL_DCHECK(handle.is_valid());
+  FTL_DCHECK(handle);
   FTL_DCHECK(message);
   FTL_DCHECK(message->handles()->empty());
   FTL_DCHECK(message->data_num_bytes() == 0);
 
   uint32_t num_bytes = 0;
   uint32_t num_handles = 0;
-  mx_status_t rv = ReadMessageRaw(handle, nullptr, &num_bytes, nullptr,
-                                  &num_handles, MOJO_READ_MESSAGE_FLAG_NONE);
+  mx_status_t rv = handle.read(nullptr, &num_bytes, nullptr, &num_handles, 0);
   if (rv != MOJO_SYSTEM_RESULT_RESOURCE_EXHAUSTED)
     return rv;
 
@@ -86,12 +85,12 @@ mx_status_t ReadMessage(const mx::msgpipe& handle, Message* message) {
 
   uint32_t num_bytes_actual = num_bytes;
   uint32_t num_handles_actual = num_handles;
-  rv = ReadMessageRaw(
-      handle, message->mutable_data(), &num_bytes_actual,
+  rv = handle.read(
+      message->mutable_data(), &num_bytes_actual,
       message->mutable_handles()->empty()
           ? nullptr
           : reinterpret_cast<MojoHandle*>(&message->mutable_handles()->front()),
-      &num_handles_actual, MOJO_READ_MESSAGE_FLAG_NONE);
+      &num_handles_actual, 0);
 
   FTL_DCHECK(num_bytes == num_bytes_actual);
   FTL_DCHECK(num_handles == num_handles_actual);

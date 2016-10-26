@@ -59,10 +59,10 @@ void ReportValidationError(ValidationError error, std::string* description) {
   if (g_validation_error_observer) {
     g_validation_error_observer->set_last_error(error);
   } else if (description) {
-    MOJO_LOG(ERROR) << "Invalid message: " << ValidationErrorToString(error)
-                    << " (" << *description << ")";
+    FTL_LOG(ERROR) << "Invalid message: " << ValidationErrorToString(error)
+                   << " (" << *description << ")";
   } else {
-    MOJO_LOG(ERROR) << "Invalid message: " << ValidationErrorToString(error);
+    FTL_LOG(ERROR) << "Invalid message: " << ValidationErrorToString(error);
   }
 }
 
