@@ -5,12 +5,12 @@
 #ifndef LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
 #define LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
 
+#include <mx/handle.h>
+#include <mx/msgpipe.h>
 #include <type_traits>
 
 #include "lib/fidl/cpp/bindings/lib/template_util.h"
 #include "lib/fidl/cpp/bindings/struct_ptr.h"
-#include "mojo/public/cpp/system/handle.h"
-#include "mojo/public/cpp/system/message_pipe.h"
 
 namespace fidl {
 class String;
@@ -65,8 +65,13 @@ union StringPointer {
 };
 static_assert(sizeof(StringPointer) == 8, "Bad_sizeof(StringPointer)");
 
+struct WrappedHandle {
+  mx_handle_t value;
+};
+static_assert(sizeof(WrappedHandle) == 4, "Bad_sizeof(WrappedHandle)");
+
 struct Interface_Data {
-  MessagePipeHandle handle;
+  WrappedHandle handle;
   uint32_t version;
 };
 static_assert(sizeof(Interface_Data) == 8, "Bad_sizeof(Interface_Data)");
@@ -93,9 +98,19 @@ T FetchAndReset(T* ptr) {
   return temp;
 }
 
-template <typename H>
-struct IsHandle {
-  enum { value = std::is_base_of<Handle, H>::value };
+template <typename T>
+T UnwrapHandle(const WrappedHandle& handle) {
+  return T(mx::handle<void>(handle.value));
+}
+
+template <typename T>
+struct IsWrappedHandle {
+  static const bool value = false;
+};
+
+template <>
+struct IsWrappedHandle<WrappedHandle> {
+  static const bool value = true;
 };
 
 // TODO(vardhan): Replace RemoveStructPtr<> and UnwrapStructPtr<> with
@@ -207,12 +222,12 @@ struct WrapperTraits<T, false, false> {
   using DataType = T;
 };
 template <typename H>
-struct WrapperTraits<ScopedHandleBase<H>, true, false> {
-  using DataType = H;
+struct WrapperTraits<mx::handle<H>, true, false> {
+  using DataType = WrappedHandle;
 };
 template <typename I>
 struct WrapperTraits<InterfaceRequest<I>, true, false> {
-  using DataType = MessagePipeHandle;
+  using DataType = WrappedHandle;
 };
 template <typename Interface>
 struct WrapperTraits<InterfaceHandle<Interface>, true, false> {
@@ -249,10 +264,9 @@ struct ValueTraits<T,
 };
 
 template <typename T>
-struct ValueTraits<ScopedHandleBase<T>> {
-  static bool Equals(const ScopedHandleBase<T>& a,
-                     const ScopedHandleBase<T>& b) {
-    return (&a == &b) || (!a.is_valid() && !b.is_valid());
+struct ValueTraits<mx::handle<T>> {
+  static bool Equals(const mx::handle<T>& a, const mx::handle<T>& b) {
+    return (&a == &b) || (!a && !b);
   }
 };
 

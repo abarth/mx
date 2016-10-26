@@ -73,17 +73,17 @@ class Map_Data {
     const Map_Data* object = static_cast<const Map_Data*>(data);
     if (object->header_.num_bytes != sizeof(Map_Data) ||
         object->header_.version != 0) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::UNEXPECTED_STRUCT_HEADER;
     }
 
     if (!ValidateEncodedPointer(&object->keys.offset)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::ILLEGAL_POINTER;
     }
 
     if (!object->keys.offset) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "null key array in map struct";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "null key array in map struct";
       return ValidationError::UNEXPECTED_NULL_POINTER;
     }
 
@@ -96,12 +96,12 @@ class Map_Data {
       return retval;
 
     if (!ValidateEncodedPointer(&object->values.offset)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::ILLEGAL_POINTER;
     }
 
     if (!object->values.offset) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
           << "null value array in map struct";
       return ValidationError::UNEXPECTED_NULL_POINTER;
     }
@@ -117,7 +117,7 @@ class Map_Data {
     const ArrayHeader* value_header = static_cast<const ArrayHeader*>(
         DecodePointerRaw(&object->values.offset));
     if (key_header->num_elements != value_header->num_elements) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::DIFFERENT_SIZED_ARRAYS_IN_MAP;
     }
 

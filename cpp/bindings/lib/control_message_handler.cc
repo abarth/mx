@@ -22,7 +22,7 @@ ControlMessageHandler::ControlMessageHandler(uint32_t interface_version)
 ControlMessageHandler::~ControlMessageHandler() {}
 
 bool ControlMessageHandler::Accept(Message* message) {
-  if (message->header()->name == kRunOrClosePipeMessageId)
+  if (message->header()->name == mojo::kRunOrClosePipeMessageId)
     return RunOrClosePipe(message);
 
   FTL_DCHECK(false) << "Bad control message (no response): name = "
@@ -33,7 +33,7 @@ bool ControlMessageHandler::Accept(Message* message) {
 bool ControlMessageHandler::AcceptWithResponder(
     Message* message,
     MessageReceiverWithStatus* responder) {
-  if (message->header()->name == kRunMessageId)
+  if (message->header()->name == mojo::kRunMessageId)
     return Run(message, responder);
 
   FTL_DCHECK(false) << "Bad control message (with response): name = "
@@ -51,7 +51,8 @@ bool ControlMessageHandler::Run(Message* message,
   response_params_ptr->query_version_result->version = interface_version_;
 
   size_t size = GetSerializedSize_(*response_params_ptr);
-  ResponseMessageBuilder builder(kRunMessageId, size, message->request_id());
+  ResponseMessageBuilder builder(mojo::kRunMessageId, size,
+                                 message->request_id());
 
   RunResponseMessageParams_Data* response_params = nullptr;
   auto result =

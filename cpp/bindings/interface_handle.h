@@ -10,6 +10,7 @@
 #include <cstddef>
 #include <utility>
 
+#include "lib/fidl/cpp/bindings/macros.h"
 #include "lib/ftl/macros.h"
 
 namespace fidl {
@@ -66,7 +67,7 @@ class InterfaceHandle {
 
   // Tests as true if we have a valid handle.
   explicit operator bool() const { return is_valid(); }
-  bool is_valid() const { return handle_.is_valid(); }
+  bool is_valid() const { return handle_; }
 
   mx::msgpipe PassHandle() { return std::move(handle_); }
   const mx::msgpipe& handle() const { return handle_; }
@@ -79,7 +80,7 @@ class InterfaceHandle {
   mx::msgpipe handle_;
   uint32_t version_;
 
-  MOJO_MOVE_ONLY_TYPE(InterfaceHandle);
+  FIDL_MOVE_ONLY_TYPE(InterfaceHandle);
 };
 
 }  // namespace fidl

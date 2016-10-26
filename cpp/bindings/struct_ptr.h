@@ -9,6 +9,7 @@
 #include <memory>
 #include <new>
 
+#include "lib/fidl/cpp/bindings/macros.h"
 #include "lib/fidl/cpp/bindings/type_converter.h"
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
@@ -96,7 +97,7 @@ class StructPtr {
 
   std::unique_ptr<Struct> ptr_;
 
-  MOJO_MOVE_ONLY_TYPE(StructPtr);
+  FIDL_MOVE_ONLY_TYPE(StructPtr);
 };
 
 // Designed to be used when Struct is small and copyable. Unions are always
@@ -172,7 +173,7 @@ class InlinedStructPtr {
   mutable Struct value_;
   bool is_null_;
 
-  MOJO_MOVE_ONLY_TYPE(InlinedStructPtr);
+  FIDL_MOVE_ONLY_TYPE(InlinedStructPtr);
 };
 
 }  // namespace fidl

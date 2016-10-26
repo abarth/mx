@@ -23,19 +23,19 @@ ValidationError ValidateMessageHeader(const MessageHeader* header,
   // Extra validation of the struct header:
   if (header->version == 0) {
     if (header->num_bytes != sizeof(MessageHeader)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
           << "message header size is incorrect";
       return ValidationError::UNEXPECTED_STRUCT_HEADER;
     }
   } else if (header->version == 1) {
     if (header->num_bytes != sizeof(MessageHeaderWithRequestID)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
           << "message header (version = 1) size is incorrect";
       return ValidationError::UNEXPECTED_STRUCT_HEADER;
     }
   } else if (header->version > 1) {
     if (header->num_bytes < sizeof(MessageHeaderWithRequestID)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
           << "message header (version > 1) size is too small";
       return ValidationError::UNEXPECTED_STRUCT_HEADER;
     }
@@ -46,7 +46,7 @@ ValidationError ValidateMessageHeader(const MessageHeader* header,
   // These flags require a RequestID.
   if (header->version < 1 && ((header->flags & kMessageExpectsResponse) ||
                               (header->flags & kMessageIsResponse))) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
         << "message header associates itself with a response but does not "
            "contain a request id";
     return ValidationError::MESSAGE_HEADER_MISSING_REQUEST_ID;
@@ -55,7 +55,7 @@ ValidationError ValidateMessageHeader(const MessageHeader* header,
   // These flags are mutually exclusive.
   if ((header->flags & kMessageExpectsResponse) &&
       (header->flags & kMessageIsResponse)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
         << "message header cannot indicate itself as a response while also "
            "expecting a response";
     return ValidationError::MESSAGE_HEADER_INVALID_FLAGS;
@@ -84,7 +84,7 @@ ValidationError ValidateControlRequest(const Message* message,
                                        std::string* err) {
   ValidationError retval;
   switch (message->header()->name) {
-    case kRunMessageId: {
+    case mojo::kRunMessageId: {
       retval = ValidateMessageIsRequestExpectingResponse(message, err);
       if (retval != ValidationError::NONE)
         return retval;
@@ -92,7 +92,7 @@ ValidationError ValidateControlRequest(const Message* message,
       return ValidateMessagePayload<RunMessageParams_Data>(message, err);
     }
 
-    case kRunOrClosePipeMessageId: {
+    case mojo::kRunOrClosePipeMessageId: {
       retval = ValidateMessageIsRequestWithoutResponse(message, err);
       if (retval != ValidationError::NONE)
         return retval;
@@ -102,7 +102,7 @@ ValidationError ValidateControlRequest(const Message* message,
     }
 
     default: {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
           << "unknown InterfaceControlMessage request message name: "
           << message->header()->name;
       return ValidationError::MESSAGE_HEADER_UNKNOWN_METHOD;
@@ -119,12 +119,12 @@ ValidationError ValidateControlResponse(const Message* message,
     return retval;
 
   switch (message->header()->name) {
-    case kRunMessageId:
+    case mojo::kRunMessageId:
       return ValidateMessagePayload<RunResponseMessageParams_Data>(message,
                                                                    err);
   }
 
-  MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+  FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
       << "unknown InterfaceControlMessage response message name: "
       << message->header()->name;
   return ValidationError::MESSAGE_HEADER_UNKNOWN_METHOD;

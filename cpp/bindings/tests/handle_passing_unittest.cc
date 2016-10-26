@@ -214,7 +214,7 @@ TEST_F(HandlePassingTest, PassInvalid) {
   bool got_response = false;
   std::string got_text_reply;
   DoStuffCallback cb(&got_response, &got_text_reply);
-  factory->DoStuff(request.Pass(), mx::msgpipe().Pass(), cb);
+  factory->DoStuff(std::move(request), mx::msgpipe(), cb);
 
   EXPECT_FALSE(*cb.got_response);
 
@@ -287,7 +287,7 @@ TEST_F(HandlePassingTest, PipesAreClosed) {
     sample::RequestPtr request(sample::Request::New());
     request->more_pipes = pipes.Pass();
 
-    factory->DoStuff(request.Pass(), mx::msgpipe(),
+    factory->DoStuff(std::move(request), mx::msgpipe(),
                      sample::Factory::DoStuffCallback());
   }
 
@@ -296,19 +296,20 @@ TEST_F(HandlePassingTest, PipesAreClosed) {
   EXPECT_EQ(MOJO_SYSTEM_RESULT_INVALID_ARGUMENT, MojoClose(handle1_value));
 }
 
-TEST_F(HandlePassingTest, IsHandle) {
-  // Validate that fidl::internal::IsHandle<> works as expected since this.
+TEST_F(HandlePassingTest, IsWrappedHandle) {
+  // Validate that fidl::internal::IsWrappedHandle<> works as expected since
+  // this.
   // template is key to ensuring that we don't leak handles.
-  EXPECT_TRUE(internal::IsHandle<Handle>::value);
-  EXPECT_TRUE(internal::IsHandle<MessagePipeHandle>::value);
-  EXPECT_TRUE(internal::IsHandle<DataPipeConsumerHandle>::value);
-  EXPECT_TRUE(internal::IsHandle<DataPipeProducerHandle>::value);
-  EXPECT_TRUE(internal::IsHandle<SharedBufferHandle>::value);
+  EXPECT_TRUE(internal::IsWrappedHandle<Handle>::value);
+  EXPECT_TRUE(internal::IsWrappedHandle<MessagePipeHandle>::value);
+  EXPECT_TRUE(internal::IsWrappedHandle<DataPipeConsumerHandle>::value);
+  EXPECT_TRUE(internal::IsWrappedHandle<DataPipeProducerHandle>::value);
+  EXPECT_TRUE(internal::IsWrappedHandle<SharedBufferHandle>::value);
 
   // Basic sanity checks...
-  EXPECT_FALSE(internal::IsHandle<int>::value);
-  EXPECT_FALSE(internal::IsHandle<sample::FactoryPtr>::value);
-  EXPECT_FALSE(internal::IsHandle<String>::value);
+  EXPECT_FALSE(internal::IsWrappedHandle<int>::value);
+  EXPECT_FALSE(internal::IsWrappedHandle<sample::FactoryPtr>::value);
+  EXPECT_FALSE(internal::IsWrappedHandle<String>::value);
 }
 
 TEST_F(HandlePassingTest, CreateNamedObject) {

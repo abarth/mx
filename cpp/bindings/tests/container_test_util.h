@@ -5,6 +5,7 @@
 #ifndef LIB_FIDL_CPP_BINDINGS_TESTS_CONTAINER_TEST_UTIL_H_
 #define LIB_FIDL_CPP_BINDINGS_TESTS_CONTAINER_TEST_UTIL_H_
 
+#include "lib/fidl/cpp/bindings/macros.h"
 #include "lib/ftl/macros.h"
 
 namespace fidl {
@@ -45,7 +46,7 @@ class MoveOnlyType {
   static size_t num_instances_;
   MoveOnlyType* ptr_;
 
-  MOJO_MOVE_ONLY_TYPE(MoveOnlyType);
+  FIDL_MOVE_ONLY_TYPE(MoveOnlyType);
 };
 
 }  // namespace fidl

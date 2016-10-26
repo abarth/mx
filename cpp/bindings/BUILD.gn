@@ -5,7 +5,6 @@
 group("bindings") {
   public_deps = [
     ":core",
-    ":utility",
   ]
 }
 
@@ -40,6 +39,7 @@ source_set("serialization") {
     "lib/validation_errors.h",
     "lib/validation_util.cc",
     "lib/validation_util.h",
+    "macros.h",
     "map.h",
     "string.h",
     "struct_ptr.h",
@@ -47,8 +47,9 @@ source_set("serialization") {
   ]
 
   public_deps = [
-    "mojo/public/cpp/environment",
-    "magenta/system/ulib/mx",
+    "//lib/ftl",
+    "//lib/fidl/cpp/waiter",
+    "//magenta/system/ulib/mx",
   ]
 }
 
@@ -91,5 +92,9 @@ source_set("core") {
     "synchronous_interface_ptr.h",
   ]
 
-  deps = [ "mojo/public/interfaces/bindings:bindings_cpp_sources" ]
+  public_deps = [
+    ":serialization",
+  ]
+
+  deps = [ "//mojo/public/interfaces/bindings:bindings_cpp_sources" ]
 }

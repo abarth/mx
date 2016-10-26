@@ -48,10 +48,10 @@ inline void DecodePointer(const uint64_t* offset, T** ptr) {
 // Handles are encoded as indices into a vector of handles. These functions
 // manipulate the value of |handle|, mapping it to and from an index.
 
-void EncodeHandle(mx_handle_t* handle, std::vector<mx_handle_t>* handles);
+void EncodeHandle(WrappedHandle* handle, std::vector<mx_handle_t>* handles);
 void EncodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles);
 // Note: The following three functions don't validate the encoded handle value.
-void DecodeHandle(mx_handle_t* handle, std::vector<mx_handle_t>* handles);
+void DecodeHandle(WrappedHandle* handle, std::vector<mx_handle_t>* handles);
 void DecodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles);
 
 // The following 2 functions are used to encode/decode all objects (structs and
@@ -82,8 +82,8 @@ inline void InterfaceHandleToData(InterfaceHandle<T> input,
 template <typename T>
 inline void InterfaceDataToHandle(Interface_Data* input,
                                   InterfaceHandle<T>* output) {
-  *output = InterfaceHandle<T>(MakeScopedHandle(FetchAndReset(&input->handle)),
-                               input->version);
+  *output = InterfaceHandle<T>(
+      UnwrapHandle<mx::msgpipe>(FetchAndReset(&input->handle)), input->version);
 }
 
 }  // namespace internal

@@ -17,6 +17,7 @@
 #include "lib/fidl/cpp/bindings/lib/array_internal.h"
 #include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
 #include "lib/fidl/cpp/bindings/lib/template_util.h"
+#include "lib/fidl/cpp/bindings/macros.h"
 #include "lib/fidl/cpp/bindings/type_converter.h"
 
 namespace fidl {
@@ -250,7 +251,7 @@ class Array {
   std::vector<T> vec_;
   bool is_null_;
 
-  MOJO_MOVE_ONLY_TYPE(Array);
+  FIDL_MOVE_ONLY_TYPE(Array);
 };
 
 // A |TypeConverter| that will create an |Array<T>| containing a copy of the

@@ -152,9 +152,10 @@ struct ArraySerializer<bool, bool, false> {
 
 // Serializes and deserializes arrays of handles.
 template <typename H>
-struct ArraySerializer<ScopedHandleBase<H>, H, false> {
-  static size_t GetSerializedSize(const Array<ScopedHandleBase<H>>& input) {
-    return sizeof(Array_Data<H>) + Align(input.size() * sizeof(H));
+struct ArraySerializer<mx::handle<H>, WrappedHandle, false> {
+  static size_t GetSerializedSize(const Array<mx::handle<H>>& input) {
+    return sizeof(Array_Data<WrappedHandle>) +
+           Align(input.size() * sizeof(WrappedHandle));
   }
 
   template <typename Iterator>
@@ -162,7 +163,7 @@ struct ArraySerializer<ScopedHandleBase<H>, H, false> {
       Iterator it,
       size_t num_elements,
       Buffer* buf,
-      Array_Data<H>* output,
+      Array_Data<WrappedHandle>* output,
       const ArrayValidateParams* validate_params) {
     FTL_DCHECK(!validate_params->element_validate_params)
         << "Handle type should not have array validate params";
@@ -171,7 +172,7 @@ struct ArraySerializer<ScopedHandleBase<H>, H, false> {
       // Transfer ownership of the handle.
       output->at(i) = it->release();
       if (!validate_params->element_is_nullable && !output->at(i).is_valid()) {
-        MOJO_INTERNAL_DLOG_SERIALIZATION_WARNING(
+        FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(
             ValidationError::UNEXPECTED_INVALID_HANDLE,
             MakeMessageWithArrayIndex(
                 "invalid handle in array expecting valid handles", num_elements,
@@ -183,21 +184,21 @@ struct ArraySerializer<ScopedHandleBase<H>, H, false> {
     return ValidationError::NONE;
   }
 
-  static void DeserializeElements(Array_Data<H>* input,
-                                  Array<ScopedHandleBase<H>>* output) {
-    auto result = Array<ScopedHandleBase<H>>::New(input->size());
+  static void DeserializeElements(Array_Data<WrappedHandle>* input,
+                                  Array<mx::handle<H>>* output) {
+    auto result = Array<mx::handle<H>>::New(input->size());
     for (size_t i = 0; i < input->size(); ++i)
-      result.at(i) = MakeScopedHandle(FetchAndReset(&input->at(i)));
+      result.at(i) = UnwrapHandle<H>(FetchAndReset(&input->at(i)));
     output->Swap(&result);
   }
 };
 
 // Serializes and deserializes arrays of interface requests.
 template <typename I>
-struct ArraySerializer<InterfaceRequest<I>, MessagePipeHandle, false> {
+struct ArraySerializer<InterfaceRequest<I>, WrappedHandle, false> {
   static size_t GetSerializedSize(const Array<InterfaceRequest<I>>& input) {
-    return sizeof(Array_Data<MessagePipeHandle>) +
-           Align(input.size() * sizeof(MessagePipeHandle));
+    return sizeof(Array_Data<WrappedHandle>) +
+           Align(input.size() * sizeof(WrappedHandle));
   }
 
   template <typename Iterator>
@@ -205,16 +206,17 @@ struct ArraySerializer<InterfaceRequest<I>, MessagePipeHandle, false> {
       Iterator it,
       size_t num_elements,
       Buffer* buf,
-      Array_Data<MessagePipeHandle>* output,
+      Array_Data<WrappedHandle>* output,
       const ArrayValidateParams* validate_params) {
     FTL_DCHECK(!validate_params->element_validate_params)
         << "Handle type should not have array validate params";
 
     for (size_t i = 0; i < num_elements; ++i, ++it) {
-      // Transfer ownership of the MessagePipeHandle.
+      // Transfer ownership of the WrappedHandle.
       output->at(i) = it->PassMessagePipe().release();
-      if (!validate_params->element_is_nullable && !output->at(i).is_valid()) {
-        MOJO_INTERNAL_DLOG_SERIALIZATION_WARNING(
+      if (!validate_params->element_is_nullable &&
+          output->at(i) != MX_HANDLE_INVALID) {
+        FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(
             ValidationError::UNEXPECTED_INVALID_HANDLE,
             MakeMessageWithArrayIndex(
                 "invalid message pipe handle in array expecting valid handles",
@@ -226,13 +228,12 @@ struct ArraySerializer<InterfaceRequest<I>, MessagePipeHandle, false> {
     return ValidationError::NONE;
   }
 
-  static void DeserializeElements(Array_Data<MessagePipeHandle>* input,
+  static void DeserializeElements(Array_Data<WrappedHandle>* input,
                                   Array<InterfaceRequest<I>>* output) {
     auto result = Array<InterfaceRequest<I>>::New(input->size());
     for (size_t i = 0; i < input->size(); ++i)
-      result.at(i) =
-          InterfaceRequest<I>(MakeScopedHandle(FetchAndReset(&input->at(i))))
-              .Pass();
+      result.at(i) = InterfaceRequest<I>(
+          UnwrapHandle<mx::msgpipe>(FetchAndReset(&input->at(i))));
     output->Swap(&result);
   }
 };
@@ -261,7 +262,7 @@ struct ArraySerializer<InterfaceHandle<Interface>, Interface_Data, false> {
       internal::InterfaceHandleToData(it->Pass(), &output->at(i));
       if (!validate_params->element_is_nullable &&
           !output->at(i).handle.is_valid()) {
-        MOJO_INTERNAL_DLOG_SERIALIZATION_WARNING(
+        FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(
             ValidationError::UNEXPECTED_INVALID_HANDLE,
             MakeMessageWithArrayIndex(
                 "invalid handle in array expecting valid handles", num_elements,
@@ -321,7 +322,7 @@ struct ArraySerializer<
 
       output->at(i) = element;
       if (!validate_params->element_is_nullable && !element) {
-        MOJO_INTERNAL_DLOG_SERIALIZATION_WARNING(
+        FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(
             ValidationError::UNEXPECTED_NULL_POINTER,
             MakeMessageWithArrayIndex("null in array expecting valid pointers",
                                       num_elements, i));
@@ -448,7 +449,7 @@ struct ArraySerializer<U, U_Data, true> {
       if (retval != ValidationError::NONE)
         return retval;
       if (!validate_params->element_is_nullable && output->at(i).is_null()) {
-        MOJO_INTERNAL_DLOG_SERIALIZATION_WARNING(
+        FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(
 
             ValidationError::UNEXPECTED_NULL_POINTER,
             MakeMessageWithArrayIndex("null in array expecting valid unions",
@@ -504,7 +505,7 @@ inline internal::ValidationError SerializeArray_(
 
   if (validate_params->expected_num_elements != 0 &&
       input->size() != validate_params->expected_num_elements) {
-    MOJO_INTERNAL_DLOG_SERIALIZATION_WARNING(
+    FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(
         internal::ValidationError::UNEXPECTED_ARRAY_HEADER,
         internal::MakeMessageWithExpectedArraySize(
             "fixed-size array has wrong number of elements", input->size(),

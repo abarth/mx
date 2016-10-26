@@ -6,7 +6,6 @@
 
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
-#include "mojo/public/cpp/system/wait.h"
 
 namespace fidl {
 namespace internal {

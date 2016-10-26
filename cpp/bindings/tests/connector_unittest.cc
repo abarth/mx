@@ -265,9 +265,8 @@ TEST_F(ConnectorTest, MessageWithHandles) {
 
   // Now send a message to the transferred handle and confirm it's sent through
   // to the orginal pipe.
-  // TODO(vtl): Do we need a better way of "downcasting" the handle types?
   mx::msgpipe smph;
-  smph.reset(MessagePipeHandle(message_received.handles()->front().value()));
+  smph.reset(message_received.handles()->front().value());
   message_received.mutable_handles()->front() = Handle();
   // |smph| now owns this handle.
 

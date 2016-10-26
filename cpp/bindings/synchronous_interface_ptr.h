@@ -12,6 +12,7 @@
 #include "lib/fidl/cpp/bindings/interface_handle.h"
 #include "lib/fidl/cpp/bindings/lib/message_header_validator.h"
 #include "lib/fidl/cpp/bindings/lib/synchronous_connector.h"
+#include "lib/fidl/cpp/bindings/macros.h"
 #include "lib/fidl/cpp/bindings/message_validator.h"
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
@@ -107,7 +108,7 @@ class SynchronousInterfacePtr {
         connector_.get(), std::move(validators)));
   }
 
-  MOJO_MOVE_ONLY_TYPE(SynchronousInterfacePtr);
+  FIDL_MOVE_ONLY_TYPE(SynchronousInterfacePtr);
 };
 
 // Creates a new message pipe over which Interface is to be served. Binds the

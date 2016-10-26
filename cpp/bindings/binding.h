@@ -186,7 +186,7 @@ class Binding {
   // be used to make explicit Wait/WaitMany calls. Requires that the Binding be
   // bound. Ownership of the handle is retained by the Binding, it is not
   // transferred to the caller.
-  MessagePipeHandle handle() const {
+  mx_handle_t handle() const {
     FTL_DCHECK(is_bound());
     return internal_router_->handle();
   }

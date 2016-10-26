@@ -5,6 +5,7 @@
 #ifndef LIB_FIDL_CPP_BINDINGS_LIB_BOUNDS_CHECKER_H_
 #define LIB_FIDL_CPP_BINDINGS_LIB_BOUNDS_CHECKER_H_
 
+#include <magenta/types.h>
 #include <stdint.h>
 
 #include "lib/ftl/macros.h"

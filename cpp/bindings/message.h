@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "lib/fidl/cpp/bindings/lib/message_internal.h"
+#include "lib/ftl/compiler_specific.h"
 #include "lib/ftl/logging.h"
 
 namespace fidl {
@@ -70,8 +71,8 @@ class Message {
   }
 
   // Access the handles.
-  const std::vector<Handle>* handles() const { return &handles_; }
-  std::vector<Handle>* mutable_handles() { return &handles_; }
+  const std::vector<mx_handle_t>* handles() const { return &handles_; }
+  std::vector<mx_handle_t>* mutable_handles() { return &handles_; }
 
  private:
   void Initialize();
@@ -79,7 +80,7 @@ class Message {
 
   uint32_t data_num_bytes_;
   internal::MessageData* data_;
-  std::vector<Handle> handles_;
+  std::vector<mx_handle_t> handles_;
 
   FTL_DISALLOW_COPY_AND_ASSIGN(Message);
 };

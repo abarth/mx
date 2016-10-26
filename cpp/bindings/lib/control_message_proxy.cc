@@ -49,7 +49,7 @@ void SendRunMessage(MessageReceiverWithResponder* receiver,
   params_ptr->query_version = query_version.Pass();
 
   size_t size = GetSerializedSize_(*params_ptr);
-  RequestMessageBuilder builder(kRunMessageId, size);
+  RequestMessageBuilder builder(mojo::kRunMessageId, size);
 
   RunMessageParams_Data* params = nullptr;
   auto result = Serialize_(params_ptr.get(), builder.buffer(), &params);
@@ -69,7 +69,7 @@ void SendRunOrClosePipeMessage(MessageReceiverWithResponder* receiver,
   params_ptr->require_version = require_version.Pass();
 
   size_t size = GetSerializedSize_(*params_ptr);
-  MessageBuilder builder(kRunOrClosePipeMessageId, size);
+  MessageBuilder builder(mojo::kRunOrClosePipeMessageId, size);
 
   RunOrClosePipeMessageParams_Data* params = nullptr;
   auto result = Serialize_(params_ptr.get(), builder.buffer(), &params);

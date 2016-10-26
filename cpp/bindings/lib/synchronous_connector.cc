@@ -4,15 +4,11 @@
 
 #include "lib/fidl/cpp/bindings/lib/synchronous_connector.h"
 
-#include <mojo/system/handle.h>
-#include <mojo/system/time.h>
-
+#include <mx/msgpipe.h>
 #include <utility>
 
 #include "lib/fidl/cpp/bindings/message.h"
 #include "lib/ftl/logging.h"
-#include "mojo/public/cpp/system/message_pipe.h"
-#include "mojo/public/cpp/system/wait.h"
 
 namespace fidl {
 namespace internal {

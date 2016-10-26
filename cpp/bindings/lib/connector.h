@@ -10,6 +10,7 @@
 #include "lib/fidl/cpp/bindings/message.h"
 #include "lib/fidl/cpp/waiter/default.h"
 #include "lib/fidl/cpp/waiter/default.h"
+#include "lib/ftl/compiler_specific.h"
 #include "lib/ftl/macros.h"
 
 namespace fidl {

@@ -15,12 +15,12 @@ namespace internal {
 ValidationError ValidateMessageIsRequestWithoutResponse(const Message* message,
                                                         std::string* err) {
   if (message->has_flag(kMessageIsResponse)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
         << "message should be a request, not a response";
     return ValidationError::MESSAGE_HEADER_INVALID_FLAGS;
   }
   if (message->has_flag(kMessageExpectsResponse)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
         << "message should not expect a response";
     return ValidationError::MESSAGE_HEADER_INVALID_FLAGS;
   }
@@ -31,12 +31,12 @@ ValidationError ValidateMessageIsRequestExpectingResponse(
     const Message* message,
     std::string* err) {
   if (message->has_flag(kMessageIsResponse)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
         << "message should be a request, not a response";
     return ValidationError::MESSAGE_HEADER_INVALID_FLAGS;
   }
   if (!message->has_flag(kMessageExpectsResponse)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
         << "message should expect a response";
     return ValidationError::MESSAGE_HEADER_INVALID_FLAGS;
   }
@@ -47,7 +47,7 @@ ValidationError ValidateMessageIsResponse(const Message* message,
                                           std::string* err) {
   if (message->has_flag(kMessageExpectsResponse) ||
       !message->has_flag(kMessageIsResponse)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "message should be a response";
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "message should be a response";
     return ValidationError::MESSAGE_HEADER_INVALID_FLAGS;
   }
   return ValidationError::NONE;

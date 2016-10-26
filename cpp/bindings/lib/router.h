@@ -70,7 +70,7 @@ class Router : public MessageReceiverWithResponder {
   //   receiver.
   void EnableTestingMode();
 
-  MessagePipeHandle handle() const { return connector_.handle(); }
+  mx_handle_t handle() const { return connector_.handle(); }
 
  private:
   typedef std::map<uint64_t, MessageReceiver*> ResponderMap;

@@ -51,19 +51,19 @@ ArrayDataTraits<bool>::BitRef::operator bool() const {
 }
 
 // static
-void ArraySerializationHelper<Handle, true, false>::EncodePointersAndHandles(
-    const ArrayHeader* header,
-    ElementType* elements,
-    std::vector<Handle>* handles) {
+void ArraySerializationHelper<WrappedHandle, true, false>::
+    EncodePointersAndHandles(const ArrayHeader* header,
+                             ElementType* elements,
+                             std::vector<mx_handle_t>* handles) {
   for (uint32_t i = 0; i < header->num_elements; ++i)
     EncodeHandle(&elements[i], handles);
 }
 
 // static
-void ArraySerializationHelper<Handle, true, false>::DecodePointersAndHandles(
-    const ArrayHeader* header,
-    ElementType* elements,
-    std::vector<Handle>* handles) {
+void ArraySerializationHelper<WrappedHandle, true, false>::
+    DecodePointersAndHandles(const ArrayHeader* header,
+                             ElementType* elements,
+                             std::vector<mx_handle_t>* handles) {
   for (uint32_t i = 0; i < header->num_elements; ++i)
     DecodeHandle(&elements[i], handles);
 }

@@ -8,6 +8,7 @@
 #include <new>
 #include <string>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
@@ -174,11 +175,11 @@ struct ArraySerializationHelper<T, false, false> {
 
   static void EncodePointersAndHandles(const ArrayHeader* header,
                                        ElementType* elements,
-                                       std::vector<Handle>* handles) {}
+                                       std::vector<mx_handle_t>* handles) {}
 
   static void DecodePointersAndHandles(const ArrayHeader* header,
                                        ElementType* elements,
-                                       std::vector<Handle>* handles) {}
+                                       std::vector<mx_handle_t>* handles) {}
 
   static ValidationError ValidateElements(
       const ArrayHeader* header,
@@ -195,16 +196,16 @@ struct ArraySerializationHelper<T, false, false> {
 };
 
 template <>
-struct ArraySerializationHelper<Handle, true, false> {
-  typedef ArrayDataTraits<Handle>::StorageType ElementType;
+struct ArraySerializationHelper<WrappedHandle, true, false> {
+  typedef ArrayDataTraits<WrappedHandle>::StorageType ElementType;
 
   static void EncodePointersAndHandles(const ArrayHeader* header,
                                        ElementType* elements,
-                                       std::vector<Handle>* handles);
+                                       std::vector<mx_handle_t>* handles);
 
   static void DecodePointersAndHandles(const ArrayHeader* header,
                                        ElementType* elements,
-                                       std::vector<Handle>* handles);
+                                       std::vector<mx_handle_t>* handles);
 
   static ValidationError ValidateElements(
       const ArrayHeader* header,
@@ -218,13 +219,13 @@ struct ArraySerializationHelper<Handle, true, false> {
     for (uint32_t i = 0; i < header->num_elements; ++i) {
       if (!validate_params->element_is_nullable &&
           elements[i].value() == kEncodedInvalidHandleValue) {
-        MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+        FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
             << "invalid handle in array expecting valid handles (array size="
             << header->num_elements << ", index = " << i << ")";
         return ValidationError::UNEXPECTED_INVALID_HANDLE;
       }
       if (!bounds_checker->ClaimHandle(elements[i])) {
-        MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+        FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
         return ValidationError::ILLEGAL_HANDLE;
       }
     }
@@ -238,16 +239,18 @@ struct ArraySerializationHelper<H, true, false> {
 
   static void EncodePointersAndHandles(const ArrayHeader* header,
                                        ElementType* elements,
-                                       std::vector<Handle>* handles) {
-    ArraySerializationHelper<Handle, true, false>::EncodePointersAndHandles(
-        header, elements, handles);
+                                       std::vector<mx_handle_t>* handles) {
+    ArraySerializationHelper<WrappedHandle, true,
+                             false>::EncodePointersAndHandles(header, elements,
+                                                              handles);
   }
 
   static void DecodePointersAndHandles(const ArrayHeader* header,
                                        ElementType* elements,
-                                       std::vector<Handle>* handles) {
-    ArraySerializationHelper<Handle, true, false>::DecodePointersAndHandles(
-        header, elements, handles);
+                                       std::vector<mx_handle_t>* handles) {
+    ArraySerializationHelper<WrappedHandle, true,
+                             false>::DecodePointersAndHandles(header, elements,
+                                                              handles);
   }
 
   static ValidationError ValidateElements(
@@ -256,8 +259,11 @@ struct ArraySerializationHelper<H, true, false> {
       BoundsChecker* bounds_checker,
       const ArrayValidateParams* validate_params,
       std::string* err) {
-    return ArraySerializationHelper<Handle, true, false>::ValidateElements(
-        header, elements, bounds_checker, validate_params, err);
+    return ArraySerializationHelper<WrappedHandle, true,
+                                    false>::ValidateElements(header, elements,
+                                                             bounds_checker,
+                                                             validate_params,
+                                                             err);
   }
 };
 
@@ -287,14 +293,14 @@ struct ArraySerializationHelper<P*, false, false> {
       std::string* err) {
     for (uint32_t i = 0; i < header->num_elements; ++i) {
       if (!validate_params->element_is_nullable && !elements[i].offset) {
-        MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+        FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
             << "null in array expecting valid pointers (size="
             << header->num_elements << ", index = " << i << ")";
         return ValidationError::UNEXPECTED_NULL_POINTER;
       }
 
       if (!ValidateEncodedPointer(&elements[i].offset)) {
-        MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+        FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
         return ValidationError::ILLEGAL_POINTER;
       }
 
@@ -373,7 +379,7 @@ struct ArraySerializationHelper<P, false, true> {
         << "Union type should not have array validate params";
     for (uint32_t i = 0; i < header->num_elements; ++i) {
       if (!validate_params->element_is_nullable && elements[i].is_null()) {
-        MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+        FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
             << "null union in array expecting non-null unions (size="
             << header->num_elements << ", index = " << i << ")";
         return ValidationError::UNEXPECTED_NULL_UNION;
@@ -397,7 +403,7 @@ class Array_Data {
   typedef typename Traits::ConstRef ConstRef;
   typedef ArraySerializationHelper<
       T,
-      IsHandle<T>::value,
+      IsWrappedHandle<T>::value,
       IsUnionDataType<typename std::remove_pointer<T>::type>::value>
       Helper;
 
@@ -420,24 +426,24 @@ class Array_Data {
     if (!data)
       return ValidationError::NONE;
     if (!IsAligned(data)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::MISALIGNED_OBJECT;
     }
     if (!bounds_checker->IsValidRange(data, sizeof(ArrayHeader))) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::ILLEGAL_MEMORY_RANGE;
     }
 
     const ArrayHeader* header = static_cast<const ArrayHeader*>(data);
     if (header->num_elements > Traits::kMaxNumElements ||
         header->num_bytes < Traits::GetStorageSize(header->num_elements)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::UNEXPECTED_ARRAY_HEADER;
     }
 
     if (validate_params->expected_num_elements != 0 &&
         header->num_elements != validate_params->expected_num_elements) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err)
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)
           << "fixed-size array has wrong number of elements (size="
           << header->num_elements
           << ", expected size=" << validate_params->expected_num_elements
@@ -446,7 +452,7 @@ class Array_Data {
     }
 
     if (!bounds_checker->ClaimMemory(data, header->num_bytes)) {
-      MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+      FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
       return ValidationError::ILLEGAL_MEMORY_RANGE;
     }
 
@@ -520,7 +526,7 @@ template <typename T>
 struct ArrayTraits<T, true> {
   typedef T ForwardType;
   static inline void PushBack(std::vector<T>* vec, T& value) {
-    vec->push_back(value.Pass());
+    vec->push_back(std::move(value));
   }
   static inline void Clone(const std::vector<T>& src_vec,
                            std::vector<T>* dest_vec) {

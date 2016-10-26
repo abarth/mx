@@ -10,10 +10,11 @@
 #include <functional>
 #include <utility>
 
-#include "lib/ftl/macros.h"
 #include "lib/fidl/cpp/bindings/interface_handle.h"
 #include "lib/fidl/cpp/bindings/lib/interface_ptr_internal.h"
+#include "lib/fidl/cpp/bindings/macros.h"
 #include "lib/fidl/cpp/waiter/default.h"
+#include "lib/ftl/macros.h"
 
 namespace fidl {
 
@@ -181,7 +182,7 @@ class InterfacePtr {
   typedef internal::InterfacePtrState<Interface> State;
   mutable State internal_state_;
 
-  MOJO_MOVE_ONLY_TYPE(InterfacePtr);
+  FIDL_MOVE_ONLY_TYPE(InterfacePtr);
 };
 
 }  // namespace fidl

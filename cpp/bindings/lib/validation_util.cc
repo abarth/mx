@@ -28,23 +28,23 @@ ValidationError ValidateStructHeaderAndClaimMemory(
     BoundsChecker* bounds_checker,
     std::string* err) {
   if (!IsAligned(data)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
     return ValidationError::MISALIGNED_OBJECT;
   }
   if (!bounds_checker->IsValidRange(data, sizeof(StructHeader))) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
     return ValidationError::ILLEGAL_MEMORY_RANGE;
   }
 
   const StructHeader* header = static_cast<const StructHeader*>(data);
 
   if (header->num_bytes < sizeof(StructHeader)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
     return ValidationError::UNEXPECTED_STRUCT_HEADER;
   }
 
   if (!bounds_checker->ClaimMemory(data, header->num_bytes)) {
-    MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
+    FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err) << "";
     return ValidationError::ILLEGAL_MEMORY_RANGE;
   }
 

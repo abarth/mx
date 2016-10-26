@@ -334,7 +334,7 @@ TEST(ArrayTest, Serialization_ArrayOfString) {
 
 // Tests serializing and deserializing an Array<Handle>.
 TEST(ArrayTest, Serialization_ArrayOfHandle) {
-  auto array = Array<ScopedHandleBase<MessagePipeHandle>>::New(4);
+  auto array = Array<ScopedHandleBase<mx_handle_t>>::New(4);
   MessagePipe p0;
   MessagePipe p1;
   // array[0] is left invalid.
@@ -349,7 +349,7 @@ TEST(ArrayTest, Serialization_ArrayOfHandle) {
 
   // We're going to reuse this buffer.. twice.
   FixedBufferForTesting buf(size * 3);
-  Array_Data<MessagePipeHandle>* data = nullptr;
+  Array_Data<mx_handle_t>* data = nullptr;
 
   // 1.  Serialization should fail on non-nullable invalid Handle.
   ArrayValidateParams validate_params(4, false, nullptr);

@@ -10,6 +10,7 @@
 
 #include "lib/fidl/cpp/bindings/lib/map_internal.h"
 #include "lib/fidl/cpp/bindings/lib/template_util.h"
+#include "lib/fidl/cpp/bindings/macros.h"
 
 namespace fidl {
 
@@ -248,7 +249,7 @@ class Map {
   std::map<KeyType, ValueType> map_;
   bool is_null_;
 
-  MOJO_MOVE_ONLY_TYPE(Map);
+  FIDL_MOVE_ONLY_TYPE(Map);
 };
 
 // Copies the contents of an std::map to a new Map, optionally changing the

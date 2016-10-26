@@ -10,6 +10,8 @@
 #include <cstddef>
 #include <utility>
 
+#include "lib/fidl/cpp/bindings/macros.h"
+
 namespace fidl {
 
 template <typename I>
@@ -66,7 +68,7 @@ class InterfaceRequest {
  private:
   mx::msgpipe handle_;
 
-  MOJO_MOVE_ONLY_TYPE(InterfaceRequest);
+  FIDL_MOVE_ONLY_TYPE(InterfaceRequest);
 };
 
 // Creates a new message pipe over which Interface is to be served, and one end
