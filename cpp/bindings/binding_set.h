@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "lib/ftl/macros.h"
@@ -28,7 +29,7 @@ class BindingSet {
   // a connection error occurs.  Does not take ownership of |impl|, which
   // must outlive the binding set.
   void AddBinding(Interface* impl, InterfaceRequest<Interface> request) {
-    bindings_.emplace_back(new Binding<Interface>(impl, request.Pass()));
+    bindings_.emplace_back(new Binding<Interface>(impl, std::move(request)));
     auto* binding = bindings_.back().get();
     // Set the connection error handler for the newly added Binding to be a
     // function that will erase it from the vector.
@@ -49,7 +50,7 @@ class BindingSet {
     binding->set_connection_error_handler(
         std::bind(&BindingSet<Interface>::RemoveOnError, this, binding));
 
-    return interface.Pass();
+    return std::move(interface);
   }
 
   void CloseAllBindings() { bindings_.clear(); }

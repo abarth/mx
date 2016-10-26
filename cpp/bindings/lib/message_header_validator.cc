@@ -89,7 +89,7 @@ ValidationError ValidateControlRequest(const Message* message,
       if (retval != ValidationError::NONE)
         return retval;
 
-      return ValidateMessagePayload<RunMessageParams_Data>(message, err);
+      return ValidateMessagePayload<mojo::RunMessageParams_Data>(message, err);
     }
 
     case mojo::kRunOrClosePipeMessageId: {

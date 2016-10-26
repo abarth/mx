@@ -128,8 +128,8 @@ InterfaceRequest<Interface> GetProxy(InterfaceHandle<Interface>* handle) {
 //   CollectorPtr collector = ...;  // Connect to Collector.
 //   SourcePtr source;
 //   InterfaceRequest<Source> source_request = GetProxy(&source);
-//   collector->RegisterSource(source.Pass());
-//   CreateSource(source_request.Pass());  // Create implementation locally.
+//   collector->RegisterSource(std::move(source));
+//   CreateSource(std::move(source_request));  // Create implementation locally.
 //
 // TODO(vardhan): Move this function into interface_ptr.h
 template <typename Interface>

@@ -42,7 +42,7 @@ struct MapTraits<Key, Value, true> {
   static inline void Insert(std::map<Key, Value>* m,
                             const Key& key,
                             Value& value) {
-    m->insert(std::make_pair(key, value.Pass()));
+    m->insert(std::make_pair(key, std::move(value)));
   }
   static inline void Clone(const std::map<Key, Value>& src,
                            std::map<Key, Value>* dst) {

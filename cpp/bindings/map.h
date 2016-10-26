@@ -91,7 +91,7 @@ class Map {
   void mark_non_null() { is_null_ = false; }
 
   // Inserts a key-value pair into the map, moving the value by calling its
-  // Pass() method if it is a move-only type. Like std::map, this does not
+  // move constructor if it is a move-only type. Like std::map, this does not
   // insert |value| if |key| is already a member of the map.
   void insert(const KeyType& key, ValueForwardType value) {
     is_null_ = false;

@@ -7,7 +7,6 @@
 
 #include <stdint.h>
 
-#include "lib/fidl/cpp/bindings/callback.h"
 #include "lib/ftl/macros.h"
 
 namespace fidl {
@@ -22,7 +21,7 @@ class ControlMessageProxy {
   // Doesn't take ownership of |receiver|. It must outlive this object.
   explicit ControlMessageProxy(MessageReceiverWithResponder* receiver);
 
-  void QueryVersion(const Callback<void(uint32_t)>& callback);
+  void QueryVersion(const std::function<void(uint32_t)>& callback);
   void RequireVersion(uint32_t version);
 
  protected:

@@ -201,7 +201,7 @@ inline void Deserialize_(internal::Map_Data<DataKey, DataValue>* input,
     Deserialize_(input->keys.ptr, &keys);
     Deserialize_(input->values.ptr, &values);
 
-    *output = Map<MapKey, MapValue>(keys.Pass(), values.Pass());
+    *output = Map<MapKey, MapValue>(std::move(keys), std::move(values));
   } else {
     output->reset();
   }

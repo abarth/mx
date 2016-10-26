@@ -6,6 +6,7 @@
 #define LIB_FIDL_CPP_BINDINGS_LIB_TEMPLATE_UTIL_H_
 
 #include <type_traits>
+#include <utility>
 
 namespace fidl {
 namespace internal {
@@ -19,8 +20,6 @@ struct NoType {
 };
 
 // A helper template to determine if given type is non-const move-only-type,
-// i.e. if a value of the given type should be passed via .Pass() in a
-// destructive way.
 template <typename T>
 struct IsMoveOnlyType {
   template <typename U>
@@ -42,7 +41,7 @@ typename std::enable_if<!IsMoveOnlyType<T>::value, T>::type& Forward(T& t) {
 // Returns the result of t.Pass() when T is a move-only type.
 template <typename T>
 typename std::enable_if<IsMoveOnlyType<T>::value, T>::type Forward(T& t) {
-  return t.Pass();
+  return std::move(t);
 }
 
 template <template <typename...> class Template, typename T>

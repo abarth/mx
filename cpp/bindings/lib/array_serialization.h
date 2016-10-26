@@ -259,7 +259,7 @@ struct ArraySerializer<InterfaceHandle<Interface>, Interface_Data, false> {
 
     for (size_t i = 0; i < num_elements; ++i, ++it) {
       // Transfer ownership of the handle.
-      internal::InterfaceHandleToData(it->Pass(), &output->at(i));
+      internal::InterfaceHandleToData(std::move(*it), &output->at(i));
       if (!validate_params->element_is_nullable &&
           !output->at(i).handle.is_valid()) {
         FIDL_INTERNAL_DLOG_SERIALIZATION_WARNING(

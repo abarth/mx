@@ -104,7 +104,7 @@ class InterfacePtrState {
   // shouldn't be reused.
   InterfaceHandle<Interface> PassInterfaceHandle() {
     return InterfaceHandle<Interface>(
-        router_ ? router_->PassMessagePipe() : handle_.Pass(), version_);
+        router_ ? router_->PassMessagePipe() : std::move(handle_), version_);
   }
 
   bool is_bound() const { return handle_.is_valid() || router_; }

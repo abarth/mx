@@ -36,7 +36,7 @@ bool RunResponseForwardToCallback::Accept(Message* message) {
   RunResponseMessageParamsPtr params_ptr(RunResponseMessageParams::New());
   Deserialize_(params, params_ptr.get());
 
-  callback_.Run(params_ptr->query_version_result.Pass());
+  callback_.Run(std::move(params_ptr->query_version_result));
   return true;
 }
 
@@ -46,12 +46,12 @@ void SendRunMessage(MessageReceiverWithResponder* receiver,
   RunMessageParamsPtr params_ptr(RunMessageParams::New());
   params_ptr->reserved0 = 16u;
   params_ptr->reserved1 = 0u;
-  params_ptr->query_version = query_version.Pass();
+  params_ptr->query_version = std::move(query_version);
 
   size_t size = GetSerializedSize_(*params_ptr);
   RequestMessageBuilder builder(mojo::kRunMessageId, size);
 
-  RunMessageParams_Data* params = nullptr;
+  mojo::RunMessageParams_Data* params = nullptr;
   auto result = Serialize_(params_ptr.get(), builder.buffer(), &params);
   FTL_DCHECK(result == ValidationError::NONE);
 
@@ -66,7 +66,7 @@ void SendRunOrClosePipeMessage(MessageReceiverWithResponder* receiver,
   RunOrClosePipeMessageParamsPtr params_ptr(RunOrClosePipeMessageParams::New());
   params_ptr->reserved0 = 16u;
   params_ptr->reserved1 = 0u;
-  params_ptr->require_version = require_version.Pass();
+  params_ptr->require_version = std::move(require_version);
 
   size_t size = GetSerializedSize_(*params_ptr);
   MessageBuilder builder(mojo::kRunOrClosePipeMessageId, size);
@@ -86,9 +86,9 @@ ControlMessageProxy::ControlMessageProxy(MessageReceiverWithResponder* receiver)
     : receiver_(receiver) {}
 
 void ControlMessageProxy::QueryVersion(
-    const Callback<void(uint32_t)>& callback) {
+    const std::function<void(uint32_t)>& callback) {
   auto run_callback = [callback](QueryVersionResultPtr query_version_result) {
-    callback.Run(query_version_result->version);
+    callback(query_version_result->version);
   };
   SendRunMessage(receiver_, QueryVersion::New(), run_callback);
 }
@@ -96,7 +96,7 @@ void ControlMessageProxy::QueryVersion(
 void ControlMessageProxy::RequireVersion(uint32_t version) {
   RequireVersionPtr require_version(RequireVersion::New());
   require_version->version = version;
-  SendRunOrClosePipeMessage(receiver_, require_version.Pass());
+  SendRunOrClosePipeMessage(receiver_, std::move(require_version));
 }
 
 }  // namespace internal
