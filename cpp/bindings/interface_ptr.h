@@ -63,7 +63,7 @@ class InterfacePtr {
   // specified |waiter| will be used as in the InterfacePtr::Bind() method.
   static InterfacePtr<Interface> Create(
       InterfaceHandle<Interface> info,
-      const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
+      const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     InterfacePtr<Interface> ptr;
     if (info.is_valid())
       ptr.Bind(std::move(info), waiter);
@@ -79,7 +79,7 @@ class InterfacePtr {
   // has the same effect as reset(). In this case, the InterfacePtr is not
   // considered as bound.
   void Bind(InterfaceHandle<Interface> info,
-            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
+            const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     reset();
     if (info.is_valid())
       internal_state_.Bind(std::move(info), waiter);

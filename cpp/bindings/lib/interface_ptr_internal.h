@@ -16,7 +16,7 @@
 #include "lib/fidl/cpp/bindings/lib/router.h"
 #include "lib/ftl/logging.h"
 
-struct MojoAsyncWaiter;
+struct FidlAsyncWaiter;
 
 namespace fidl {
 namespace internal {
@@ -80,7 +80,7 @@ class InterfacePtrState {
     swap(other->version_, version_);
   }
 
-  void Bind(InterfaceHandle<Interface> info, const MojoAsyncWaiter* waiter) {
+  void Bind(InterfaceHandle<Interface> info, const FidlAsyncWaiter* waiter) {
     FTL_DCHECK(!proxy_);
     FTL_DCHECK(!router_);
     FTL_DCHECK(!handle_.is_valid());
@@ -159,7 +159,7 @@ class InterfacePtrState {
   // message pipe handle is needed. |handle_| and |waiter_| are valid between
   // the Bind() call and the initialization of |proxy_| and |router_|.
   mx::msgpipe handle_;
-  const MojoAsyncWaiter* waiter_;
+  const FidlAsyncWaiter* waiter_;
 
   uint32_t version_;
 

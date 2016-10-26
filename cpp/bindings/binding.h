@@ -42,7 +42,7 @@ namespace fidl {
 //     Binding<Foo> binding_;
 //   };
 //
-// The caller may specify a |MojoAsyncWaiter| to be used by the connection when
+// The caller may specify a |FidlAsyncWaiter| to be used by the connection when
 // waiting for calls to arrive. Normally it is fine to use the default waiter.
 // However, the caller may provide their own implementation if needed. The
 // |Binding| will not take ownership of the waiter, and the waiter must outlive
@@ -64,7 +64,7 @@ class Binding {
   // See class comment for definition of |waiter|.
   Binding(Interface* impl,
           mx::msgpipe handle,
-          const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter())
+          const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter())
       : Binding(impl) {
     Bind(std::move(handle), waiter);
   }
@@ -77,7 +77,7 @@ class Binding {
   // |waiter|.
   Binding(Interface* impl,
           InterfaceHandle<Interface>* interface_handle,
-          const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter())
+          const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter())
       : Binding(impl) {
     Bind(interface_handle, waiter);
   }
@@ -88,7 +88,7 @@ class Binding {
   // |waiter|.
   Binding(Interface* impl,
           InterfaceRequest<Interface> request,
-          const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter())
+          const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter())
       : Binding(impl) {
     Bind(request.PassMessagePipe(), waiter);
   }
@@ -101,7 +101,7 @@ class Binding {
   // implementation. Takes ownership of |handle| and binds it to the previously
   // specified implementation. See class comment for definition of |waiter|.
   void Bind(mx::msgpipe handle,
-            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
+            const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     FTL_DCHECK(!internal_router_);
 
     internal::MessageValidatorList validators;
@@ -124,7 +124,7 @@ class Binding {
   // eventual client of the service. Does not take ownership of |ptr|. See
   // class comment for definition of |waiter|.
   void Bind(InterfaceHandle<Interface>* interface_handle,
-            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
+            const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     mx::msgpipe endpoint0;
     mx::msgpipe endpoint1;
     mx::msgpipe::create(&endpoint0, &endpoint1, 0);
@@ -138,7 +138,7 @@ class Binding {
   // binding it to the previously specified implementation. See class comment
   // for definition of |waiter|.
   void Bind(InterfaceRequest<Interface> request,
-            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
+            const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     Bind(request.PassMessagePipe(), waiter);
   }
 

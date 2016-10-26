@@ -26,7 +26,7 @@ class Connector : public MessageReceiver {
  public:
   // The Connector takes ownership of |message_pipe|.
   explicit Connector(mx::msgpipe message_pipe,
-                     const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter());
+                     const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter());
   ~Connector() override;
 
   // Sets the receiver to handle messages read from the message pipe.  The
@@ -96,7 +96,7 @@ class Connector : public MessageReceiver {
   void CancelWait();
 
   ftl::Closure connection_error_handler_;
-  const MojoAsyncWaiter* waiter_;
+  const FidlAsyncWaiter* waiter_;
 
   mx::msgpipe message_pipe_;
   MessageReceiver* incoming_receiver_;

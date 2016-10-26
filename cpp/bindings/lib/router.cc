@@ -74,7 +74,7 @@ bool Router::HandleIncomingMessageThunk::Accept(Message* message) {
 
 Router::Router(mx::msgpipe message_pipe,
                MessageValidatorList validators,
-               const MojoAsyncWaiter* waiter)
+               const FidlAsyncWaiter* waiter)
     : thunk_(this),
       validators_(std::move(validators)),
       connector_(std::move(message_pipe.Pass), waiter),

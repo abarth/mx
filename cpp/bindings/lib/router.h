@@ -22,7 +22,7 @@ class Router : public MessageReceiverWithResponder {
  public:
   Router(mx::msgpipe message_pipe,
          MessageValidatorList validators,
-         const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter());
+         const FidlAsyncWaiter* waiter = GetDefaultAsyncWaiter());
   ~Router() override;
 
   // Sets the receiver to handle messages read from the message pipe that do

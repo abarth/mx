@@ -13,7 +13,7 @@ namespace internal {
 
 // ----------------------------------------------------------------------------
 
-Connector::Connector(mx::msgpipe message_pipe, const MojoAsyncWaiter* waiter)
+Connector::Connector(mx::msgpipe message_pipe, const FidlAsyncWaiter* waiter)
     : waiter_(waiter),
       message_pipe_(std::move(message_pipe)),
       incoming_receiver_(nullptr),
