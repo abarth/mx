@@ -49,8 +49,7 @@ bool Connector::WaitForIncomingMessage(mx_time_t deadline) {
 
   mx_status_t rv =
       message_pipe_.wait_one(MX_SIGNAL_READABLE, deadline, nullptr);
-  if (rv == MOJO_SYSTEM_RESULT_SHOULD_WAIT ||
-      rv == MOJO_SYSTEM_RESULT_DEADLINE_EXCEEDED)
+  if (rv == ERR_SHOULD_WAIT || rv == ERR_TIMED_OUT)
     return false;
   if (rv != MOJO_RESULT_OK) {
     NotifyError();
@@ -155,7 +154,7 @@ bool Connector::ReadSingleMessage(mx_status_t* read_result) {
   }
   destroyed_flag_ = previous_destroyed_flag;
 
-  if (rv == MOJO_SYSTEM_RESULT_SHOULD_WAIT)
+  if (rv == ERR_SHOULD_WAIT)
     return true;
 
   if (rv != MOJO_RESULT_OK ||
@@ -174,7 +173,7 @@ void Connector::ReadAllAvailableMessages() {
     if (!ReadSingleMessage(&rv))
       return;
 
-    if (rv == MOJO_SYSTEM_RESULT_SHOULD_WAIT) {
+    if (rv == ERR_SHOULD_WAIT) {
       WaitToReadMore();
       break;
     }

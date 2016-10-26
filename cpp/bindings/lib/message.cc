@@ -61,10 +61,10 @@ void Message::Initialize() {
 void Message::FreeDataAndCloseHandles() {
   free(data_);
 
-  for (std::vector<Handle>::iterator it = handles_.begin();
+  for (std::vector<mx_handle_t>::iterator it = handles_.begin();
        it != handles_.end(); ++it) {
-    if (it->is_valid())
-      CloseRaw(*it);
+    if (*it)
+      mx_handle_close(*it);
   }
 }
 
@@ -77,7 +77,7 @@ mx_status_t ReadMessage(const mx::msgpipe& handle, Message* message) {
   uint32_t num_bytes = 0;
   uint32_t num_handles = 0;
   mx_status_t rv = handle.read(nullptr, &num_bytes, nullptr, &num_handles, 0);
-  if (rv != MOJO_SYSTEM_RESULT_RESOURCE_EXHAUSTED)
+  if (rv != ERR_NO_MEMORY)
     return rv;
 
   message->AllocUninitializedData(num_bytes);

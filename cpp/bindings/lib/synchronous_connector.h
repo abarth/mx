@@ -34,7 +34,7 @@ class SynchronousConnector {
   mx::msgpipe PassHandle() { return std::move(handle_); }
 
   // Returns true if the underlying MessagePipe is valid.
-  bool is_valid() const { return handle_; }
+  bool is_valid() const { return !!handle_; }
 
  private:
   mx::msgpipe handle_;

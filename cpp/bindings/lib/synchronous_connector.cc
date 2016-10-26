@@ -22,11 +22,11 @@ bool SynchronousConnector::Write(Message* msg_to_send) {
   FTL_DCHECK(handle_);
   FTL_DCHECK(msg_to_send);
 
-  mx_status_t rv = handle.write(
+  mx_status_t rv = handle_.write(
       msg_to_send->data(), msg_to_send->data_num_bytes(),
       msg_to_send->mutable_handles()->empty()
           ? nullptr
-          : reinterpret_cast<const MojoHandle*>(
+          : reinterpret_cast<const mx_handle_t*>(
                 msg_to_send->mutable_handles()->data()),
       static_cast<uint32_t>(msg_to_send->mutable_handles()->size()), 0);
 

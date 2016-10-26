@@ -120,8 +120,8 @@ ValidationError ValidateControlResponse(const Message* message,
 
   switch (message->header()->name) {
     case mojo::kRunMessageId:
-      return ValidateMessagePayload<RunResponseMessageParams_Data>(message,
-                                                                   err);
+      return ValidateMessagePayload<
+          mojo::internal::RunResponseMessageParams_Data>(message, err);
   }
 
   FIDL_INTERNAL_DEBUG_SET_ERROR_MSG(err)

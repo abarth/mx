@@ -54,7 +54,7 @@ bool ControlMessageHandler::Run(Message* message,
   ResponseMessageBuilder builder(mojo::kRunMessageId, size,
                                  message->request_id());
 
-  RunResponseMessageParams_Data* response_params = nullptr;
+  mojo::internal::RunResponseMessageParams_Data* response_params = nullptr;
   auto result =
       Serialize_(response_params_ptr.get(), builder.buffer(), &response_params);
   FTL_DCHECK(result == ValidationError::NONE);

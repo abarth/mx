@@ -7,6 +7,8 @@
 
 #include <stdint.h>
 
+#include <functional>
+
 #include "lib/ftl/macros.h"
 
 namespace fidl {

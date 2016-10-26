@@ -14,7 +14,7 @@ namespace internal {
 
 namespace {
 
-using RunCallback = Callback<void(QueryVersionResultPtr)>;
+using RunCallback = std::function<void(QueryVersionResultPtr)>;
 
 class RunResponseForwardToCallback : public MessageReceiver {
  public:
@@ -28,15 +28,15 @@ class RunResponseForwardToCallback : public MessageReceiver {
 };
 
 bool RunResponseForwardToCallback::Accept(Message* message) {
-  RunResponseMessageParams_Data* params =
-      reinterpret_cast<RunResponseMessageParams_Data*>(
+  mojo::internal::RunResponseMessageParams_Data* params =
+      reinterpret_cast<mojo::internal::RunResponseMessageParams_Data*>(
           message->mutable_payload());
   params->DecodePointersAndHandles(message->mutable_handles());
 
   RunResponseMessageParamsPtr params_ptr(RunResponseMessageParams::New());
   Deserialize_(params, params_ptr.get());
 
-  callback_.Run(std::move(params_ptr->query_version_result));
+  callback_(std::move(params_ptr->query_version_result));
   return true;
 }
 

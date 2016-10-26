@@ -67,7 +67,7 @@ class InterfaceHandle {
 
   // Tests as true if we have a valid handle.
   explicit operator bool() const { return is_valid(); }
-  bool is_valid() const { return handle_; }
+  bool is_valid() const { return !!handle_; }
 
   mx::msgpipe PassHandle() { return std::move(handle_); }
   const mx::msgpipe& handle() const { return handle_; }
