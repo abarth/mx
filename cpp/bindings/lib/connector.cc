@@ -51,12 +51,12 @@ bool Connector::WaitForIncomingMessage(mx_time_t deadline) {
       message_pipe_.wait_one(MX_SIGNAL_READABLE, deadline, nullptr);
   if (rv == ERR_SHOULD_WAIT || rv == ERR_TIMED_OUT)
     return false;
-  if (rv != MOJO_RESULT_OK) {
+  if (rv != NO_ERROR) {
     NotifyError();
     return false;
   }
   ignore_result(ReadSingleMessage(&rv));
-  return (rv == MOJO_RESULT_OK);
+  return (rv == NO_ERROR);
 }
 
 bool Connector::Accept(Message* message) {
@@ -76,31 +76,18 @@ bool Connector::Accept(Message* message) {
       static_cast<uint32_t>(message->mutable_handles()->size()), 0);
 
   switch (rv) {
-    case MOJO_RESULT_OK:
+    case NO_ERROR:
       // The handles were successfully transferred, so we don't need the message
       // to track their lifetime any longer.
       message->mutable_handles()->clear();
       break;
-    case MOJO_SYSTEM_RESULT_FAILED_PRECONDITION:
+    case ERR_BAD_STATE:
       // There's no point in continuing to write to this pipe since the other
       // end is gone. Avoid writing any future messages. Hide write failures
       // from the caller since we'd like them to continue consuming any backlog
       // of incoming messages before regarding the message pipe as closed.
       drop_writes_ = true;
       break;
-    case MOJO_SYSTEM_RESULT_BUSY:
-      // We'd get a "busy" result if one of the message's handles is:
-      //   - |message_pipe_|'s own handle;
-      //   - simultaneously being used on another thread; or
-      //   - in a "busy" state that prohibits it from being transferred (e.g.,
-      //     a data pipe handle in the middle of a two-phase read/write,
-      //     regardless of which thread that two-phase read/write is happening
-      //     on).
-      // TODO(vtl): I wonder if this should be a |FTL_DCHECK()|. (But, until
-      // crbug.com/389666, etc. are resolved, this will make tests fail quickly
-      // rather than hanging.)
-      FTL_CHECK(false) << "Race condition or other bug detected";
-      return false;
     default:
       // This particular write was rejected, presumably because of bad input.
       // The pipe is not necessarily in a bad state.
@@ -128,9 +115,9 @@ void Connector::OnHandleReady(mx_status_t result) {
 
 void Connector::WaitToReadMore() {
   FTL_CHECK(!async_wait_id_);
-  async_wait_id_ = waiter_->AsyncWait(
-      message_pipe_.get().value(), MOJO_HANDLE_SIGNAL_READABLE,
-      MX_TIME_INFINITE, &Connector::CallOnHandleReady, this);
+  async_wait_id_ =
+      waiter_->AsyncWait(message_pipe_.get().value(), MX_SIGNAL_READABLE,
+                         MX_TIME_INFINITE, &Connector::CallOnHandleReady, this);
 }
 
 bool Connector::ReadSingleMessage(mx_status_t* read_result) {
@@ -157,7 +144,7 @@ bool Connector::ReadSingleMessage(mx_status_t* read_result) {
   if (rv == ERR_SHOULD_WAIT)
     return true;
 
-  if (rv != MOJO_RESULT_OK ||
+  if (rv != NO_ERROR ||
       (enforce_errors_from_incoming_receiver_ && !receiver_result)) {
     NotifyError();
     return false;

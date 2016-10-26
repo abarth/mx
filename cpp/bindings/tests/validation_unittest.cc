@@ -116,7 +116,7 @@ class ValidationIntegrationTest : public testing::Test {
 
   void SetUp() override {
     mx::msgpipe tester_endpoint;
-    ASSERT_EQ(MOJO_RESULT_OK,
+    ASSERT_EQ(NO_ERROR,
               CreateMessagePipe(nullptr, &tester_endpoint, &testee_endpoint_));
     test_message_receiver_ =
         new TestMessageReceiver(this, tester_endpoint.Pass());

@@ -33,7 +33,8 @@ bool RunResponseForwardToCallback::Accept(Message* message) {
           message->mutable_payload());
   params->DecodePointersAndHandles(message->mutable_handles());
 
-  RunResponseMessageParamsPtr params_ptr(RunResponseMessageParams::New());
+  mojo::RunResponseMessageParamsPtr params_ptr(
+      mojo::RunResponseMessageParams::New());
   Deserialize_(params, params_ptr.get());
 
   callback_(std::move(params_ptr->query_version_result));
@@ -77,7 +78,7 @@ void SendRunOrClosePipeMessage(MessageReceiverWithResponder* receiver,
 
   params->EncodePointersAndHandles(builder.message()->mutable_handles());
   bool ok = receiver->Accept(builder.message());
-  MOJO_ALLOW_UNUSED_LOCAL(ok);
+  FTL_ALLOW_UNUSED_LOCAL(ok);
 }
 
 }  // namespace

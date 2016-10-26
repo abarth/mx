@@ -103,7 +103,7 @@ mx_status_t ReadAndDispatchMessage(const mx::msgpipe& handle,
                                    bool* receiver_result) {
   Message message;
   mx_status_t rv = ReadMessage(handle, &message);
-  if (receiver && rv == MOJO_RESULT_OK)
+  if (receiver && rv == NO_ERROR)
     *receiver_result = receiver->Accept(&message);
 
   return rv;

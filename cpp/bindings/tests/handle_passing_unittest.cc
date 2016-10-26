@@ -100,13 +100,13 @@ class SampleFactoryImpl : public sample::Factory {
     // DidStuff2().
     ASSERT_TRUE(pipe.is_valid());
     uint32_t data_size = 0;
-    ASSERT_EQ(MOJO_RESULT_OK, ReadDataRaw(pipe.get(), nullptr, &data_size,
-                                          MOJO_READ_DATA_FLAG_QUERY));
+    ASSERT_EQ(NO_ERROR, ReadDataRaw(pipe.get(), nullptr, &data_size,
+                                    MOJO_READ_DATA_FLAG_QUERY));
     ASSERT_NE(0, static_cast<int>(data_size));
     char data[64];
     ASSERT_LT(static_cast<int>(data_size), 64);
-    ASSERT_EQ(MOJO_RESULT_OK, ReadDataRaw(pipe.get(), data, &data_size,
-                                          MOJO_READ_DATA_FLAG_ALL_OR_NONE));
+    ASSERT_EQ(NO_ERROR, ReadDataRaw(pipe.get(), data, &data_size,
+                                    MOJO_READ_DATA_FLAG_ALL_OR_NONE));
 
     callback.Run(data);
   }
@@ -248,12 +248,12 @@ TEST_F(HandlePassingTest, DataPipe) {
   MojoCreateDataPipeOptions options = {sizeof(MojoCreateDataPipeOptions),
                                        MOJO_CREATE_DATA_PIPE_OPTIONS_FLAG_NONE,
                                        1, 1024};
-  ASSERT_EQ(MOJO_RESULT_OK,
+  ASSERT_EQ(NO_ERROR,
             CreateDataPipe(&options, &producer_handle, &consumer_handle));
   std::string expected_text_reply = "got it";
   // +1 for \0.
   uint32_t data_size = static_cast<uint32_t>(expected_text_reply.size() + 1);
-  ASSERT_EQ(MOJO_RESULT_OK,
+  ASSERT_EQ(NO_ERROR,
             WriteDataRaw(producer_handle.get(), expected_text_reply.c_str(),
                          &data_size, MOJO_WRITE_DATA_FLAG_ALL_OR_NONE));
 

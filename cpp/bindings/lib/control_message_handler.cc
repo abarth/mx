@@ -43,11 +43,11 @@ bool ControlMessageHandler::AcceptWithResponder(
 
 bool ControlMessageHandler::Run(Message* message,
                                 MessageReceiverWithStatus* responder) {
-  RunResponseMessageParamsPtr response_params_ptr(
-      RunResponseMessageParams::New());
+  mojo::RunResponseMessageParamsPtr response_params_ptr(
+      mojo::RunResponseMessageParams::New());
   response_params_ptr->reserved0 = 16u;
   response_params_ptr->reserved1 = 0u;
-  response_params_ptr->query_version_result = QueryVersionResult::New();
+  response_params_ptr->query_version_result = mojo::QueryVersionResult::New();
   response_params_ptr->query_version_result->version = interface_version_;
 
   size_t size = GetSerializedSize_(*response_params_ptr);
@@ -62,7 +62,7 @@ bool ControlMessageHandler::Run(Message* message,
   response_params->EncodePointersAndHandles(
       builder.message()->mutable_handles());
   bool ok = responder->Accept(builder.message());
-  MOJO_ALLOW_UNUSED_LOCAL(ok);
+  FTL_ALLOW_UNUSED_LOCAL(ok);
   delete responder;
 
   return true;
