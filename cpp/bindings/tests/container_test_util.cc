@@ -1,10 +1,10 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/tests/container_test_util.h"
+#include "lib/fidl/cpp/bindings/tests/container_test_util.h"
 
-namespace mdl {
+namespace fidl {
 
 size_t CopyableType::num_instances_ = 0;
 size_t MoveOnlyType::num_instances_ = 0;
@@ -47,4 +47,4 @@ MoveOnlyType::~MoveOnlyType() {
   num_instances_--;
 }
 
-}  // namespace mdl
+}  // namespace fidl

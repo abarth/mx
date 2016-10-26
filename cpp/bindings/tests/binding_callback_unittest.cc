@@ -1,11 +1,11 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/interface_ptr.h"
-#include "lib/mdl/cpp/bindings/string.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/interface_ptr.h"
+#include "lib/fidl/cpp/bindings/string.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/sample_interfaces.mojom.h"
@@ -21,7 +21,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -294,4 +294,4 @@ TEST_F(BindingCallbackTest, DeleteCallbackBeforeBindingDeathTest) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

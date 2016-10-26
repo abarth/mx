@@ -1,15 +1,15 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/control_message_proxy.h"
+#include "lib/fidl/cpp/bindings/lib/control_message_proxy.h"
 
-#include "lib/mdl/cpp/bindings/lib/message_builder.h"
-#include "lib/mdl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/lib/message_builder.h"
+#include "lib/fidl/cpp/bindings/message.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/interface_control_messages.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 namespace {
@@ -100,4 +100,4 @@ void ControlMessageProxy::RequireVersion(uint32_t version) {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

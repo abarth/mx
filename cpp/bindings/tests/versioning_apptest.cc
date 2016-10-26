@@ -1,4 +1,4 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -7,7 +7,7 @@
 #include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/tests/versioning_test_client.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace versioning {
 
@@ -118,4 +118,4 @@ TEST_F(VersioningApplicationTest, CallNonexistentMethod) {
 
 }  // namespace versioning
 }  // namespace examples
-}  // namespace mdl
+}  // namespace fidl

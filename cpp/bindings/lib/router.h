@@ -1,19 +1,19 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_ROUTER_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_ROUTER_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_ROUTER_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_ROUTER_H_
 
 #include <map>
 
-#include "lib/mdl/cpp/bindings/lib/connector.h"
-#include "lib/mdl/cpp/bindings/lib/shared_data.h"
-#include "lib/mdl/cpp/bindings/lib/validation_errors.h"
-#include "lib/mdl/cpp/bindings/message_validator.h"
-#include "mojo/public/cpp/environment/environment.h"
+#include "lib/fidl/cpp/bindings/lib/connector.h"
+#include "lib/fidl/cpp/bindings/lib/shared_data.h"
+#include "lib/fidl/cpp/bindings/lib/validation_errors.h"
+#include "lib/fidl/cpp/bindings/message_validator.h"
+#include "lib/fidl/cpp/waiter/default.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 // Router provides a way for sending messages over a MessagePipe, and re-routing
@@ -22,7 +22,7 @@ class Router : public MessageReceiverWithResponder {
  public:
   Router(mx::msgpipe message_pipe,
          MessageValidatorList validators,
-         const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter());
+         const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter());
   ~Router() override;
 
   // Sets the receiver to handle messages read from the message pipe that do
@@ -102,6 +102,6 @@ class Router : public MessageReceiverWithResponder {
 };
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_ROUTER_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_ROUTER_H_

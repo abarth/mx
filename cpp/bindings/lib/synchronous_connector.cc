@@ -1,20 +1,20 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/synchronous_connector.h"
+#include "lib/fidl/cpp/bindings/lib/synchronous_connector.h"
 
 #include <mojo/system/handle.h>
 #include <mojo/system/time.h>
 
 #include <utility>
 
-#include "lib/mdl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/message.h"
 #include "lib/ftl/logging.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 #include "mojo/public/cpp/system/wait.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 SynchronousConnector::SynchronousConnector(mx::msgpipe handle)
@@ -68,4 +68,4 @@ bool SynchronousConnector::BlockingRead(Message* received_msg) {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

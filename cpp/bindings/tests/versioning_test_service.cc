@@ -1,4 +1,4 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -10,11 +10,11 @@
 #include "mojo/public/cpp/application/application_impl_base.h"
 #include "mojo/public/cpp/application/run_application.h"
 #include "mojo/public/cpp/application/service_provider_impl.h"
-#include "lib/mdl/cpp/bindings/strong_binding.h"
+#include "lib/fidl/cpp/bindings/strong_binding.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/tests/versioning_test_service.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace versioning {
 
@@ -118,9 +118,9 @@ class HumanResourceSystemServer : public ApplicationImplBase {
 
 }  // namespace versioning
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl
 
 mx_status_t MojoMain(MojoHandle application_request) {
-  mdl::test::versioning::HumanResourceSystemServer hr_system_server;
-  return mdl::RunApplication(application_request, &hr_system_server);
+  fidl::test::versioning::HumanResourceSystemServer hr_system_server;
+  return fidl::RunApplication(application_request, &hr_system_server);
 }

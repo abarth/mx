@@ -1,12 +1,12 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include "gtest/gtest.h"
-#include "mojo/public/cpp/environment/environment.h"
+#include "lib/fidl/cpp/waiter/default.h"
 #include "mojo/public/interfaces/bindings/tests/test_structs.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace {
 
 struct RedmondRect {
@@ -202,4 +202,4 @@ TEST(TypeConversionTest, CustomTypeConverter_Nested) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

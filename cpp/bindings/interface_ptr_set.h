@@ -1,17 +1,17 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_SET_H_
-#define LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_SET_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_INTERFACE_PTR_SET_H_
+#define LIB_FIDL_CPP_BINDINGS_INTERFACE_PTR_SET_H_
 
 #include <assert.h>
 
 #include <vector>
 
-#include "lib/mdl/cpp/bindings/interface_ptr.h"
+#include "lib/fidl/cpp/bindings/interface_ptr.h"
 
-namespace mdl {
+namespace fidl {
 
 // An InterfacePtrSet contains a collection of InterfacePtrs
 // that are automatically removed from the collection and destroyed
@@ -68,6 +68,6 @@ class InterfacePtrSet {
   std::vector<InterfacePtr<Interface>> ptrs_;
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_SET_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_INTERFACE_PTR_SET_H_

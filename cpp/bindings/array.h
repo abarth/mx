@@ -1,9 +1,9 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_ARRAY_H_
-#define LIB_MDL_CPP_BINDINGS_ARRAY_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_ARRAY_H_
+#define LIB_FIDL_CPP_BINDINGS_ARRAY_H_
 
 #include <stddef.h>
 #include <string.h>
@@ -14,12 +14,12 @@
 #include <string>
 #include <vector>
 
-#include "lib/mdl/cpp/bindings/lib/array_internal.h"
-#include "lib/mdl/cpp/bindings/lib/bindings_internal.h"
-#include "lib/mdl/cpp/bindings/lib/template_util.h"
-#include "lib/mdl/cpp/bindings/type_converter.h"
+#include "lib/fidl/cpp/bindings/lib/array_internal.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
+#include "lib/fidl/cpp/bindings/lib/template_util.h"
+#include "lib/fidl/cpp/bindings/type_converter.h"
 
-namespace mdl {
+namespace fidl {
 
 // Represents a moveable array with contents of type |T|. The array can be null,
 // meaning that no value has been assigned to it. Null is distinct from empty.
@@ -310,6 +310,6 @@ struct TypeConverter<std::set<E>, Array<T>> {
   }
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_ARRAY_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_ARRAY_H_

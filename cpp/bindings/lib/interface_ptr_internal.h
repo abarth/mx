@@ -1,24 +1,24 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_INTERFACE_PTR_INTERNAL_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_INTERFACE_PTR_INTERNAL_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_INTERFACE_PTR_INTERNAL_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_INTERFACE_PTR_INTERNAL_H_
 
 #include <algorithm>  // For |std::swap()|.
 #include <memory>
 #include <utility>
 #include <functional>
 
-#include "lib/mdl/cpp/bindings/interface_handle.h"
-#include "lib/mdl/cpp/bindings/lib/control_message_proxy.h"
-#include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
-#include "lib/mdl/cpp/bindings/lib/router.h"
+#include "lib/fidl/cpp/bindings/interface_handle.h"
+#include "lib/fidl/cpp/bindings/lib/control_message_proxy.h"
+#include "lib/fidl/cpp/bindings/lib/message_header_validator.h"
+#include "lib/fidl/cpp/bindings/lib/router.h"
 #include "lib/ftl/logging.h"
 
 struct MojoAsyncWaiter;
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 template <typename Interface>
@@ -167,6 +167,6 @@ class InterfacePtrState {
 };
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_INTERFACE_PTR_INTERNAL_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_INTERFACE_PTR_INTERNAL_H_

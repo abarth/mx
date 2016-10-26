@@ -1,19 +1,19 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include <utility>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/strong_binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/strong_binding.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/math_calculator.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/sample_interfaces.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/sample_service.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/scoping.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -37,7 +37,7 @@ RunnableImpl<Method, Class> MakeRunnable(Method method, Class object) {
   return RunnableImpl<Method, Class>(method, object);
 }
 
-typedef mdl::Callback<void(double)> CalcCallback;
+typedef fidl::Callback<void(double)> CalcCallback;
 
 class MathCalculatorImpl : public math::Calculator {
  public:
@@ -152,7 +152,7 @@ class ReentrantServiceImpl : public sample::Service {
 
   void Frobinate(sample::FooPtr foo,
                  sample::Service::BazOptions baz,
-                 mdl::InterfaceHandle<sample::Port> port,
+                 fidl::InterfaceHandle<sample::Port> port,
                  const sample::Service::FrobinateCallback& callback) override {
     max_call_depth_ = std::max(++call_depth_, max_call_depth_);
     if (call_depth_ == 1) {
@@ -162,7 +162,7 @@ class ReentrantServiceImpl : public sample::Service {
     callback.Run(5);
   }
 
-  void GetPort(mdl::InterfaceRequest<sample::Port> port) override {}
+  void GetPort(fidl::InterfaceRequest<sample::Port> port) override {}
 
  private:
   int call_depth_;
@@ -649,4 +649,4 @@ TEST_F(InterfacePtrTest, Scoping) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

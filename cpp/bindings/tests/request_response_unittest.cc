@@ -1,15 +1,15 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
 #include "mojo/public/cpp/test_support/test_utils.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/sample_import.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/sample_interfaces.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -145,4 +145,4 @@ TEST_F(RequestResponseTest, EchoEnum) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

@@ -1,4 +1,4 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -9,22 +9,22 @@
 // serializable type and call those traits from here.  This should help us
 // remove most of the ArraySerializer<> specializations here.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_ARRAY_SERIALIZATION_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_ARRAY_SERIALIZATION_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_ARRAY_SERIALIZATION_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_ARRAY_SERIALIZATION_H_
 
 #include <string.h>  // For |memcpy()|.
 #include <type_traits>
 #include <vector>
 
-#include "lib/mdl/cpp/bindings/lib/array_internal.h"
-#include "lib/mdl/cpp/bindings/lib/bindings_internal.h"
-#include "lib/mdl/cpp/bindings/lib/iterator_util.h"
-#include "lib/mdl/cpp/bindings/lib/map_data_internal.h"
-#include "lib/mdl/cpp/bindings/lib/map_serialization_forward.h"
-#include "lib/mdl/cpp/bindings/lib/string_serialization.h"
-#include "lib/mdl/cpp/bindings/lib/validation_errors.h"
+#include "lib/fidl/cpp/bindings/lib/array_internal.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
+#include "lib/fidl/cpp/bindings/lib/iterator_util.h"
+#include "lib/fidl/cpp/bindings/lib/map_data_internal.h"
+#include "lib/fidl/cpp/bindings/lib/map_serialization_forward.h"
+#include "lib/fidl/cpp/bindings/lib/string_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/validation_errors.h"
 
-namespace mdl {
+namespace fidl {
 
 namespace internal {
 
@@ -532,6 +532,6 @@ inline void Deserialize_(internal::Array_Data<F>* input, Array<E>* output) {
   }
 }
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_ARRAY_SERIALIZATION_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_ARRAY_SERIALIZATION_H_

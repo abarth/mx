@@ -1,9 +1,9 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_BINDING_SET_H_
-#define LIB_MDL_CPP_BINDINGS_BINDING_SET_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_BINDING_SET_H_
+#define LIB_FIDL_CPP_BINDINGS_BINDING_SET_H_
 
 #include <assert.h>
 
@@ -12,9 +12,9 @@
 #include <vector>
 
 #include "lib/ftl/macros.h"
-#include "lib/mdl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
 
-namespace mdl {
+namespace fidl {
 
 // Use this class to manage a set of bindings each of which is
 // owned by the pipe it is bound to.
@@ -72,6 +72,6 @@ class BindingSet {
   FTL_DISALLOW_COPY_AND_ASSIGN(BindingSet);
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_BINDING_SET_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_BINDING_SET_H_

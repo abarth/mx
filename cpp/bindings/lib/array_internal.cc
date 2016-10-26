@@ -1,12 +1,12 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/array_internal.h"
+#include "lib/fidl/cpp/bindings/lib/array_internal.h"
 
 #include <sstream>
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 std::string MakeMessageWithArrayIndex(const char* message,
@@ -69,4 +69,4 @@ void ArraySerializationHelper<Handle, true, false>::DecodePointersAndHandles(
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

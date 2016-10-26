@@ -1,14 +1,14 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/connector.h"
+#include "lib/fidl/cpp/bindings/lib/connector.h"
 
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/cpp/system/wait.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 // ----------------------------------------------------------------------------
@@ -197,4 +197,4 @@ void Connector::NotifyError() {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

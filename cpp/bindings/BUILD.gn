@@ -1,4 +1,4 @@
-# Copyright 2014 The Chromium Authors. All rights reserved.
+# Copyright 2016 The Fuchsia Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -47,12 +47,8 @@ source_set("serialization") {
   ]
 
   public_deps = [
-    ":callback",
-  ]
-
-  public_deps = [
     "mojo/public/cpp/environment",
-    "mojo/public/cpp/system",
+    "magenta/system/ulib/mx",
   ]
 }
 
@@ -61,8 +57,10 @@ source_set("serialization") {
 source_set("core") {
   sources = [
     "binding.h",
+    "binding_set.h",
     "interface_handle.h",
     "interface_ptr.h",
+    "interface_ptr_set.h",
     "interface_request.h",
     "lib/connector.cc",
     "lib/connector.h",
@@ -83,45 +81,15 @@ source_set("core") {
     "lib/no_interface.cc",
     "lib/router.cc",
     "lib/router.h",
+    "lib/shared_data.h",
     "lib/synchronous_connector.cc",
     "lib/synchronous_connector.h",
+    "lib/template_util.h",
     "message.h",
     "message_validator.h",
     "no_interface.h",
     "synchronous_interface_ptr.h",
   ]
 
-  public_deps = [
-    ":callback",
-    ":serialization",
-  ]
-
   deps = [ "mojo/public/interfaces/bindings:bindings_cpp_sources" ]
-}
-
-source_set("utility") {
-  sources = [
-    "binding_set.h",
-    "interface_ptr_set.h",
-    "strong_binding.h",
-    "strong_binding_set.h",
-  ]
-
-  public_deps = [
-    ":core",
-  ]
-
-  deps = [ "mojo/public/cpp/system" ]
-}
-
-source_set("callback") {
-  sources = [
-    "callback.h",
-    "lib/callback_internal.h",
-    "lib/shared_data.h",
-    "lib/shared_ptr.h",
-    "lib/template_util.h",
-  ]
-
-  deps = [ "mojo/public/cpp/system" ]
 }

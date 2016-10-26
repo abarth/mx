@@ -1,8 +1,8 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/message.h"
 
 #include <stdlib.h>
 
@@ -10,7 +10,7 @@
 
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 
 Message::Message() {
   Initialize();
@@ -109,4 +109,4 @@ mx_status_t ReadAndDispatchMessage(const mx::msgpipe& handle,
   return rv;
 }
 
-}  // namespace mdl
+}  // namespace fidl

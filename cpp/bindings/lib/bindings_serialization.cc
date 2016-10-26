@@ -1,12 +1,12 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_serialization.h"
 
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 namespace {
@@ -79,4 +79,4 @@ void DecodeHandle(Interface_Data* data, std::vector<mx_handle_t>* handles) {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

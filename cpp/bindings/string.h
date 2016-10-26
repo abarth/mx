@@ -1,18 +1,18 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_STRING_H_
-#define LIB_MDL_CPP_BINDINGS_STRING_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_STRING_H_
+#define LIB_FIDL_CPP_BINDINGS_STRING_H_
 
 #include <iosfwd>
 #include <string>
 
-#include "lib/mdl/cpp/bindings/lib/array_internal.h"
-#include "lib/mdl/cpp/bindings/type_converter.h"
+#include "lib/fidl/cpp/bindings/lib/array_internal.h"
+#include "lib/fidl/cpp/bindings/type_converter.h"
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 
 // A UTF-8 encoded character string that can be null. Provides functions that
 // are similar to std::string, along with access to the underlying std::string
@@ -29,7 +29,8 @@ class String {
   }
   String(const char* chars, size_t num_chars)
       : value_(chars, num_chars), is_null_(false) {}
-  String(const mdl::String& str) : value_(str.value_), is_null_(str.is_null_) {}
+  String(const fidl::String& str)
+      : value_(str.value_), is_null_(str.is_null_) {}
 
   template <size_t N>
   String(const char chars[N]) : value_(chars, N - 1), is_null_(false) {}
@@ -44,7 +45,7 @@ class String {
     return TypeConverter<U, String>::Convert(*this);
   }
 
-  String& operator=(const mdl::String& str) {
+  String& operator=(const fidl::String& str) {
     value_ = str.value_;
     is_null_ = str.is_null_;
     return *this;
@@ -171,6 +172,6 @@ struct TypeConverter<String, const char*> {
   static String Convert(const char* input) { return String(input); }
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_STRING_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_STRING_H_

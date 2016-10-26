@@ -1,16 +1,16 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include <sstream>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/array.h"
-#include "lib/mdl/cpp/bindings/formatting.h"
-#include "lib/mdl/cpp/bindings/map.h"
+#include "lib/fidl/cpp/bindings/array.h"
+#include "lib/fidl/cpp/bindings/formatting.h"
+#include "lib/fidl/cpp/bindings/map.h"
 #include "mojo/public/interfaces/bindings/tests/test_structs.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 RectPtr MakeRect(int32_t factor = 1) {
@@ -101,4 +101,4 @@ TEST(FormattingTest, Structs) {
 }
 
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

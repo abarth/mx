@@ -1,13 +1,13 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/callback.h"
-#include "lib/mdl/cpp/bindings/map.h"
-#include "lib/mdl/cpp/bindings/string.h"
+#include "lib/fidl/cpp/bindings/callback.h"
+#include "lib/fidl/cpp/bindings/map.h"
+#include "lib/fidl/cpp/bindings/string.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -62,7 +62,7 @@ void FunctionMoveOnlyType(ExampleMoveOnlyType m) {
   (*g_calls)++;
 }
 
-// Tests constructing and invoking a mdl::Callback from objects with a
+// Tests constructing and invoking a fidl::Callback from objects with a
 // compatible Run() method (called 'runnables'), from lambdas, and from function
 // pointers.
 TEST(Callback, Create) {
@@ -70,7 +70,7 @@ TEST(Callback, Create) {
 
   RunnableNoArgs f(&calls);
   // Construct from a runnable object.
-  mdl::Callback<void()> cb = f;
+  fidl::Callback<void()> cb = f;
   cb.Run();
   EXPECT_EQ(1, calls);
 
@@ -80,7 +80,7 @@ TEST(Callback, Create) {
   EXPECT_EQ(2, calls);
 
   // Construct from a runnable object with one primitive parameter.
-  mdl::Callback<void(int)> cb_with_param = RunnableOneArg(&calls);
+  fidl::Callback<void(int)> cb_with_param = RunnableOneArg(&calls);
   cb_with_param.Run(1);
   EXPECT_EQ(3, calls);
 
@@ -90,7 +90,7 @@ TEST(Callback, Create) {
   EXPECT_EQ(4, calls);
 
   // Construct from a runnable object with one string parameter.
-  mdl::Callback<void(String)> cb_with_string_param =
+  fidl::Callback<void(String)> cb_with_string_param =
       RunnableStringArgByConstRef(&calls);
   cb_with_string_param.Run(String("hello world"));
   EXPECT_EQ(5, calls);
@@ -101,7 +101,7 @@ TEST(Callback, Create) {
   EXPECT_EQ(6, calls);
 
   ExampleMoveOnlyType m;
-  mdl::Callback<void(ExampleMoveOnlyType)> cb_with_move_only_param =
+  fidl::Callback<void(ExampleMoveOnlyType)> cb_with_move_only_param =
       RunnableMoveOnlyParam(&calls);
   cb_with_move_only_param.Run(m.Clone());
   EXPECT_EQ(7, calls);
@@ -144,17 +144,17 @@ void OverloadedFunction(double param) {
   g_overloaded_function_with_double_param_called = true;
 }
 
-// Tests constructing and invoking a mdl::Callback from pointers to overloaded
+// Tests constructing and invoking a fidl::Callback from pointers to overloaded
 // functions.
 TEST(Callback, CreateFromOverloadedFunctionPtr) {
   g_overloaded_function_with_int_param_called = false;
-  mdl::Callback<void(int)> cb_with_int_param = &OverloadedFunction;
+  fidl::Callback<void(int)> cb_with_int_param = &OverloadedFunction;
   cb_with_int_param.Run(123);
   EXPECT_TRUE(g_overloaded_function_with_int_param_called);
   g_overloaded_function_with_int_param_called = false;
 
   g_overloaded_function_with_double_param_called = false;
-  mdl::Callback<void(double)> cb_with_double_param = &OverloadedFunction;
+  fidl::Callback<void(double)> cb_with_double_param = &OverloadedFunction;
   cb_with_double_param.Run(123);
   EXPECT_TRUE(g_overloaded_function_with_double_param_called);
   g_overloaded_function_with_double_param_called = false;
@@ -162,4 +162,4 @@ TEST(Callback, CreateFromOverloadedFunctionPtr) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

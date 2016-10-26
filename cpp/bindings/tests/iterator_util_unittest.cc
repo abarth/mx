@@ -1,15 +1,15 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include <algorithm>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/lib/iterator_util.h"
-#include "lib/mdl/cpp/bindings/map.h"
-#include "lib/mdl/cpp/bindings/tests/iterator_test_util.h"
+#include "lib/fidl/cpp/bindings/lib/iterator_util.h"
+#include "lib/fidl/cpp/bindings/map.h"
+#include "lib/fidl/cpp/bindings/tests/iterator_test_util.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 
 using internal::MapKeyIterator;
@@ -86,4 +86,4 @@ TEST(MapIteratorTest, BidirectionalIteratorConcept) {
 }
 
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

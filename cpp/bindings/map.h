@@ -1,17 +1,17 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_MAP_H_
-#define LIB_MDL_CPP_BINDINGS_MAP_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_MAP_H_
+#define LIB_FIDL_CPP_BINDINGS_MAP_H_
 
 #include <map>
 #include <type_traits>
 
-#include "lib/mdl/cpp/bindings/lib/map_internal.h"
-#include "lib/mdl/cpp/bindings/lib/template_util.h"
+#include "lib/fidl/cpp/bindings/lib/map_internal.h"
+#include "lib/fidl/cpp/bindings/lib/template_util.h"
 
-namespace mdl {
+namespace fidl {
 
 // A move-only map that can handle move-only values. Map has the following
 // characteristics:
@@ -44,7 +44,7 @@ class Map {
 
   // Constructs a non-null Map containing the specified |keys| mapped to the
   // corresponding |values|.
-  Map(mdl::Array<KeyType> keys, mdl::Array<ValueType> values)
+  Map(fidl::Array<KeyType> keys, fidl::Array<ValueType> values)
       : is_null_(false) {
     FTL_DCHECK(keys.size() == values.size());
     for (size_t i = 0; i < keys.size(); ++i)
@@ -253,18 +253,18 @@ class Map {
 
 // Copies the contents of an std::map to a new Map, optionally changing the
 // types of the keys and values along the way using TypeConverter.
-template <typename MdlKey,
-          typename MdlValue,
+template <typename FidlKey,
+          typename FidlValue,
           typename STLKey,
           typename STLValue>
-struct TypeConverter<Map<MdlKey, MdlValue>, std::map<STLKey, STLValue>> {
-  static Map<MdlKey, MdlValue> Convert(
+struct TypeConverter<Map<FidlKey, FidlValue>, std::map<STLKey, STLValue>> {
+  static Map<FidlKey, FidlValue> Convert(
       const std::map<STLKey, STLValue>& input) {
-    Map<MdlKey, MdlValue> result;
+    Map<FidlKey, FidlValue> result;
     result.mark_non_null();
     for (auto& pair : input) {
-      result.insert(TypeConverter<MdlKey, STLKey>::Convert(pair.first),
-                    TypeConverter<MdlValue, STLValue>::Convert(pair.second));
+      result.insert(TypeConverter<FidlKey, STLKey>::Convert(pair.first),
+                    TypeConverter<FidlValue, STLValue>::Convert(pair.second));
     }
     return result;
   }
@@ -272,25 +272,25 @@ struct TypeConverter<Map<MdlKey, MdlValue>, std::map<STLKey, STLValue>> {
 
 // Copies the contents of a Map to an std::map, optionally changing the types of
 // the keys and values along the way using TypeConverter.
-template <typename MdlKey,
-          typename MdlValue,
+template <typename FidlKey,
+          typename FidlValue,
           typename STLKey,
           typename STLValue>
-struct TypeConverter<std::map<STLKey, STLValue>, Map<MdlKey, MdlValue>> {
+struct TypeConverter<std::map<STLKey, STLValue>, Map<FidlKey, FidlValue>> {
   static std::map<STLKey, STLValue> Convert(
-      const Map<MdlKey, MdlValue>& input) {
+      const Map<FidlKey, FidlValue>& input) {
     std::map<STLKey, STLValue> result;
     if (!input.is_null()) {
       for (auto it = input.cbegin(); it != input.cend(); ++it) {
         result.insert(std::make_pair(
-            TypeConverter<STLKey, MdlKey>::Convert(it.GetKey()),
-            TypeConverter<STLValue, MdlValue>::Convert(it.GetValue())));
+            TypeConverter<STLKey, FidlKey>::Convert(it.GetKey()),
+            TypeConverter<STLValue, FidlValue>::Convert(it.GetValue())));
       }
     }
     return result;
   }
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_MAP_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_MAP_H_

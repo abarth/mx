@@ -1,14 +1,14 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/control_message_handler.h"
+#include "lib/fidl/cpp/bindings/lib/control_message_handler.h"
 
-#include "lib/mdl/cpp/bindings/lib/message_builder.h"
+#include "lib/fidl/cpp/bindings/lib/message_builder.h"
 #include "lib/ftl/logging.h"
 #include "mojo/public/interfaces/bindings/interface_control_messages.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 // static
@@ -80,4 +80,4 @@ bool ControlMessageHandler::RunOrClosePipe(Message* message) {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

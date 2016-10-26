@@ -1,16 +1,16 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_TESTS_ITERATOR_TEST_UTIL_H_
-#define LIB_MDL_CPP_BINDINGS_TESTS_ITERATOR_TEST_UTIL_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_TESTS_ITERATOR_TEST_UTIL_H_
+#define LIB_FIDL_CPP_BINDINGS_TESTS_ITERATOR_TEST_UTIL_H_
 
 #include <algorithm>
 #include <vector>
 
 #include "gtest/gtest.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 
 template <typename Iterator, typename ValueType>
@@ -127,6 +127,6 @@ void ExpectBidiMutableIteratorConcept(
 }
 
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_TESTS_ITERATOR_TEST_UTIL_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_TESTS_ITERATOR_TEST_UTIL_H_

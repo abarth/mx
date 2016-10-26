@@ -1,16 +1,16 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/tests/validation_util.h"
+#include "lib/fidl/cpp/bindings/tests/validation_util.h"
 
 #include <stdio.h>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/tests/validation_test_input_parser.h"
+#include "lib/fidl/cpp/bindings/tests/validation_test_input_parser.h"
 #include "mojo/public/cpp/test_support/test_support.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace validation_util {
 
@@ -104,4 +104,4 @@ std::vector<std::string> GetMatchingTests(const std::string& prefix) {
 
 }  // namespace validation_util
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

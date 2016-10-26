@@ -1,14 +1,14 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_NO_INTERFACE_H_
-#define LIB_MDL_CPP_BINDINGS_NO_INTERFACE_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_NO_INTERFACE_H_
+#define LIB_FIDL_CPP_BINDINGS_NO_INTERFACE_H_
 
-#include "lib/mdl/cpp/bindings/message.h"
-#include "lib/mdl/cpp/bindings/message_validator.h"
+#include "lib/fidl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/message_validator.h"
 
-namespace mdl {
+namespace fidl {
 
 // NoInterface is for use in cases when a non-existent or empty interface is
 // needed.
@@ -46,6 +46,6 @@ class NoInterfaceStub : public MessageReceiverWithResponder {
 
 typedef NoInterface AnyInterface;
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_NO_INTERFACE_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_NO_INTERFACE_H_

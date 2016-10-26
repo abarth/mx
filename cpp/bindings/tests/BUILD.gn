@@ -1,4 +1,4 @@
-# Copyright 2014 The Chromium Authors. All rights reserved.
+# Copyright 2014 The Fuchsia Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -53,8 +53,8 @@ mojo_sdk_source_set("tests") {
 
   mojo_sdk_deps = [
     "mojo/public:gtest",
-    "lib/mdl/cpp/bindings",
-    "lib/mdl/cpp/bindings:callback",
+    "lib/fidl/cpp/bindings",
+    "lib/fidl/cpp/bindings:callback",
     "mojo/public/cpp/environment:standalone",
     "mojo/public/cpp/system",
     "mojo/public/cpp/test_support",
@@ -74,8 +74,8 @@ mojo_sdk_source_set("perftests") {
 
   mojo_sdk_deps = [
     "mojo/public:gtest",
-    "lib/mdl/cpp/bindings",
-    "lib/mdl/cpp/bindings:callback",
+    "lib/fidl/cpp/bindings",
+    "lib/fidl/cpp/bindings:callback",
     "mojo/public/cpp/environment:standalone",
     "mojo/public/cpp/system",
     "mojo/public/cpp/test_support",
@@ -130,7 +130,7 @@ mojo_sdk_source_set("versioning_test_service_source_set") {
 
   mojo_sdk_deps = [
     "mojo/public/cpp/application:standalone",
-    "lib/mdl/cpp/bindings",
+    "lib/fidl/cpp/bindings",
     "mojo/public/cpp/system",
     "mojo/public/interfaces/bindings/tests:versioning_test_service_interfaces",
   ]
@@ -158,7 +158,7 @@ mojo_sdk_source_set("versioning_apptest_source_set") {
   mojo_sdk_deps = [
     "mojo/public/cpp/application:standalone",
     "mojo/public/cpp/application:test_support_standalone",
-    "lib/mdl/cpp/bindings",
+    "lib/fidl/cpp/bindings",
     "mojo/public/cpp/system",
     "mojo/public/interfaces/bindings/tests:versioning_test_client_interfaces",
   ]

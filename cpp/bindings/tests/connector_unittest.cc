@@ -1,4 +1,4 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -8,14 +8,14 @@
 #include <string>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/lib/connector.h"
-#include "lib/mdl/cpp/bindings/lib/message_builder.h"
-#include "lib/mdl/cpp/bindings/tests/message_queue.h"
+#include "lib/fidl/cpp/bindings/lib/connector.h"
+#include "lib/fidl/cpp/bindings/lib/message_builder.h"
+#include "lib/fidl/cpp/bindings/tests/message_queue.h"
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -464,4 +464,4 @@ TEST_F(ConnectorTest, DISABLED_NoTaskStarvation) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

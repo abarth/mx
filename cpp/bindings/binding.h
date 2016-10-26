@@ -1,26 +1,26 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_BINDING_H_
-#define LIB_MDL_CPP_BINDINGS_BINDING_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_BINDING_H_
+#define LIB_FIDL_CPP_BINDINGS_BINDING_H_
 
-#include <mojo/environment/async_waiter.h>
 #include <mx/msgpipe.h>
 
 #include <memory>
 #include <utility>
 
+#include "lib/fidl/cpp/bindings/interface_handle.h"
+#include "lib/fidl/cpp/bindings/interface_ptr.h"
+#include "lib/fidl/cpp/bindings/interface_request.h"
+#include "lib/fidl/cpp/bindings/lib/message_header_validator.h"
+#include "lib/fidl/cpp/bindings/lib/router.h"
+#include "lib/fidl/cpp/waiter/default.h"
 #include "lib/ftl/functional/closure.h"
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
-#include "lib/mdl/cpp/bindings/interface_handle.h"
-#include "lib/mdl/cpp/bindings/interface_ptr.h"
-#include "lib/mdl/cpp/bindings/interface_request.h"
-#include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
-#include "lib/mdl/cpp/bindings/lib/router.h"
 
-namespace mdl {
+namespace fidl {
 
 // Represents the binding of an interface implementation to a message pipe.
 // When the |Binding| object is destroyed, the binding between the message pipe
@@ -64,7 +64,7 @@ class Binding {
   // See class comment for definition of |waiter|.
   Binding(Interface* impl,
           mx::msgpipe handle,
-          const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter())
+          const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter())
       : Binding(impl) {
     Bind(std::move(handle), waiter);
   }
@@ -77,7 +77,7 @@ class Binding {
   // |waiter|.
   Binding(Interface* impl,
           InterfaceHandle<Interface>* interface_handle,
-          const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter())
+          const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter())
       : Binding(impl) {
     Bind(interface_handle, waiter);
   }
@@ -88,7 +88,7 @@ class Binding {
   // |waiter|.
   Binding(Interface* impl,
           InterfaceRequest<Interface> request,
-          const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter())
+          const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter())
       : Binding(impl) {
     Bind(request.PassMessagePipe(), waiter);
   }
@@ -100,9 +100,8 @@ class Binding {
   // Completes a binding that was constructed with only an interface
   // implementation. Takes ownership of |handle| and binds it to the previously
   // specified implementation. See class comment for definition of |waiter|.
-  void Bind(
-      mx::msgpipe handle,
-      const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
+  void Bind(mx::msgpipe handle,
+            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     FTL_DCHECK(!internal_router_);
 
     internal::MessageValidatorList validators;
@@ -124,9 +123,8 @@ class Binding {
   // takes ownership of it. The caller is expected to pass |ptr| on to the
   // eventual client of the service. Does not take ownership of |ptr|. See
   // class comment for definition of |waiter|.
-  void Bind(
-      InterfaceHandle<Interface>* interface_handle,
-      const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
+  void Bind(InterfaceHandle<Interface>* interface_handle,
+            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     mx::msgpipe endpoint0;
     mx::msgpipe endpoint1;
     mx::msgpipe::create(&endpoint0, &endpoint1, 0);
@@ -139,9 +137,8 @@ class Binding {
   // implementation by removing the message pipe endpoint from |request| and
   // binding it to the previously specified implementation. See class comment
   // for definition of |waiter|.
-  void Bind(
-      InterfaceRequest<Interface> request,
-      const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
+  void Bind(InterfaceRequest<Interface> request,
+            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     Bind(request.PassMessagePipe(), waiter);
   }
 
@@ -206,6 +203,6 @@ class Binding {
   FTL_DISALLOW_COPY_AND_ASSIGN(Binding);
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_BINDING_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_BINDING_H_

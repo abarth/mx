@@ -1,13 +1,13 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/message_builder.h"
+#include "lib/fidl/cpp/bindings/lib/message_builder.h"
 
-#include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
-#include "lib/mdl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_serialization.h"
+#include "lib/fidl/cpp/bindings/message.h"
 
-namespace mdl {
+namespace fidl {
 namespace {
 using internal::MessageHeader;
 using internal::MessageHeaderWithRequestID;
@@ -56,4 +56,4 @@ void MessageBuilder::Initialize(size_t size) {
   buf_.Initialize(message_.mutable_data(), message_.data_num_bytes());
 }
 
-}  // namespace mdl
+}  // namespace fidl

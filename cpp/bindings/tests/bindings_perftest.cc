@@ -1,14 +1,14 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
 #include "mojo/public/cpp/test_support/test_support.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/ping_service.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace {
 
 const double kMojoTicksPerSecond = 1000000.0;
@@ -117,4 +117,4 @@ TEST_F(MojoBindingsPerftest, InProcessPingPong) {
 }
 
 }  // namespace
-}  // namespace mdl
+}  // namespace fidl

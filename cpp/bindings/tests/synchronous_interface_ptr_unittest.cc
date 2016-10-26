@@ -1,27 +1,27 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/synchronous_interface_ptr.h"
+#include "lib/fidl/cpp/bindings/synchronous_interface_ptr.h"
 
 #include <thread>
 #include <utility>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/interface_request.h"
-#include "lib/mdl/cpp/bindings/strong_binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/interface_request.h"
+#include "lib/fidl/cpp/bindings/strong_binding.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/math_calculator.mojom-sync.h"
 #include "mojo/public/interfaces/bindings/tests/math_calculator.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/scoping.mojom-sync.h"
 #include "mojo/public/interfaces/bindings/tests/scoping.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
-using CalcCallback = mdl::Callback<void(double)>;
+using CalcCallback = fidl::Callback<void(double)>;
 
 // This runs in a separate thread.
 class MathCalculatorImpl : public math::Calculator {
@@ -221,4 +221,4 @@ TEST_F(SynchronousInterfacePtrTest, Scoping) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

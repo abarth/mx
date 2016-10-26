@@ -1,16 +1,16 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_MESSAGE_H_
-#define LIB_MDL_CPP_BINDINGS_MESSAGE_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_MESSAGE_H_
+#define LIB_FIDL_CPP_BINDINGS_MESSAGE_H_
 
 #include <vector>
 
-#include "lib/mdl/cpp/bindings/lib/message_internal.h"
+#include "lib/fidl/cpp/bindings/lib/message_internal.h"
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 
 // Message is a holder for the data and handles to be sent over a MessagePipe.
 // Message owns its data and handles, but a consumer of Message is free to
@@ -168,6 +168,6 @@ mx_status_t ReadAndDispatchMessage(const mx::msgpipe& handle,
                                    MessageReceiver* receiver,
                                    bool* receiver_result);
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_MESSAGE_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_MESSAGE_H_

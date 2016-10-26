@@ -1,24 +1,24 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
 
 #include <magenta/types.h>
 
 #include <vector>
 
-#include "lib/mdl/cpp/bindings/lib/bindings_internal.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
 
-namespace mdl {
+namespace fidl {
 
 template <typename I>
 class InterfaceHandle;
 
 namespace internal {
 
-// Please note that this is a different value than |mdl::kInvalidHandleValue|,
+// Please note that this is a different value than |fidl::kInvalidHandleValue|,
 // which is the "decoded" invalid handle.
 const mx_handle_t kEncodedInvalidHandleValue = static_cast<mx_handle_t>(-1);
 
@@ -87,6 +87,6 @@ inline void InterfaceDataToHandle(Interface_Data* input,
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_SERIALIZATION_H_

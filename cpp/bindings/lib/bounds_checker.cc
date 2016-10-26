@@ -1,13 +1,13 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/bounds_checker.h"
+#include "lib/fidl/cpp/bindings/lib/bounds_checker.h"
 
-#include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_serialization.h"
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 BoundsChecker::BoundsChecker(const void* data,
@@ -72,4 +72,4 @@ bool BoundsChecker::InternalIsValidRange(uintptr_t begin, uintptr_t end) const {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

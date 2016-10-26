@@ -1,18 +1,18 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
 
 #include <type_traits>
 
-#include "lib/mdl/cpp/bindings/lib/template_util.h"
-#include "lib/mdl/cpp/bindings/struct_ptr.h"
+#include "lib/fidl/cpp/bindings/lib/template_util.h"
+#include "lib/fidl/cpp/bindings/struct_ptr.h"
 #include "mojo/public/cpp/system/handle.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 
-namespace mdl {
+namespace fidl {
 class String;
 
 template <typename T>
@@ -276,6 +276,6 @@ struct ValueTraits<InterfaceRequest<I>> {
 };
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_BINDINGS_INTERNAL_H_

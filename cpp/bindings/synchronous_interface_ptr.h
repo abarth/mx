@@ -1,22 +1,22 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_SYNCHRONOUS_INTERFACE_PTR_H_
-#define LIB_MDL_CPP_BINDINGS_SYNCHRONOUS_INTERFACE_PTR_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_SYNCHRONOUS_INTERFACE_PTR_H_
+#define LIB_FIDL_CPP_BINDINGS_SYNCHRONOUS_INTERFACE_PTR_H_
 
 #include <cstddef>
 #include <memory>
 #include <utility>
 
-#include "lib/mdl/cpp/bindings/interface_handle.h"
-#include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
-#include "lib/mdl/cpp/bindings/lib/synchronous_connector.h"
-#include "lib/mdl/cpp/bindings/message_validator.h"
+#include "lib/fidl/cpp/bindings/interface_handle.h"
+#include "lib/fidl/cpp/bindings/lib/message_header_validator.h"
+#include "lib/fidl/cpp/bindings/lib/synchronous_connector.h"
+#include "lib/fidl/cpp/bindings/message_validator.h"
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
 
-namespace mdl {
+namespace fidl {
 
 // A synchronous version of InterfacePtr. Interface message calls using a
 // SynchronousInterfacePtr will block if a response message is expected. This
@@ -97,10 +97,10 @@ class SynchronousInterfacePtr {
       : version_(handle.version()) {
     connector_.reset(new internal::SynchronousConnector(handle.PassHandle()));
 
-    mdl::internal::MessageValidatorList validators;
-    validators.push_back(std::unique_ptr<mdl::internal::MessageValidator>(
-        new mdl::internal::MessageHeaderValidator));
-    validators.push_back(std::unique_ptr<mdl::internal::MessageValidator>(
+    fidl::internal::MessageValidatorList validators;
+    validators.push_back(std::unique_ptr<fidl::internal::MessageValidator>(
+        new fidl::internal::MessageHeaderValidator));
+    validators.push_back(std::unique_ptr<fidl::internal::MessageValidator>(
         new typename Interface::ResponseValidator_));
 
     proxy_.reset(new typename Interface::Synchronous_::Proxy_(
@@ -131,7 +131,7 @@ class SynchronousInterfacePtr {
 //   SynchronousInterfacePtr<Echo> client;
 //   InterfaceRequest<Echo> impl = GetSynchronousProxy(&client);
 //   // .. pass |impl| off to an implementation.
-//   mdl::String out;
+//   fidl::String out;
 //   client->EchoString("hello!", &out);
 //
 // TODO(vardhan): Consider renaming this function, along with her sister
@@ -145,6 +145,6 @@ InterfaceRequest<Interface> GetSynchronousProxy(
   return retval;
 }
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_SYNCHRONOUS_INTERFACE_PTR_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_SYNCHRONOUS_INTERFACE_PTR_H_

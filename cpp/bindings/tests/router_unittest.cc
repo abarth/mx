@@ -1,4 +1,4 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -6,13 +6,13 @@
 #include <string.h>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/lib/message_builder.h"
-#include "lib/mdl/cpp/bindings/lib/router.h"
-#include "lib/mdl/cpp/bindings/tests/message_queue.h"
+#include "lib/fidl/cpp/bindings/lib/message_builder.h"
+#include "lib/fidl/cpp/bindings/lib/router.h"
+#include "lib/fidl/cpp/bindings/tests/message_queue.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -457,4 +457,4 @@ TEST_F(RouterTest, LateResponse) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

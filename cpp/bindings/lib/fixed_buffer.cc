@@ -1,17 +1,17 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/fixed_buffer.h"
+#include "lib/fidl/cpp/bindings/lib/fixed_buffer.h"
 
 #include <stdlib.h>
 
 #include <algorithm>
 
-#include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_serialization.h"
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 FixedBuffer::FixedBuffer() : ptr_(nullptr), cursor_(0), size_(0) {}
@@ -57,4 +57,4 @@ void* FixedBufferForTesting::Leak() {
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

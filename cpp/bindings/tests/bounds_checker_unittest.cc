@@ -1,15 +1,15 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include <limits>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
-#include "lib/mdl/cpp/bindings/lib/bounds_checker.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/bounds_checker.h"
 #include "mojo/public/cpp/system/handle.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -206,4 +206,4 @@ TEST(BoundsCheckerTest, ClaimMemory) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

@@ -1,13 +1,13 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_MESSAGE_INTERNAL_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_MESSAGE_INTERNAL_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_MESSAGE_INTERNAL_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_MESSAGE_INTERNAL_H_
 
-#include "lib/mdl/cpp/bindings/lib/bindings_internal.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 #pragma pack(push, 1)
@@ -36,6 +36,6 @@ static_assert(sizeof(MessageData) == sizeof(MessageHeader),
 #pragma pack(pop)
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_MESSAGE_INTERNAL_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_MESSAGE_INTERNAL_H_

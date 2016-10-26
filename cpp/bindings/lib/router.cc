@@ -1,16 +1,16 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/router.h"
+#include "lib/fidl/cpp/bindings/lib/router.h"
 
 #include <string>
 #include <utility>
 
-#include "lib/mdl/cpp/bindings/message_validator.h"
+#include "lib/fidl/cpp/bindings/message_validator.h"
 #include "lib/ftl/logging.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 // ----------------------------------------------------------------------------
@@ -169,4 +169,4 @@ bool Router::HandleIncomingMessage(Message* message) {
 // ----------------------------------------------------------------------------
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

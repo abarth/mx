@@ -1,4 +1,4 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -10,22 +10,22 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/interface_ptr.h"
-#include "lib/mdl/cpp/bindings/lib/connector.h"
-#include "lib/mdl/cpp/bindings/lib/message_header_validator.h"
-#include "lib/mdl/cpp/bindings/lib/router.h"
-#include "lib/mdl/cpp/bindings/lib/validation_errors.h"
-#include "lib/mdl/cpp/bindings/message.h"
-#include "lib/mdl/cpp/bindings/tests/validation_test_input_parser.h"
-#include "lib/mdl/cpp/bindings/tests/validation_util.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/interface_ptr.h"
+#include "lib/fidl/cpp/bindings/lib/connector.h"
+#include "lib/fidl/cpp/bindings/lib/message_header_validator.h"
+#include "lib/fidl/cpp/bindings/lib/router.h"
+#include "lib/fidl/cpp/bindings/lib/validation_errors.h"
+#include "lib/fidl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/tests/validation_test_input_parser.h"
+#include "lib/fidl/cpp/bindings/tests/validation_util.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/cpp/system/message_pipe.h"
 #include "mojo/public/cpp/test_support/test_support.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/validation_test_interfaces.mojom.h"
 
-namespace mdl {
+namespace fidl {
 
 using internal::MessageValidator;
 using internal::MessageValidatorList;
@@ -152,7 +152,7 @@ class ValidationIntegrationTest : public testing::Test {
 
    public:
     ValidationIntegrationTest* owner_;
-    mdl::internal::Connector connector_;
+    fidl::internal::Connector connector_;
   };
 
   void PumpMessages() { loop_.RunUntilIdle(); }
@@ -172,7 +172,7 @@ class IntegrationTestInterfaceImpl : public IntegrationTestInterface {
   }
 };
 
-class FailingValidator : public mdl::internal::MessageValidator {
+class FailingValidator : public fidl::internal::MessageValidator {
  public:
   explicit FailingValidator(ValidationError err) : err_(err) {}
   ValidationError Validate(const Message* message, std::string* err) override {
@@ -291,7 +291,7 @@ TEST(ValidationTest, Conformance) {
   DummyMessageReceiver dummy_receiver;
   MessageValidatorList validators;
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::MessageHeaderValidator));
+      new fidl::internal::MessageHeaderValidator));
   validators.push_back(std::unique_ptr<MessageValidator>(
       new ConformanceTestInterface::RequestValidator_));
 
@@ -305,7 +305,7 @@ TEST(ValidationTest, BoundsCheck) {
   DummyMessageReceiver dummy_receiver;
   MessageValidatorList validators;
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::MessageHeaderValidator));
+      new fidl::internal::MessageHeaderValidator));
   validators.push_back(std::unique_ptr<MessageValidator>(
       new BoundsCheckTestInterface::RequestValidator_));
 
@@ -317,7 +317,7 @@ TEST(ValidationTest, ResponseConformance) {
   DummyMessageReceiver dummy_receiver;
   MessageValidatorList validators;
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::MessageHeaderValidator));
+      new fidl::internal::MessageHeaderValidator));
   validators.push_back(std::unique_ptr<MessageValidator>(
       new ConformanceTestInterface::ResponseValidator_));
 
@@ -329,7 +329,7 @@ TEST(ValidationTest, ResponseBoundsCheck) {
   DummyMessageReceiver dummy_receiver;
   MessageValidatorList validators;
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::MessageHeaderValidator));
+      new fidl::internal::MessageHeaderValidator));
   validators.push_back(std::unique_ptr<MessageValidator>(
       new BoundsCheckTestInterface::ResponseValidator_));
 
@@ -346,9 +346,9 @@ TEST_F(ValidationIntegrationTest, InterfacePtr) {
           InterfaceHandle<IntegrationTestInterface>(testee_endpoint(), 0u));
   interface_ptr.internal_state()->router_for_testing()->EnableTestingMode();
 
-  mdl::internal::MessageValidatorList validators;
+  fidl::internal::MessageValidatorList validators;
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::MessageHeaderValidator));
+      new fidl::internal::MessageHeaderValidator));
   validators.push_back(std::unique_ptr<MessageValidator>(
       new typename IntegrationTestInterface::ResponseValidator_));
 
@@ -368,9 +368,9 @@ TEST_F(ValidationIntegrationTest, Binding) {
       InterfaceRequest<IntegrationTestInterface>(testee_endpoint().Pass()));
   binding.internal_router()->EnableTestingMode();
 
-  mdl::internal::MessageValidatorList validators;
+  fidl::internal::MessageValidatorList validators;
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::MessageHeaderValidator));
+      new fidl::internal::MessageHeaderValidator));
   validators.push_back(std::unique_ptr<MessageValidator>(
       new typename IntegrationTestInterface::RequestValidator_));
 
@@ -384,22 +384,22 @@ TEST(ValidationTest, ValidateEncodedPointer) {
   uint64_t offset;
 
   offset = 0ULL;
-  EXPECT_TRUE(mdl::internal::ValidateEncodedPointer(&offset));
+  EXPECT_TRUE(fidl::internal::ValidateEncodedPointer(&offset));
 
   offset = 1ULL;
-  EXPECT_TRUE(mdl::internal::ValidateEncodedPointer(&offset));
+  EXPECT_TRUE(fidl::internal::ValidateEncodedPointer(&offset));
 
   // offset must be <= 32-bit.
   offset = std::numeric_limits<uint32_t>::max() + 1ULL;
-  EXPECT_FALSE(mdl::internal::ValidateEncodedPointer(&offset));
+  EXPECT_FALSE(fidl::internal::ValidateEncodedPointer(&offset));
 }
 
 TEST(ValidationTest, RunValidatorsOnMessageTest) {
   Message msg;
-  mdl::internal::MessageValidatorList validators;
+  fidl::internal::MessageValidatorList validators;
 
   validators.push_back(std::unique_ptr<MessageValidator>(
-      new mdl::internal::PassThroughValidator));
+      new fidl::internal::PassThroughValidator));
   EXPECT_EQ(ValidationError::NONE,
             RunValidatorsOnMessage(validators, &msg, nullptr));
 
@@ -450,4 +450,4 @@ TEST(EnumValueValidationTest, EnumWithin) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

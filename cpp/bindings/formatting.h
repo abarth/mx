@@ -1,22 +1,22 @@
-// Copyright 2016 The Chromium Authors. All rights reserved.
+// Copyright 2016 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_FORMATTING_H_
-#define LIB_MDL_CPP_BINDINGS_FORMATTING_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_FORMATTING_H_
+#define LIB_FIDL_CPP_BINDINGS_FORMATTING_H_
 
 #include <iosfwd>
 
-#include "lib/mdl/cpp/bindings/array.h"
-#include "lib/mdl/cpp/bindings/map.h"
-#include "lib/mdl/cpp/bindings/struct_ptr.h"
+#include "lib/fidl/cpp/bindings/array.h"
+#include "lib/fidl/cpp/bindings/map.h"
+#include "lib/fidl/cpp/bindings/struct_ptr.h"
 
-namespace mdl {
+namespace fidl {
 
 // Prints the contents of an array to an output stream in a human-readable
 // format.
 template <typename T>
-std::ostream& operator<<(std::ostream& os, const mdl::Array<T>& array) {
+std::ostream& operator<<(std::ostream& os, const fidl::Array<T>& array) {
   if (array) {
     os << "[";
     bool first = true;
@@ -38,7 +38,7 @@ std::ostream& operator<<(std::ostream& os, const mdl::Array<T>& array) {
 // Prints the contents of a map to an output stream in a human-readable
 // format.
 template <typename Key, typename Value>
-std::ostream& operator<<(std::ostream& os, const mdl::Map<Key, Value>& map) {
+std::ostream& operator<<(std::ostream& os, const fidl::Map<Key, Value>& map) {
   if (map) {
     os << "{";
     bool first = true;
@@ -72,6 +72,6 @@ std::ostream& operator<<(std::ostream& os, const InlinedStructPtr<T>& value) {
   return os << value.get();
 }
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_FORMATTING_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_FORMATTING_H_

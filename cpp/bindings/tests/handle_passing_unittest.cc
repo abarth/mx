@@ -1,17 +1,17 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include <utility>
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/strong_binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/strong_binding.h"
 #include "mojo/public/cpp/test_support/test_utils.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/sample_factory.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -47,9 +47,9 @@ class SampleNamedObjectImpl : public sample::NamedObject {
  public:
   explicit SampleNamedObjectImpl(InterfaceRequest<sample::NamedObject> request)
       : binding_(this, request.Pass()) {}
-  void SetName(const mdl::String& name) override { name_ = name; }
+  void SetName(const fidl::String& name) override { name_ = name; }
 
-  void GetName(const mdl::Callback<void(mdl::String)>& callback) override {
+  void GetName(const fidl::Callback<void(fidl::String)>& callback) override {
     callback.Run(name_);
   }
 
@@ -122,11 +122,11 @@ class SampleFactoryImpl : public sample::Factory {
   // interfaces.
   void RequestImportedInterface(
       InterfaceRequest<imported::ImportedInterface> imported,
-      const mdl::Callback<void(InterfaceRequest<imported::ImportedInterface>)>&
+      const fidl::Callback<void(InterfaceRequest<imported::ImportedInterface>)>&
           callback) override {}
   void TakeImportedInterface(
       InterfaceHandle<imported::ImportedInterface> imported,
-      const mdl::Callback<void(InterfaceHandle<imported::ImportedInterface>)>&
+      const fidl::Callback<void(InterfaceHandle<imported::ImportedInterface>)>&
           callback) override {}
 
  private:
@@ -297,7 +297,7 @@ TEST_F(HandlePassingTest, PipesAreClosed) {
 }
 
 TEST_F(HandlePassingTest, IsHandle) {
-  // Validate that mdl::internal::IsHandle<> works as expected since this.
+  // Validate that fidl::internal::IsHandle<> works as expected since this.
   // template is key to ensuring that we don't leak handles.
   EXPECT_TRUE(internal::IsHandle<Handle>::value);
   EXPECT_TRUE(internal::IsHandle<MessagePipeHandle>::value);
@@ -344,4 +344,4 @@ TEST_F(HandlePassingTest, CreateNamedObject) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

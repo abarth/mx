@@ -1,11 +1,11 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_TYPE_CONVERTER_H_
-#define LIB_MDL_CPP_BINDINGS_TYPE_CONVERTER_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_TYPE_CONVERTER_H_
+#define LIB_FIDL_CPP_BINDINGS_TYPE_CONVERTER_H_
 
-namespace mdl {
+namespace fidl {
 
 // Specialize the following class:
 //   template <typename T, typename U> struct TypeConverter;
@@ -13,7 +13,7 @@ namespace mdl {
 // the target type; U is the input type.
 //
 // Specializations should implement the following interfaces:
-//   namespace mdl {
+//   namespace fidl {
 //   template <>
 //   struct TypeConverter<X, Y> {
 //     static X Convert(const Y& input);
@@ -38,7 +38,7 @@ namespace mdl {
 // Now, imagine you wanted to write a TypeConverter specialization for
 // gfx::Point. It might look like this:
 //
-//   namespace mdl {
+//   namespace fidl {
 //   template <>
 //   struct TypeConverter<geometry::PointPtr, gfx::Point> {
 //     static geometry::PointPtr Convert(const gfx::Point& input) {
@@ -87,6 +87,6 @@ inline T ConvertTo(const U& obj) {
   return TypeConverter<T, U>::Convert(obj);
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_TYPE_CONVERTER_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_TYPE_CONVERTER_H_

@@ -1,16 +1,16 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/validation_util.h"
+#include "lib/fidl/cpp/bindings/lib/validation_util.h"
 
 #include <limits>
 #include <string>
 
-#include "lib/mdl/cpp/bindings/lib/bindings_serialization.h"
-#include "lib/mdl/cpp/bindings/lib/validation_errors.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/validation_errors.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 bool ValidateEncodedPointer(const uint64_t* offset) {
@@ -52,4 +52,4 @@ ValidationError ValidateStructHeaderAndClaimMemory(
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

@@ -1,16 +1,16 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_CONTROL_MESSAGE_PROXY_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_CONTROL_MESSAGE_PROXY_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_CONTROL_MESSAGE_PROXY_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_CONTROL_MESSAGE_PROXY_H_
 
 #include <stdint.h>
 
-#include "lib/mdl/cpp/bindings/callback.h"
+#include "lib/fidl/cpp/bindings/callback.h"
 #include "lib/ftl/macros.h"
 
-namespace mdl {
+namespace fidl {
 
 class MessageReceiverWithResponder;
 
@@ -33,6 +33,6 @@ class ControlMessageProxy {
 };
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_CONTROL_MESSAGE_PROXY_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_CONTROL_MESSAGE_PROXY_H_

@@ -1,4 +1,4 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -11,7 +11,7 @@
 #include "lib/ftl/macros.h"
 #include "mojo/public/interfaces/bindings/tests/sample_service.mojom.h"
 
-namespace mdl {
+namespace fidl {
 
 template <>
 struct TypeConverter<int32_t, sample::BarPtr> {
@@ -22,7 +22,7 @@ struct TypeConverter<int32_t, sample::BarPtr> {
   }
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
 namespace sample {
 namespace {
@@ -35,7 +35,7 @@ bool g_dump_message_as_text = false;
 
 // Make a sample |Foo|.
 FooPtr MakeFoo() {
-  mdl::String name("foopy");
+  fidl::String name("foopy");
 
   BarPtr bar(Bar::New());
   bar->alpha = 20;
@@ -43,7 +43,7 @@ FooPtr MakeFoo() {
   bar->gamma = 60;
   bar->type = Bar::Type::VERTICAL;
 
-  auto extra_bars = mdl::Array<BarPtr>::New(3);
+  auto extra_bars = fidl::Array<BarPtr>::New(3);
   for (size_t i = 0; i < extra_bars.size(); ++i) {
     Bar::Type type = i % 2 == 0 ? Bar::Type::VERTICAL : Bar::Type::HORIZONTAL;
     BarPtr bar(Bar::New());
@@ -55,34 +55,34 @@ FooPtr MakeFoo() {
     extra_bars[i] = bar.Pass();
   }
 
-  auto data = mdl::Array<uint8_t>::New(10);
+  auto data = fidl::Array<uint8_t>::New(10);
   for (size_t i = 0; i < data.size(); ++i)
     data[i] = static_cast<uint8_t>(data.size() - i);
 
-  auto input_streams = mdl::Array<mdl::ScopedDataPipeConsumerHandle>::New(2);
-  auto output_streams = mdl::Array<mdl::ScopedDataPipeProducerHandle>::New(2);
+  auto input_streams = fidl::Array<fidl::ScopedDataPipeConsumerHandle>::New(2);
+  auto output_streams = fidl::Array<fidl::ScopedDataPipeProducerHandle>::New(2);
   for (size_t i = 0; i < input_streams.size(); ++i) {
     MojoCreateDataPipeOptions options;
     options.struct_size = sizeof(MojoCreateDataPipeOptions);
     options.flags = MOJO_CREATE_DATA_PIPE_OPTIONS_FLAG_NONE;
     options.element_num_bytes = 1;
     options.capacity_num_bytes = 1024;
-    mdl::ScopedDataPipeProducerHandle producer;
-    mdl::ScopedDataPipeConsumerHandle consumer;
-    mdl::CreateDataPipe(&options, &producer, &consumer);
+    fidl::ScopedDataPipeProducerHandle producer;
+    fidl::ScopedDataPipeConsumerHandle consumer;
+    fidl::CreateDataPipe(&options, &producer, &consumer);
     input_streams[i] = consumer.Pass();
     output_streams[i] = producer.Pass();
   }
 
-  auto array_of_array_of_bools = mdl::Array<mdl::Array<bool>>::New(2);
+  auto array_of_array_of_bools = fidl::Array<fidl::Array<bool>>::New(2);
   for (size_t i = 0; i < 2; ++i) {
-    auto array_of_bools = mdl::Array<bool>::New(2);
+    auto array_of_bools = fidl::Array<bool>::New(2);
     for (size_t j = 0; j < 2; ++j)
       array_of_bools[j] = j;
     array_of_array_of_bools[i] = array_of_bools.Pass();
   }
 
-  mdl::MessagePipe pipe;
+  fidl::MessagePipe pipe;
   FooPtr foo(Foo::New());
   foo->name = name;
   foo->x = 1;
@@ -175,12 +175,14 @@ void Print(int depth, const char* name, uint8_t value) {
 }
 
 template <typename H>
-void Print(int depth, const char* name, const mdl::ScopedHandleBase<H>& value) {
+void Print(int depth,
+           const char* name,
+           const fidl::ScopedHandleBase<H>& value) {
   PrintSpacer(depth);
   std::cout << name << ": 0x" << std::hex << value.get().value() << std::endl;
 }
 
-void Print(int depth, const char* name, const mdl::String& str) {
+void Print(int depth, const char* name, const fidl::String& str) {
   PrintSpacer(depth);
   std::cout << name << ": \"" << str.get() << "\"" << std::endl;
 }
@@ -199,7 +201,7 @@ void Print(int depth, const char* name, const BarPtr& bar) {
 }
 
 template <typename T>
-void Print(int depth, const char* name, const mdl::Array<T>& array) {
+void Print(int depth, const char* name, const fidl::Array<T>& array) {
   PrintSpacer(depth);
   std::cout << name << ":" << std::endl;
   if (!array.is_null()) {
@@ -256,7 +258,7 @@ class ServiceImpl : public Service {
  public:
   void Frobinate(FooPtr foo,
                  BazOptions baz,
-                 mdl::InterfaceHandle<Port> port,
+                 fidl::InterfaceHandle<Port> port,
                  const Service::FrobinateCallback& callback) override {
     // Users code goes here to handle the incoming Frobinate message.
 
@@ -278,18 +280,18 @@ class ServiceImpl : public Service {
     callback.Run(5);
   }
 
-  void GetPort(mdl::InterfaceRequest<Port> port_request) override {}
+  void GetPort(fidl::InterfaceRequest<Port> port_request) override {}
 };
 
 class ServiceProxyImpl : public ServiceProxy {
  public:
-  explicit ServiceProxyImpl(mdl::MessageReceiverWithResponder* receiver)
+  explicit ServiceProxyImpl(fidl::MessageReceiverWithResponder* receiver)
       : ServiceProxy(receiver) {}
 };
 
-class SimpleMessageReceiver : public mdl::MessageReceiverWithResponder {
+class SimpleMessageReceiver : public fidl::MessageReceiverWithResponder {
  public:
-  bool Accept(mdl::Message* message) override {
+  bool Accept(fidl::Message* message) override {
     // Imagine some IPC happened here.
 
     if (g_dump_message_as_hex) {
@@ -306,8 +308,8 @@ class SimpleMessageReceiver : public mdl::MessageReceiverWithResponder {
     return stub.Accept(message);
   }
 
-  bool AcceptWithResponder(mdl::Message* message,
-                           mdl::MessageReceiver* responder) override {
+  bool AcceptWithResponder(fidl::Message* message,
+                           fidl::MessageReceiver* responder) override {
     return false;
   }
 };

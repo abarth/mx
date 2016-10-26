@@ -1,9 +1,9 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_VALIDATION_ERRORS_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_VALIDATION_ERRORS_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_VALIDATION_ERRORS_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_VALIDATION_ERRORS_H_
 
 #include <sstream>
 #include <string>
@@ -11,7 +11,7 @@
 #include "lib/ftl/logging.h"
 #include "lib/ftl/macros.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 enum class ValidationError {
@@ -100,7 +100,7 @@ class ValidationErrorStringStream {
 };
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
 // In a debug build, logs a serialization warning.
 // TODO(vardhan): Make this work like an ostream.
@@ -118,11 +118,11 @@ class ValidationErrorStringStream {
 // this macro's use semantically valid.
 #define MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err_msg) \
   true ? (void)0                                   \
-       : ::mdl::internal::VoidifyOstream() &       \
-             ::mdl::internal::ValidationErrorStringStream(err_msg).stream()
+       : ::fidl::internal::VoidifyOstream() &      \
+             ::fidl::internal::ValidationErrorStringStream(err_msg).stream()
 #else
 #define MOJO_INTERNAL_DEBUG_SET_ERROR_MSG(err_msg) \
-  ::mdl::internal::ValidationErrorStringStream(err_msg).stream()
+  ::fidl::internal::ValidationErrorStringStream(err_msg).stream()
 #endif  // NDEBUG
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_VALIDATION_ERRORS_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_VALIDATION_ERRORS_H_

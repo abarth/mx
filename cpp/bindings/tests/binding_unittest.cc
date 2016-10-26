@@ -1,19 +1,19 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Note: This file tests both binding.h (mdl::Binding) and strong_binding.h
-// (mdl::StrongBinding).
+// Note: This file tests both binding.h (fidl::Binding) and strong_binding.h
+// (fidl::StrongBinding).
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/strong_binding.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/strong_binding.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/sample_interfaces.mojom.h"
 #include "mojo/public/interfaces/bindings/tests/sample_service.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace {
 
 class BindingTestBase : public testing::Test {
@@ -42,7 +42,7 @@ class ServiceImpl : public sample::Service {
   // sample::Service implementation
   void Frobinate(sample::FooPtr foo,
                  BazOptions options,
-                 mdl::InterfaceHandle<sample::Port> port,
+                 fidl::InterfaceHandle<sample::Port> port,
                  const FrobinateCallback& callback) override {
     callback.Run(1);
   }
@@ -71,7 +71,7 @@ TEST_F(BindingTest, Close) {
   EXPECT_TRUE(called);
 }
 
-// Tests that destroying a mdl::Binding closes the bound message pipe handle.
+// Tests that destroying a fidl::Binding closes the bound message pipe handle.
 TEST_F(BindingTest, DestroyClosesMessagePipe) {
   bool encountered_error = false;
   ServiceImpl impl;
@@ -215,7 +215,7 @@ class IntegerAccessorImpl : public sample::IntegerAccessor {
 
 TEST_F(BindingTest, SetInterfaceHandleVersion) {
   IntegerAccessorImpl impl;
-  mdl::InterfaceHandle<sample::IntegerAccessor> handle;
+  fidl::InterfaceHandle<sample::IntegerAccessor> handle;
   Binding<sample::IntegerAccessor> binding(&impl, &handle);
   EXPECT_EQ(3u, handle.version());
 }
@@ -224,7 +224,7 @@ TEST_F(BindingTest, SetInterfaceHandleVersion) {
 
 using StrongBindingTest = BindingTestBase;
 
-// Tests that destroying a mdl::StrongBinding closes the bound message pipe
+// Tests that destroying a fidl::StrongBinding closes the bound message pipe
 // handle but does *not* destroy the implementation object.
 TEST_F(StrongBindingTest, DestroyClosesMessagePipe) {
   bool encountered_error = false;
@@ -334,4 +334,4 @@ TEST_F(BindingTest, StrongBindingUnbindCompile) {
 }
 
 }  // namespace
-}  // namespace mdl
+}  // namespace fidl

@@ -1,9 +1,9 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_H_
-#define LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_INTERFACE_PTR_H_
+#define LIB_FIDL_CPP_BINDINGS_INTERFACE_PTR_H_
 
 #include <algorithm>
 #include <cstddef>
@@ -11,11 +11,11 @@
 #include <utility>
 
 #include "lib/ftl/macros.h"
-#include "lib/mdl/cpp/bindings/interface_handle.h"
-#include "lib/mdl/cpp/bindings/lib/interface_ptr_internal.h"
-#include "mojo/public/cpp/environment/environment.h"
+#include "lib/fidl/cpp/bindings/interface_handle.h"
+#include "lib/fidl/cpp/bindings/lib/interface_ptr_internal.h"
+#include "lib/fidl/cpp/waiter/default.h"
 
-namespace mdl {
+namespace fidl {
 
 // A pointer to a local proxy of a remote Interface implementation. Uses a
 // message pipe to communicate with the remote implementation, and automatically
@@ -63,7 +63,7 @@ class InterfacePtr {
   // specified |waiter| will be used as in the InterfacePtr::Bind() method.
   static InterfacePtr<Interface> Create(
       InterfaceHandle<Interface> info,
-      const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
+      const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     InterfacePtr<Interface> ptr;
     if (info.is_valid())
       ptr.Bind(std::move(info), waiter);
@@ -78,9 +78,8 @@ class InterfacePtr {
   // Calling with an invalid |info| (containing an invalid message pipe handle)
   // has the same effect as reset(). In this case, the InterfacePtr is not
   // considered as bound.
-  void Bind(
-      InterfaceHandle<Interface> info,
-      const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter()) {
+  void Bind(InterfaceHandle<Interface> info,
+            const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter()) {
     reset();
     if (info.is_valid())
       internal_state_.Bind(std::move(info), waiter);
@@ -185,6 +184,6 @@ class InterfacePtr {
   MOJO_MOVE_ONLY_TYPE(InterfacePtr);
 };
 
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_INTERFACE_PTR_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_INTERFACE_PTR_H_

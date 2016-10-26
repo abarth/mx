@@ -1,16 +1,16 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_TESTS_VALIDATION_TEST_INPUT_PARSER_H_
-#define LIB_MDL_CPP_BINDINGS_TESTS_VALIDATION_TEST_INPUT_PARSER_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_TESTS_VALIDATION_TEST_INPUT_PARSER_H_
+#define LIB_FIDL_CPP_BINDINGS_TESTS_VALIDATION_TEST_INPUT_PARSER_H_
 
 #include <stdint.h>
 
 #include <string>
 #include <vector>
 
-namespace mdl {
+namespace fidl {
 namespace test {
 
 // Input Format of Mojo Message Validation Tests.
@@ -115,6 +115,6 @@ bool ParseValidationTestInput(const std::string& input,
                               std::string* error_message);
 
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_TESTS_VALIDATION_TEST_INPUT_PARSER_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_TESTS_VALIDATION_TEST_INPUT_PARSER_H_

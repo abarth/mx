@@ -1,12 +1,12 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/string_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/string_serialization.h"
 
 #include <string.h>
 
-namespace mdl {
+namespace fidl {
 
 size_t GetSerializedSize_(const String& input) {
   if (!input)
@@ -37,4 +37,4 @@ void Deserialize_(internal::String_Data* input, String* output) {
   }
 }
 
-}  // namespace mdl
+}  // namespace fidl

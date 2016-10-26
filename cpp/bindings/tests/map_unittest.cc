@@ -1,30 +1,30 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/array.h"
-#include "lib/mdl/cpp/bindings/lib/array_serialization.h"
-#include "lib/mdl/cpp/bindings/lib/bindings_internal.h"
-#include "lib/mdl/cpp/bindings/lib/fixed_buffer.h"
-#include "lib/mdl/cpp/bindings/lib/map_serialization.h"
-#include "lib/mdl/cpp/bindings/lib/validate_params.h"
-#include "lib/mdl/cpp/bindings/map.h"
-#include "lib/mdl/cpp/bindings/string.h"
-#include "lib/mdl/cpp/bindings/tests/container_test_util.h"
+#include "lib/fidl/cpp/bindings/array.h"
+#include "lib/fidl/cpp/bindings/lib/array_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/bindings_internal.h"
+#include "lib/fidl/cpp/bindings/lib/fixed_buffer.h"
+#include "lib/fidl/cpp/bindings/lib/map_serialization.h"
+#include "lib/fidl/cpp/bindings/lib/validate_params.h"
+#include "lib/fidl/cpp/bindings/map.h"
+#include "lib/fidl/cpp/bindings/string.h"
+#include "lib/fidl/cpp/bindings/tests/container_test_util.h"
 #include "mojo/public/interfaces/bindings/tests/rect.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace test {
 
 namespace {
 
-using mdl::internal::Array_Data;
-using mdl::internal::ArrayValidateParams;
-using mdl::internal::FixedBufferForTesting;
-using mdl::internal::Map_Data;
-using mdl::internal::String_Data;
-using mdl::internal::ValidationError;
+using fidl::internal::Array_Data;
+using fidl::internal::ArrayValidateParams;
+using fidl::internal::FixedBufferForTesting;
+using fidl::internal::Map_Data;
+using fidl::internal::String_Data;
+using fidl::internal::ValidationError;
 
 struct StringIntData {
   const char* string_data;
@@ -83,7 +83,7 @@ TEST(MapTest, TestIndexOperatorAsRValue) {
 
 TEST(MapTest, TestIndexOperatorMoveOnly) {
   ASSERT_EQ(0u, MoveOnlyType::num_instances());
-  mdl::Map<mdl::String, mdl::Array<int32_t>> map;
+  fidl::Map<fidl::String, fidl::Array<int32_t>> map;
   std::vector<MoveOnlyType*> value_ptrs;
 
   for (size_t i = 0; i < kStringIntDataSize; ++i) {
@@ -115,13 +115,13 @@ TEST(MapTest, ConstructedFromArray) {
 
   for (size_t i = 0; i < kStringIntDataSize; ++i) {
     EXPECT_EQ(kStringIntData[i].int_data,
-              map.at(mdl::String(kStringIntData[i].string_data)));
+              map.at(fidl::String(kStringIntData[i].string_data)));
   }
 }
 
 TEST(MapTest, Insert_Copyable) {
   ASSERT_EQ(0u, CopyableType::num_instances());
-  mdl::Map<mdl::String, CopyableType> map;
+  fidl::Map<fidl::String, CopyableType> map;
   std::vector<CopyableType*> value_ptrs;
 
   for (size_t i = 0; i < kStringIntDataSize; ++i) {
@@ -147,7 +147,7 @@ TEST(MapTest, Insert_Copyable) {
 
 TEST(MapTest, Insert_MoveOnly) {
   ASSERT_EQ(0u, MoveOnlyType::num_instances());
-  mdl::Map<mdl::String, MoveOnlyType> map;
+  fidl::Map<fidl::String, MoveOnlyType> map;
   std::vector<MoveOnlyType*> value_ptrs;
 
   for (size_t i = 0; i < kStringIntDataSize; ++i) {
@@ -173,7 +173,7 @@ TEST(MapTest, Insert_MoveOnly) {
 
 TEST(MapTest, IndexOperator_MoveOnly) {
   ASSERT_EQ(0u, MoveOnlyType::num_instances());
-  mdl::Map<mdl::String, MoveOnlyType> map;
+  fidl::Map<fidl::String, MoveOnlyType> map;
   std::vector<MoveOnlyType*> value_ptrs;
 
   for (size_t i = 0; i < kStringIntDataSize; ++i) {
@@ -426,4 +426,4 @@ TEST(MapTest, Serialization_MapOfNullableStructs) {
 
 }  // namespace
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl

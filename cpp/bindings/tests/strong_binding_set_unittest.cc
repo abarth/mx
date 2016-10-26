@@ -1,17 +1,17 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/strong_binding_set.h"
+#include "lib/fidl/cpp/bindings/strong_binding_set.h"
 
 #include "gtest/gtest.h"
-#include "lib/mdl/cpp/bindings/binding.h"
-#include "lib/mdl/cpp/bindings/interface_request.h"
+#include "lib/fidl/cpp/bindings/binding.h"
+#include "lib/fidl/cpp/bindings/interface_request.h"
 #include "lib/ftl/macros.h"
 #include "mojo/public/cpp/utility/run_loop.h"
 #include "mojo/public/interfaces/bindings/tests/minimal_interface.mojom.h"
 
-namespace mdl {
+namespace fidl {
 namespace common {
 namespace {
 
@@ -113,4 +113,4 @@ TEST(StrongBindingSetTest, FullLifeCycle) {
 
 }  // namespace
 }  // namespace common
-}  // namespace mdl
+}  // namespace fidl

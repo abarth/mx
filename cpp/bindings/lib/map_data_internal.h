@@ -1,19 +1,19 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_MAP_DATA_INTERNAL_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_MAP_DATA_INTERNAL_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_MAP_DATA_INTERNAL_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_MAP_DATA_INTERNAL_H_
 
 #include <string>
 #include <vector>
 
-#include "lib/mdl/cpp/bindings/lib/array_internal.h"
-#include "lib/mdl/cpp/bindings/lib/validate_params.h"
-#include "lib/mdl/cpp/bindings/lib/validation_errors.h"
-#include "lib/mdl/cpp/bindings/lib/validation_util.h"
+#include "lib/fidl/cpp/bindings/lib/array_internal.h"
+#include "lib/fidl/cpp/bindings/lib/validate_params.h"
+#include "lib/fidl/cpp/bindings/lib/validation_errors.h"
+#include "lib/fidl/cpp/bindings/lib/validation_util.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 inline const ArrayValidateParams* GetMapKeyValidateParamsDefault() {
@@ -41,7 +41,7 @@ struct MapKeyValidateParamsFactory {
 
 // For non-nullable strings only. (Which is OK; map keys can't be null.)
 template <>
-struct MapKeyValidateParamsFactory<mdl::internal::Array_Data<char>*> {
+struct MapKeyValidateParamsFactory<fidl::internal::Array_Data<char>*> {
   static const ArrayValidateParams* Get() {
     return GetMapKeyValidateParamsForStrings();
   }
@@ -129,12 +129,12 @@ class Map_Data {
   ArrayPointer<Key> keys;
   ArrayPointer<Value> values;
 
-  void EncodePointersAndHandles(std::vector<mdl::Handle>* handles) {
+  void EncodePointersAndHandles(std::vector<fidl::Handle>* handles) {
     Encode(&keys, handles);
     Encode(&values, handles);
   }
 
-  void DecodePointersAndHandles(std::vector<mdl::Handle>* handles) {
+  void DecodePointersAndHandles(std::vector<fidl::Handle>* handles) {
     Decode(&keys, handles);
     Decode(&values, handles);
   }
@@ -149,6 +149,6 @@ class Map_Data {
 static_assert(sizeof(Map_Data<char, char>) == 24, "Bad sizeof(Map_Data)");
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_MAP_DATA_INTERNAL_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_MAP_DATA_INTERNAL_H_

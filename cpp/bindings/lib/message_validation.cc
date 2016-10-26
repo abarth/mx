@@ -1,15 +1,15 @@
-// Copyright 2015 The Chromium Authors. All rights reserved.
+// Copyright 2015 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/lib/message_validation.h"
+#include "lib/fidl/cpp/bindings/lib/message_validation.h"
 
 #include <string>
 
-#include "lib/mdl/cpp/bindings/lib/validation_errors.h"
-#include "lib/mdl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/bindings/lib/validation_errors.h"
+#include "lib/fidl/cpp/bindings/message.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 ValidationError ValidateMessageIsRequestWithoutResponse(const Message* message,
@@ -54,4 +54,4 @@ ValidationError ValidateMessageIsResponse(const Message* message,
 }
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl

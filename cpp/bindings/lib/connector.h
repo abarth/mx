@@ -1,20 +1,18 @@
-// Copyright 2013 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef LIB_MDL_CPP_BINDINGS_LIB_CONNECTOR_H_
-#define LIB_MDL_CPP_BINDINGS_LIB_CONNECTOR_H_
+#ifndef LIB_FIDL_CPP_BINDINGS_LIB_CONNECTOR_H_
+#define LIB_FIDL_CPP_BINDINGS_LIB_CONNECTOR_H_
 
-#include <magenta/types.h>
 #include <mx/msgpipe.h>
 
-#include <mojo/environment/async_waiter.h>
-
+#include "lib/fidl/cpp/bindings/message.h"
+#include "lib/fidl/cpp/waiter/default.h"
+#include "lib/fidl/cpp/waiter/default.h"
 #include "lib/ftl/macros.h"
-#include "lib/mdl/cpp/bindings/message.h"
-#include "mojo/public/cpp/environment/environment.h"
 
-namespace mdl {
+namespace fidl {
 namespace internal {
 
 // The Connector class is responsible for performing read/write operations on a
@@ -27,9 +25,8 @@ namespace internal {
 class Connector : public MessageReceiver {
  public:
   // The Connector takes ownership of |message_pipe|.
-  explicit Connector(
-      mx::msgpipe message_pipe,
-      const MojoAsyncWaiter* waiter = Environment::GetDefaultAsyncWaiter());
+  explicit Connector(mx::msgpipe message_pipe,
+                     const MojoAsyncWaiter* waiter = GetDefaultAsyncWaiter());
   ~Connector() override;
 
   // Sets the receiver to handle messages read from the message pipe.  The
@@ -118,6 +115,6 @@ class Connector : public MessageReceiver {
 };
 
 }  // namespace internal
-}  // namespace mdl
+}  // namespace fidl
 
-#endif  // LIB_MDL_CPP_BINDINGS_LIB_CONNECTOR_H_
+#endif  // LIB_FIDL_CPP_BINDINGS_LIB_CONNECTOR_H_

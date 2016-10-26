@@ -1,8 +1,8 @@
-// Copyright 2014 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Fuchsia Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#include "lib/mdl/cpp/bindings/tests/validation_test_input_parser.h"
+#include "lib/fidl/cpp/bindings/tests/validation_test_input_parser.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -13,7 +13,7 @@
 #include <set>
 #include <utility>
 
-namespace mdl {
+namespace fidl {
 namespace test {
 namespace {
 
@@ -402,4 +402,4 @@ bool ParseValidationTestInput(const std::string& input,
 }
 
 }  // namespace test
-}  // namespace mdl
+}  // namespace fidl
